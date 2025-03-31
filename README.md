@@ -3,7 +3,7 @@
 ## Installer Laravel
 https://laravel.com/docs/12.x#installing-php
 
-## Lancer le serveur
+## Lancer le serveur Laravel
 ```bash
-composer run dev
+php artisan serve
 ```
