@@ -10,6 +10,12 @@ composer global require laravel/installer
 composer install
 ```
 
+## Créer la BDD
+```
+touch database/database.sqlite
+php artisan migrate
+```
+
 ## Build le serveur Laravel
 ```bash
 npm run build
