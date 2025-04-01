@@ -16,6 +16,20 @@ touch database/database.sqlite
 php artisan migrate
 ```
 
+## Accèder à la BDD manuellement (une fois dedans on peut 
+```
+sqlite3 database/database.sqlite
+```
+### Améliorer affichage résultat requetes (dans sqlite)
+```
+.mode box
+```
+
+### Faire une requete (dans sqlite)
+```
+SELECT * FROM USERS;
+```
+ 
 ## Build le serveur Laravel
 ```bash
 npm run build
