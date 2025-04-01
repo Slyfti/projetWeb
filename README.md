@@ -12,6 +12,7 @@ composer install
 
 ## Créer la BDD
 ```
+sudo apt-get install php-sqlite3
 touch database/database.sqlite
 php artisan migrate
 ```
