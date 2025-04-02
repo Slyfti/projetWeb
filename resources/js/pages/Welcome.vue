@@ -108,13 +108,12 @@ import { Head, Link } from '@inertiajs/vue3';
                     </ul>
                     <ul class="flex gap-3 text-sm leading-normal">
                         <li>
-                            <a
-                                href="https://cloud.laravel.com"
-                                target="_blank"
-                                class="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
+                            <Link
+                                :href="route('events.index')"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                Deploy now
-                            </a>
+                                Voir les événements
+                            </Link>
                         </li>
                     </ul>
                 </div>
