@@ -115,7 +115,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AppLayout.vue';

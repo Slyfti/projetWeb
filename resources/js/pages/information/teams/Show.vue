@@ -71,7 +71,7 @@
     </AuthLayout>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { format } from 'date-fns';

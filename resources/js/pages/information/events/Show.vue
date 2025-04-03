@@ -80,7 +80,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AppLayout.vue';
 import { format } from 'date-fns';
