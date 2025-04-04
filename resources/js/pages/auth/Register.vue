@@ -76,15 +76,15 @@ const submit = () => {
                     <Label for="sexe">Sexe</Label>
                     <RadioGroup default-value="femme" v-model="form.sexe">
                         <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="femme" value="femme" />
+                            <RadioGroupItem id="femme" value="Femme" />
                             <Label for="option-one">Femme</Label>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="homme" value="homme" />
+                            <RadioGroupItem id="homme" value="Homme" />
                             <Label for="homme">Homme</Label>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="autre" value="autre" />
+                            <RadioGroupItem id="autre" value="Autre" />
                             <Label for="autre">Autre</Label>
                         </div>
                     </RadioGroup>
@@ -100,10 +100,10 @@ const submit = () => {
                         <SelectContent>
                         <SelectGroup>
                             <SelectItem value="Spectateur">Spectateur</SelectItem>
-                            <SelectItem value="Athlete">Athlète</SelectItem>
-                            <SelectItem value="Entraineur">Entraîneur</SelectItem>
-                            <SelectItem value="PersonnelTechnique">Personnel technique</SelectItem>
-                            <SelectItem value="Sécurite">Sécurité</SelectItem>
+                            <SelectItem value="Athlète">Athlète</SelectItem>
+                            <SelectItem value="Entraîneur">Entraîneur</SelectItem>
+                            <SelectItem value="Personnel technique">Personnel technique</SelectItem>
+                            <SelectItem value="Sécurité">Sécurité</SelectItem>
                             <SelectItem value="Administratif">Administratif</SelectItem>
                         </SelectGroup>
                         </SelectContent>
