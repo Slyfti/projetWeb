@@ -21,4 +21,10 @@ class Evenement extends Model
         'prix',
         'Disponiblilite'
     ];
+
+    protected $casts = [
+        'dateEvenements' => 'datetime',
+        'prix' => 'float',
+        'Disponiblilite' => 'integer'
+    ];
 }

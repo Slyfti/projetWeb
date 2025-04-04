@@ -6,6 +6,7 @@ use App\Http\Controllers\Information\SportEventController;
 use App\Http\Controllers\Information\TeamController;
 use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
+use App\Http\Controllers\EvenementsController;
 use App\Models\Utilisateur;
 
 Route::get('/', function () {
@@ -21,9 +22,9 @@ Route::get('dashboard', function () {
 
 // Routes pour le module Information (visiteurs)
 Route::prefix('information')->group(function () {
-    // Routes pour les événements sportifs
-    Route::get('/events', [SportEventController::class, 'index'])->name('events.index');
-    Route::get('/events/{sportEvent}', [SportEventController::class, 'show'])->name('events.show');
+    // Routes pour les événements
+    Route::get('/evenements', [EvenementsController::class, 'index'])->name('evenements.index');
+    Route::get('/evenements/{evenement}', [EvenementsController::class, 'show'])->name('evenements.show');
     
     // Routes pour les équipes
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');

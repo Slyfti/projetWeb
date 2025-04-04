@@ -7,16 +7,15 @@
             <h3 class="mb-4 text-lg font-medium text-foreground">Filtres</h3>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div class="space-y-2">
-                <label for="sport_type" class="text-sm font-medium text-foreground">Type de sport</label>
+                <label for="typeEvents" class="text-sm font-medium text-foreground">Type d'événement</label>
                 <select
-                  id="sport_type"
-                  v-model="filters.sport_type"
+                  id="typeEvents"
+                  v-model="filters.typeEvents"
                   class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 >
-                  <option value="">Tous les sports</option>
-                  <option value="football">Football</option>
-                  <option value="basketball">Basketball</option>
-                  <option value="tennis">Tennis</option>
+                  <option value="">Tous les types</option>
+                  <option value="Football">Football</option>
+                  <option value="Concert">Concert</option>
                 </select>
               </div>
 
@@ -42,28 +41,33 @@
         <!-- Liste des événements -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card
-            v-for="event in events.data"
-            :key="event.id"
+            v-for="evenement in evenements.data"
+            :key="evenement.idEvenements"
             class="overflow-hidden"
           >
             <CardHeader>
-              <CardTitle>{{ event.title }}</CardTitle>
-              <CardDescription>{{ formatDate(event.start_date) }}</CardDescription>
+              <CardTitle>{{ evenement.nom }}</CardTitle>
+              <CardDescription>{{ formatDate(evenement.dateEvenements) }}</CardDescription>
             </CardHeader>
             <CardContent>
               <div class="space-y-2">
-                <p class="text-sm text-muted-foreground">{{ event.location }}</p>
                 <div class="inline-flex items-center rounded-md border border-input px-2.5 py-0.5 text-xs font-semibold text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                  {{ event.sport_type }}
+                  {{ evenement.typeEvents }}
                 </div>
                 <p class="text-sm font-semibold text-foreground">
-                  À partir de {{ event.base_price }}€
+                  Prix : {{ evenement.prix }}€
+                </p>
+                <p class="text-sm text-muted-foreground">
+                  Places disponibles : {{ evenement.Disponiblilite }}
+                </p>
+                <p class="text-sm text-muted-foreground">
+                  {{ evenement.equipeDomicile }} vs {{ evenement.equipeExterieur }}
                 </p>
               </div>
             </CardContent>
             <CardFooter>
               <Link
-                :href="route('events.show', event.id)"
+                :href="route('evenements.show', evenement.idEvenements)"
                 class="w-full"
               >
                 <Button variant="default" class="w-full">
@@ -75,11 +79,11 @@
         </div>
 
         <!-- Pagination -->
-        <div v-if="events.last_page > 1" class="mt-6 flex justify-center">
+        <div v-if="evenements.last_page > 1" class="mt-6 flex justify-center">
           <nav class="flex items-center space-x-1">
             <button 
-              v-if="events.current_page > 1"
-              @click="changePage(events.current_page - 1)" 
+              v-if="evenements.current_page > 1"
+              @click="changePage(evenements.current_page - 1)" 
               class="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             >
               <span class="sr-only">Page précédente</span>
@@ -92,7 +96,7 @@
               @click="typeof page === 'number' ? changePage(page) : null"
               :class="[
                 'inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                page === events.current_page 
+                page === evenements.current_page 
                   ? 'bg-primary text-primary-foreground' 
                   : 'border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
                 typeof page !== 'number' ? 'pointer-events-none' : ''
@@ -102,8 +106,8 @@
             </button>
             
             <button 
-              v-if="events.current_page < events.last_page"
-              @click="changePage(events.current_page + 1)" 
+              v-if="evenements.current_page < evenements.last_page"
+              @click="changePage(evenements.current_page + 1)" 
               class="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             >
               <span class="sr-only">Page suivante</span>
@@ -115,14 +119,13 @@
     </div>
 </template>
 
-<script setup lang = "ts">
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import AuthLayout from '@/layouts/AppLayout.vue';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-// Import shadcn components that you have
 import { 
   Card, 
   CardHeader, 
@@ -135,7 +138,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const props = defineProps({
-  events: {
+  evenements: {
     type: Object,
     required: true
   },
@@ -147,7 +150,7 @@ const props = defineProps({
 
 const filters = ref(props.filters);
 
-const formatDate = (date) => {
+const formatDate = (date: string) => {
   return format(new Date(date), 'dd MMMM yyyy HH:mm', { locale: fr });
 };
 
@@ -155,13 +158,12 @@ const applyFilters = () => {
   // Implémenter la logique de filtrage
 };
 
-const changePage = (page) => {
+const changePage = (page: number) => {
   // Implémenter la logique de changement de page
 };
 
-// Calculate pagination range with ellipsis for large page counts
 const paginationRange = computed(() => {
-  const { current_page, last_page } = props.events;
+  const { current_page, last_page } = props.evenements;
   
   if (last_page <= 7) {
     return Array.from({ length: last_page }, (_, i) => i + 1);
