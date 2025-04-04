@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class Utilisateur extends Authenticatable
 {
     use HasFactory, Notifiable;
 
     protected $table = 'utilisateurs';
-    protected $primaryKey = 'idUtilisateurs';
 
     protected $fillable = [
         'pseudo',

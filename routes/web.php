@@ -6,14 +6,14 @@ use App\Http\Controllers\Information\SportEventController;
 use App\Http\Controllers\Information\TeamController;
 use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
-use App\Models\User;
+use App\Models\Utilisateur;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
 Route::get('dashboard', function () {
-    $users = User::select('id', 'name', 'email','pseudo')->get(); // Fetch users
+    $users = Utilisateur::select('id','email','pseudo')->get(); // Fetch users
     return Inertia::render('Dashboard', [
         'users' => $users, // Pass users to the Dashboard page
     ]);

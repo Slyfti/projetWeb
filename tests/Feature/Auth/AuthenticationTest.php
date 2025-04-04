@@ -1,6 +1,6 @@
 <?php
 
-// use App\Models\User;
+// use App\Models\Utilisateur;
 
 // uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
@@ -11,7 +11,7 @@
 // });
 
 // test('users can authenticate using the login screen', function () {
-//     $user = User::factory()->create();
+//     $user = Utilisateur::factory()->create();
 
 //     $response = $this->post('/login', [
 //         'email' => $user->email,
@@ -23,7 +23,7 @@
 // });
 
 // test('users can not authenticate with invalid password', function () {
-//     $user = User::factory()->create();
+//     $user = Utilisateur::factory()->create();
 
 //     $this->post('/login', [
 //         'email' => $user->email,
@@ -34,7 +34,7 @@
 // });
 
 // test('users can logout', function () {
-//     $user = User::factory()->create();
+//     $user = Utilisateur::factory()->create();
 
 //     $response = $this->actingAs($user)->post('/logout');
 

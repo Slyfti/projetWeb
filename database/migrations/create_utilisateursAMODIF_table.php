@@ -9,10 +9,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('utilisateurs', function (Blueprint $table) {
-            $table->id('idUtilisateurs');
+            $table->id();
             $table->string('pseudo')->unique();
             $table->string('email')->unique();
-            $table->string('mdp');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+
+            // Ajout
             $table->string('nom')->nullable();
             $table->string('prenom')->nullable();
             $table->date('dateNaissance')->nullable();
@@ -26,6 +29,9 @@ return new class extends Migration
             $table->datetime('derniereConnexion')->nullable();
             $table->boolean('estActif')->default(true);
             $table->boolean('estVerifie')->default(false);
+
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
