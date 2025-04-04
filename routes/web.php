@@ -6,13 +6,17 @@ use App\Http\Controllers\Information\SportEventController;
 use App\Http\Controllers\Information\TeamController;
 use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
+use App\Models\User;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    $users = User::select('id', 'name', 'email','pseudo')->get(); // Fetch users
+    return Inertia::render('Dashboard', [
+        'users' => $users, // Pass users to the Dashboard page
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Routes pour le module Information (visiteurs)
@@ -28,10 +32,6 @@ Route::prefix('information')->group(function () {
     // Routes pour les billets
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    
-    // Routes pour les services
-    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 });
 
 require __DIR__.'/settings.php';
