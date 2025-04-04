@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('actionsUtilisateurs', function (Blueprint $table) {
             $table->id('idActionsUtilisateurs');
             $table->foreignId('idUtilisateur')
-                ->constrained('utilisateurs', 'idUtilisateurs')
+                ->constrained('utilisateurs', 'id')
                 ->onDelete('cascade');
             $table->enum('typeAction', ['Consultation', 'Modification', 'Ajout', 'Suppression']);
             $table->enum('entiteCible', ['Objet', 'Service', 'Utilisateur', 'Événement']);

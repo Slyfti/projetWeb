@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('ancienEtat', 50);
             $table->string('nouvelEtat', 50);
             $table->foreignId('idUtilisateur')
-                ->constrained('utilisateurs', 'idUtilisateurs')
+                ->constrained('utilisateurs', 'id')
                 ->onDelete('cascade');
         });
     }

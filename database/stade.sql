@@ -103,7 +103,7 @@ CREATE TABLE connexionsUtilisateurs (
     idUtilisateur INT,
     dateConnexion DATETIME DEFAULT CURRENT_TIMESTAMP,
     pointsGagne FLOAT DEFAULT 0.25,
-    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(idUtilisateurs)
+    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(id)
 );
 
 -- Table des actions des utilisateurs
@@ -115,7 +115,7 @@ CREATE TABLE actionsUtilisateurs (
     idCible INT, 
     dateAction DATETIME DEFAULT CURRENT_TIMESTAMP,
     pointsGagne FLOAT DEFAULT 0.5,
-    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(idUtilisateurs)
+    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(id)
 );
 
 -- Table de l'historique des objets
@@ -127,7 +127,7 @@ CREATE TABLE historiqueObjets (
     nouvelEtat VARCHAR(50),
     idUtilisateur INT,
     FOREIGN KEY (idObjetsConnectes) REFERENCES objetsConnectes(idObjetsConnectes),
-    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(idUtilisateurs)
+    FOREIGN KEY (idUtilisateur) REFERENCES utilisateurs(id)
 );
 
 -- Insertion des niveaux de compétences

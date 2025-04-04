@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('connexionsUtilisateurs', function (Blueprint $table) {
             $table->id('idConnexionsUtilisateurs');
             $table->foreignId('idUtilisateur')
-                ->constrained('utilisateurs', 'idUtilisateurs')
+                ->constrained('utilisateurs', 'id')
                 ->onDelete('cascade');
             $table->dateTime('dateConnexion')->useCurrent();
             $table->float('pointsGagne')->default(0.25);
