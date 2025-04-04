@@ -21,6 +21,7 @@ return new class extends Migration
             // Ajout
             $table->string('nom')->nullable();
             $table->string('prenom')->nullable();
+            $table->string('pseudo')->unique();
             $table->date('dateNaissance')->nullable();
             $table->integer('age')->nullable();
             $table->enum('sexe', ['Homme', 'Femme', 'Autre'])->nullable();

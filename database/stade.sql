@@ -16,7 +16,7 @@ CREATE TABLE utilisateurs (
     typeMembre ENUM('Spectateur', 'Athlète', 'Entraîneur', 'Personnel technique', 'Sécurité', 'Administratif'),
     niveau ENUM('Débutant', 'Intermédiaire', 'Avancé', 'Expert') DEFAULT 'Débutant',
     points FLOAT DEFAULT 0,
-    photo VARCHAR(255),
+    photo VARCHAR(255), 
     dateInscription DATETIME DEFAULT CURRENT_TIMESTAMP,
     derniereConnexion DATETIME,
     estActif BOOLEAN DEFAULT TRUE,
