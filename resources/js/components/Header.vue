@@ -12,7 +12,7 @@ import LogoImg from '@/../img/logo.jpeg';
                 <ul class="flex gap-6 text-white">
                     <li><Link :href="route('evenements.index')" class="hover:text-green-400 transition">Événements</Link></li>
                     <li><a href="#" class="hover:text-green-400 transition">Services</a></li>
-                    <li><a href="#" class="hover:text-green-400 transition">Connexion / Inscription</a></li>
+                    <li><Link :href="route('login')" class="hover:text-green-400 transition">Connexion / Inscription</Link></li>
                 </ul>
             </nav>
         </div>

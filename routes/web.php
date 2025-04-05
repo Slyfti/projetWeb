@@ -8,17 +8,11 @@ use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
 use App\Http\Controllers\EvenementsController;
 use App\Models\Utilisateur;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
-
-Route::get('dashboard', function () {
-    $users = Utilisateur::select('id','email','pseudo')->get(); // Fetch users
-    return Inertia::render('Dashboard', [
-        'users' => $users, // Pass users to the Dashboard page
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Routes pour le module Information (visiteurs)
 Route::prefix('information')->group(function () {
@@ -33,6 +27,17 @@ Route::prefix('information')->group(function () {
     // Routes pour les billets
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard et gestion des utilisateurs
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('/users/{user}/access-level', [UserController::class, 'updateAccessLevel'])->name('users.updateAccessLevel');
+    Route::put('/users/{user}/type', [UserController::class, 'updateUserType'])->name('users.updateType');
+    Route::get('/users/{user}/login-history', [UserController::class, 'getLoginHistory'])->name('users.loginHistory');
 });
 
 require __DIR__.'/settings.php';

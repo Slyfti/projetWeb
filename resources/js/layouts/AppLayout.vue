@@ -14,13 +14,11 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col">
-        <Header />
+    <div class="h-full flex flex-col">
         <main class="flex-grow">
             <AppLayout :breadcrumbs="breadcrumbs">
                 <slot />
             </AppLayout>
         </main>
-        <Footer />
     </div>
 </template>
