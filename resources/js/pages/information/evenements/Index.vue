@@ -5,22 +5,28 @@
         <div class="mb-6 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
           <div class="p-6">
             <h3 class="mb-4 text-lg font-medium text-foreground">Filtres</h3>
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <!-- Type d'événement -->
               <div class="space-y-2">
                 <label for="typeEvents" class="text-sm font-medium text-foreground">Type d'événement</label>
-                <select
-                  id="typeEvents"
-                  v-model="filters.typeEvents"
-                  class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                >
-                  <option value="">Tous les types</option>
-                  <option value="Football">Football</option>
-                  <option value="Concert">Concert</option>
-                </select>
+                <Select v-model="filters.typeEvents">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="'Tous les types'" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="">Tous les types</SelectItem>
+                      <SelectItem v-for="type in typesEvenements" :key="type" :value="type">
+                        {{ type }}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
 
+              <!-- Date -->
               <div class="space-y-2">
-                <label for="date" class="text-sm font-medium text-foreground">Date</label>
+                <label for="date" class="text-sm font-medium text-foreground">Date spécifique</label>
                 <Input
                   type="date"
                   id="date"
@@ -29,11 +35,121 @@
                 />
               </div>
 
-              <div class="flex items-end">
-                <Button @click="applyFilters" class="w-full">
-                  Appliquer les filtres
-                </Button>
+              <!-- Période -->
+              <div class="space-y-2">
+                <label for="periode" class="text-sm font-medium text-foreground">Période</label>
+                <Select v-model="filters.periode">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="'Toutes les périodes'" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="">Toutes les périodes</SelectItem>
+                      <SelectItem value="aujourd_hui">Aujourd'hui</SelectItem>
+                      <SelectItem value="cette_semaine">Cette semaine</SelectItem>
+                      <SelectItem value="ce_mois">Ce mois</SelectItem>
+                      <SelectItem value="futur">Événements à venir</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
+
+              <!-- Prix -->
+              <div class="space-y-2 col-span-2">
+                <label class="text-sm font-medium text-foreground">Prix (€)</label>
+                <div class="px-2">
+                  <SliderRoot
+                    v-model="filters.prix"
+                    :default-value="[0, 300]"
+                    :min="0"
+                    :max="300"
+                    :step="5"
+                    class="relative flex w-full touch-none select-none items-center"
+                  >
+                    <SliderTrack class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
+                      <SliderRange class="absolute h-full bg-primary" />
+                    </SliderTrack>
+                    <SliderThumb class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+                    <SliderThumb class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+                  </SliderRoot>
+                  <div class="mt-2 flex justify-between text-sm text-muted-foreground">
+                    <span>{{ filters.prix[0] }}€</span>
+                    <span>{{ filters.prix[1] }}€</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Disponibilité -->
+              <div class="space-y-2">
+                <label for="disponibilite" class="text-sm font-medium text-foreground">Disponibilité</label>
+                <Select v-model="filters.disponibilite">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="'Tous'" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="">Tous</SelectItem>
+                      <SelectItem value="disponible">Places disponibles</SelectItem>
+                      <SelectItem value="complet">Complet</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <!-- Recherche équipe -->
+              <div class="space-y-2">
+                <label for="equipe" class="text-sm font-medium text-foreground">Rechercher une équipe</label>
+                <Input
+                  type="text"
+                  id="equipe"
+                  v-model="filters.equipe"
+                  placeholder="Nom de l'équipe"
+                  class="w-full"
+                />
+              </div>
+
+              <!-- Tri -->
+              <div class="space-y-2">
+                <label for="sortBy" class="text-sm font-medium text-foreground">Trier par</label>
+                <Select v-model="filters.sortBy">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="'Date'" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="dateEvenements">Date</SelectItem>
+                      <SelectItem value="prix">Prix</SelectItem>
+                      <SelectItem value="Disponiblilite">Disponibilité</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <!-- Ordre de tri -->
+              <div class="space-y-2">
+                <label for="sortOrder" class="text-sm font-medium text-foreground">Ordre</label>
+                <Select v-model="filters.sortOrder">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="'Croissant'" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="asc">Croissant</SelectItem>
+                      <SelectItem value="desc">Décroissant</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="mt-6 flex justify-end space-x-4">
+              <Button variant="outline" @click="resetFilters">
+                Réinitialiser les filtres
+              </Button>
+              <Button @click="applyFilters">
+                Appliquer les filtres
+              </Button>
             </div>
           </div>
         </div>
@@ -121,8 +237,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
-import AuthLayout from '@/layouts/AppLayout.vue';
+import { Link, router } from '@inertiajs/vue3';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -136,30 +251,96 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SliderRoot, SliderTrack, SliderRange, SliderThumb } from 'radix-vue';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-const props = defineProps({
+interface Props {
   evenements: {
-    type: Object,
-    required: true
-  },
+    data: Array<{
+      idEvenements: number;
+      nom: string;
+      dateEvenements: string;
+      typeEvents: string;
+      prix: number;
+      Disponiblilite: number;
+      equipeDomicile: string;
+      equipeExterieur: string;
+    }>;
+    current_page: number;
+    last_page: number;
+  };
   filters: {
-    type: Object,
-    required: true
-  }
-});
+    typeEvents?: string;
+    date?: string;
+    prix?: [number, number];
+    disponibilite?: string;
+    equipe?: string;
+    periode?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  };
+  typesEvenements: string[];
+}
 
-const filters = ref(props.filters);
+const props = defineProps<Props>();
+
+const filters = ref({
+  typeEvents: props.filters.typeEvents || '',
+  date: props.filters.date || '',
+  prix: props.filters.prix || [0, 300],
+  disponibilite: props.filters.disponibilite || '',
+  equipe: props.filters.equipe || '',
+  periode: props.filters.periode || '',
+  sortBy: props.filters.sortBy || 'dateEvenements',
+  sortOrder: props.filters.sortOrder || 'asc'
+});
 
 const formatDate = (date: string) => {
   return format(new Date(date), 'dd MMMM yyyy HH:mm', { locale: fr });
 };
 
 const applyFilters = () => {
-  // Implémenter la logique de filtrage
+  router.get(route('evenements.index'), {
+    ...filters.value,
+    page: 1
+  }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  });
+};
+
+const resetFilters = () => {
+  filters.value = {
+    typeEvents: '',
+    date: '',
+    prix: [0, 300],
+    disponibilite: '',
+    equipe: '',
+    periode: '',
+    sortBy: 'dateEvenements',
+    sortOrder: 'asc'
+  };
+  applyFilters();
 };
 
 const changePage = (page: number) => {
-  // Implémenter la logique de changement de page
+  router.get(route('evenements.index'), {
+    ...filters.value,
+    page
+  }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  });
 };
 
 const paginationRange = computed(() => {
