@@ -1,0 +1,6 @@
+<script setup lang="ts"></script>
+<template>
+    <footer class="bg-gray-900 text-white text-center py-4 border-t-4 border-green-400">
+        <p>&copy; 2025 Astrosphère. Tous droits réservés.</p>
+    </footer>
+</template>
