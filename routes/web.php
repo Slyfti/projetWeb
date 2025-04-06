@@ -35,8 +35,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::put('/users/{user}/access-level', [UserController::class, 'updateAccessLevel'])->name('users.updateAccessLevel');
-    Route::put('/users/{user}/type', [UserController::class, 'updateUserType'])->name('users.updateType');
     Route::get('/users/{user}/login-history', [UserController::class, 'getLoginHistory'])->name('users.loginHistory');
 });
 

@@ -21,15 +21,27 @@ import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import InputError from '@/components/InputError.vue';
 
 interface ConnexionLog {
     idConnexionsUtilisateurs: number;
     dateConnexion: string;
     pointsGagne: number;
+}
+
+interface PageProps {
+    connexions: ConnexionLog[];
+}
+
+interface ApiResponse {
+    users: User[];
 }
 
 const props = defineProps<{
@@ -51,120 +63,53 @@ const form = useForm({
     pseudo: '',
     email: '',
     password: '',
+    password_confirmation: '',
     nom: '',
     prenom: '',
     dateNaissance: '',
     sexe: '',
     typeMembre: 'Spectateur',
     niveau: 'Débutant',
+    points: 0
 });
 
 const createUser = () => {
-    // Créer une copie des données du formulaire
-    const newUser = {
-        id: Date.now(), // ID temporaire
-        pseudo: form.pseudo,
-        email: form.email,
-        nom: form.nom,
-        prenom: form.prenom,
-        niveau: form.niveau,
-        points: 0,
-        typeMembre: form.typeMembre
-    };
-
-    // Mise à jour optimiste
-    localUsers.value = [...localUsers.value, newUser];
-
     form.post('/users', {
-        preserveScroll: true,
-        preserveState: true,
-        only: ['users'],
         onSuccess: () => {
             showUserForm.value = false;
             form.reset();
+            router.visit('/dashboard', { preserveScroll: true });
         },
         onError: () => {
-            // En cas d'erreur, on retire l'utilisateur ajouté
-            localUsers.value = localUsers.value.filter(u => u.id !== newUser.id);
+            console.error('Erreur lors de la création de l\'utilisateur');
         }
     });
 };
 
 const deleteUser = (user: User) => {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer ${user.pseudo} ?`)) {
-        // Optimistic update
-        localUsers.value = localUsers.value.filter(u => u.id !== user.id);
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return;
 
-        router.delete(`/users/${user.id}`, {
-            preserveScroll: true,
-            preserveState: true,
-            only: ['users'],
-            onError: () => {
-                // En cas d'erreur, on remet l'utilisateur dans la liste
-                localUsers.value = [...props.users];
-            }
-        });
-    }
-};
-
-const updateUser = () => {
-    if (!selectedUser.value) return;
-    
-    form.put(`/users/${selectedUser.value.id}`, {
-        preserveScroll: true,
-        preserveState: true,
-        only: ['users'],
+    router.delete(`/users/${user.id}`, {
         onSuccess: () => {
-            showUserForm.value = false;
-            form.reset();
-        },
-    });
-};
-
-const updateAccessLevel = (user: User, niveau: string) => {
-    // Optimistic update
-    const index = localUsers.value.findIndex(u => u.id === user.id);
-    if (index !== -1) {
-        localUsers.value[index] = { ...user, niveau };
-    }
-
-    router.put(`/users/${user.id}/access-level`, { niveau }, {
-        preserveScroll: true,
-        preserveState: true,
-        only: ['users'],
-        onSuccess: () => {
-            // La mise à jour est déjà faite grâce au watch sur props.users
+            console.log('Utilisateur supprimé avec succès');
         },
         onError: () => {
-            // En cas d'erreur, on revient à l'état précédent
-            const index = localUsers.value.findIndex(u => u.id === user.id);
-            if (index !== -1) {
-                localUsers.value[index] = user;
-            }
+            console.error('Erreur lors de la suppression de l\'utilisateur');
         }
     });
 };
 
-const updateUserType = (user: User, typeMembre: string) => {
-    // Optimistic update
-    const index = localUsers.value.findIndex(u => u.id === user.id);
-    if (index !== -1) {
-        localUsers.value[index] = { ...user, typeMembre };
-    }
+const updateUser = () => {
+    if (!selectedUser.value) return;
 
-    router.put(`/users/${user.id}/type`, { typeMembre }, {
-        preserveScroll: true,
-        preserveState: true,
-        only: ['users'],
+    form.put(`/users/${selectedUser.value.id}`, {
         onSuccess: () => {
-            // La mise à jour est déjà faite grâce au watch sur props.users
+            showUserForm.value = false;
+            form.reset();
+            router.visit('/dashboard', { preserveScroll: true });
         },
         onError: () => {
-            // En cas d'erreur, on revient à l'état précédent
-            const index = localUsers.value.findIndex(u => u.id === user.id);
-            if (index !== -1) {
-                localUsers.value[index] = user;
-            }
+            console.error('Erreur lors de la mise à jour de l\'utilisateur');
         }
     });
 };
@@ -172,11 +117,37 @@ const updateUserType = (user: User, typeMembre: string) => {
 const viewLoginHistory = (user: User) => {
     router.get(`/users/${user.id}/login-history`, {}, {
         preserveState: true,
-        onSuccess: (page) => {
-            loginHistory.value = page.props.connexions;
+        onSuccess: (page: any) => {
+            loginHistory.value = page.props.connexions as ConnexionLog[];
             showLoginHistory.value = true;
         },
     });
+};
+
+const editUser = (user: User) => {
+    selectedUser.value = user;
+    form.pseudo = user.pseudo;
+    form.email = user.email;
+    form.nom = user.nom || '';
+    form.prenom = user.prenom || '';
+    if (user.dateNaissance) {
+        const date = new Date(user.dateNaissance);
+        form.dateNaissance = date.toISOString().split('T')[0];
+    } else {
+        form.dateNaissance = '';
+    }
+    form.sexe = ['Homme', 'Femme', 'Autre'].includes(user.sexe || '') ? user.sexe! : '';
+    form.typeMembre = user.typeMembre;
+    form.niveau = user.niveau;
+    form.points = user.points;
+    showUserForm.value = true;
+};
+
+const resetForm = () => {
+    selectedUser.value = null;
+    form.reset();
+    form.typeMembre = 'Spectateur';
+    form.niveau = 'Débutant';
 };
 </script>
 
@@ -184,7 +155,7 @@ const viewLoginHistory = (user: User) => {
     <div class="p-4">
         <div class="mb-4 flex justify-between items-center">
             <h2 class="text-2xl font-bold">Gestion des Utilisateurs</h2>
-            <Button @click="showUserForm = true">Ajouter un utilisateur</Button>
+            <Button @click="resetForm(); showUserForm = true">Ajouter un utilisateur</Button>
         </div>
 
         <div class="grid gap-4">
@@ -202,34 +173,10 @@ const viewLoginHistory = (user: User) => {
                             @click="viewLoginHistory(user)">
                             Historique
                         </Button>
-                        <Select 
-                            :model-value="user.typeMembre"
-                            @update:model-value="(value) => updateUserType(user, value as string)">
-                            <SelectTrigger class="h-9 w-[180px]">
-                                <SelectValue placeholder="Type de membre" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Spectateur">Spectateur</SelectItem>
-                                <SelectItem value="Athlète">Athlète</SelectItem>
-                                <SelectItem value="Entraîneur">Entraîneur</SelectItem>
-                                <SelectItem value="Personnel technique">Personnel technique</SelectItem>
-                                <SelectItem value="Sécurité">Sécurité</SelectItem>
-                                <SelectItem value="Administratif">Administratif</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <Select 
-                            :model-value="user.niveau"
-                            @update:model-value="(value) => updateAccessLevel(user, value as string)">
-                            <SelectTrigger class="h-9 w-[140px]">
-                                <SelectValue placeholder="Niveau d'accès" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Débutant">Débutant</SelectItem>
-                                <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                                <SelectItem value="Avancé">Avancé</SelectItem>
-                                <SelectItem value="Expert">Expert</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <Button variant="outline" size="sm" 
+                            @click="editUser(user)">
+                            Modifier
+                        </Button>
                         <Button variant="destructive" size="sm" 
                             @click="deleteUser(user)">
                             Supprimer
@@ -251,117 +198,132 @@ const viewLoginHistory = (user: User) => {
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Pseudo -->
                         <FormField name="pseudo" class="col-span-2">
-                            <FormLabel>Pseudo</FormLabel>
+                            <FormLabel>Pseudo<InputError :message="form.errors.pseudo" /></FormLabel>
+                            
                             <FormControl>
-                                <Input v-model="form.pseudo" required />
+                                <Input v-model="form.pseudo" required placeholder="Pseudo" />
                             </FormControl>
-                            <FormMessage />
+                            
                         </FormField>
 
                         <!-- Email -->
                         <FormField name="email" class="col-span-2">
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>Email<InputError :message="form.errors.email" /></FormLabel>
                             <FormControl>
-                                <Input type="email" v-model="form.email" required />
+                                <Input type="email" v-model="form.email" required placeholder="email@example.com" />
                             </FormControl>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Mot de passe -->
                         <FormField name="password" v-if="!selectedUser" class="col-span-2">
-                            <FormLabel>Mot de passe</FormLabel>
+                            <FormLabel>Mot de passe<InputError :message="form.errors.password" /></FormLabel>
                             <FormControl>
-                                <Input type="password" v-model="form.password" required />
+                                <Input type="password" v-model="form.password" required placeholder="Mot de passe" />
                             </FormControl>
-                            <FormMessage />
+                        </FormField>
+
+                        <!-- Confirmation mot de passe -->
+                        <FormField name="password_confirmation" v-if="!selectedUser" class="col-span-2">
+                            <FormLabel>Confirmation du mot de passe<InputError :message="form.errors.password_confirmation" /></FormLabel>
+                            <FormControl>
+                                <Input type="password" v-model="form.password_confirmation" required placeholder="Confirmation mot de passe" />
+                            </FormControl>
                         </FormField>
 
                         <!-- Nom -->
                         <FormField name="nom">
-                            <FormLabel>Nom</FormLabel>
+                            <FormLabel>Nom<InputError :message="form.errors.nom" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.nom" />
+                                <Input v-model="form.nom" placeholder="Nom" />
                             </FormControl>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Prénom -->
                         <FormField name="prenom">
-                            <FormLabel>Prénom</FormLabel>
+                            <FormLabel>Prénom<InputError :message="form.errors.prenom" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.prenom" />
+                                <Input v-model="form.prenom" placeholder="Prénom" />
                             </FormControl>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Date de naissance -->
                         <FormField name="dateNaissance">
-                            <FormLabel>Date de naissance</FormLabel>
+                            <FormLabel>Date de naissance<InputError :message="form.errors.dateNaissance" /></FormLabel>
                             <FormControl>
                                 <Input type="date" v-model="form.dateNaissance" />
                             </FormControl>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Sexe -->
                         <FormField name="sexe">
-                            <FormLabel>Sexe</FormLabel>
-                            <Select v-model="form.sexe">
+                            <FormLabel>Sexe<InputError :message="form.errors.sexe" /></FormLabel>
+                            <Select v-model="form.sexe" required>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Choisir" />
+                                    <SelectValue placeholder="Sélectionner un sexe" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Homme">Homme</SelectItem>
-                                    <SelectItem value="Femme">Femme</SelectItem>
-                                    <SelectItem value="Autre">Autre</SelectItem>
+                                    <SelectGroup>
+                                        <SelectItem value="Femme">Femme</SelectItem>
+                                        <SelectItem value="Homme">Homme</SelectItem>
+                                        <SelectItem value="Autre">Autre</SelectItem>
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Type de membre -->
                         <FormField name="typeMembre">
-                            <FormLabel>Type de membre</FormLabel>
+                            <FormLabel>Type de membre<InputError :message="form.errors.typeMembre" /></FormLabel>
                             <Select v-model="form.typeMembre" required>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Sélectionner un type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Spectateur">Spectateur</SelectItem>
-                                    <SelectItem value="Athlète">Athlète</SelectItem>
-                                    <SelectItem value="Entraîneur">Entraîneur</SelectItem>
-                                    <SelectItem value="Personnel technique">Personnel technique</SelectItem>
-                                    <SelectItem value="Sécurité">Sécurité</SelectItem>
-                                    <SelectItem value="Administratif">Administratif</SelectItem>
+                                    <SelectGroup>
+                                        <SelectItem value="Spectateur">Spectateur</SelectItem>
+                                        <SelectItem value="Athlète">Athlète</SelectItem>
+                                        <SelectItem value="Entraîneur">Entraîneur</SelectItem>
+                                        <SelectItem value="Personnel technique">Personnel technique</SelectItem>
+                                        <SelectItem value="Sécurité">Sécurité</SelectItem>
+                                        <SelectItem value="Administratif">Administratif</SelectItem>
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <FormMessage />
                         </FormField>
 
                         <!-- Niveau -->
                         <FormField name="niveau">
-                            <FormLabel>Niveau</FormLabel>
+                            <FormLabel>Niveau<InputError :message="form.errors.niveau" /></FormLabel>
                             <Select v-model="form.niveau" required>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Choisir un niveau" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Débutant">Débutant</SelectItem>
-                                    <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                                    <SelectItem value="Avancé">Avancé</SelectItem>
-                                    <SelectItem value="Expert">Expert</SelectItem>
+                                    <SelectGroup>
+                                        <SelectItem value="Débutant">Débutant</SelectItem>
+                                        <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
+                                        <SelectItem value="Avancé">Avancé</SelectItem>
+                                        <SelectItem value="Expert">Expert</SelectItem>
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <FormMessage />
+                        </FormField>
+
+                        <!-- Points -->
+                        <FormField name="points">
+                            <FormLabel>Points<InputError :message="form.errors.points" /></FormLabel>
+                            <FormControl>
+                                <Input type="number" v-model="form.points" min="0" />
+                            </FormControl>
                         </FormField>
                     </div>
 
                     <div class="mt-4 flex justify-end gap-2">
                         <Button type="button" variant="outline" 
-                            @click="showUserForm = false">
+                            @click="resetForm(); showUserForm = false">
                             Annuler
                         </Button>
-                        <Button type="submit">
+                        <Button type="submit" :disabled="form.processing">
                             {{ selectedUser ? 'Modifier' : 'Ajouter' }}
                         </Button>
                     </div>

@@ -24,6 +24,8 @@ export interface User {
     email: string;
     nom?: string;
     prenom?: string;
+    dateNaissance?: string;
+    sexe?: string;
     niveau: string;
     points: number;
     typeMembre: string;
