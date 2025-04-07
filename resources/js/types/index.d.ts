@@ -29,6 +29,10 @@ export interface User {
     niveau: string;
     points: number;
     typeMembre: string;
+    photo?: string;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface SharedData extends InertiaPageProps {
@@ -40,16 +44,6 @@ export interface SharedData extends InertiaPageProps {
 
 export interface PageProps extends InertiaPageProps {
     users: User[];
-}
-
-export interface User {
-    id: number;
-    pseudo: string;
-    email: string;
-    photo?: string;
-    email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

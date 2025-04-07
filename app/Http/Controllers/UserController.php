@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     private function getUsers()
     {
-        return User::select('id', 'pseudo', 'email', 'nom', 'prenom', 'niveau', 'points', 'typeMembre', 'sexe', 'dateNaissance')
+        return User::select('id', 'pseudo', 'email', 'nom', 'prenom', 'niveau', 'points', 'typeMembre', 'sexe', 'dateNaissance', 'created_at')
             ->orderBy('pseudo')
             ->get();
     }

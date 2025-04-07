@@ -16,7 +16,12 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'nom' => ['required', 'string', 'max:255'],
+            'prenom' => ['nullable', 'string', 'max:255'],
+            'dateNaissance' => ['nullable', 'date'],
+            'sexe' => ['nullable', 'in:Homme,Femme,Autre'],
+            'typeMembre' => ['required', 'in:Spectateur,Athlète,Entraîneur,Personnel technique,Sécurité,Administratif'],
+            'niveau' => ['required', 'in:Débutant,Intermédiaire,Avancé,Expert'],
             'email' => [
                 'required',
                 'string',

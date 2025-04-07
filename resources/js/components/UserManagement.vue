@@ -150,6 +150,17 @@ const resetForm = () => {
     form.typeMembre = 'Spectateur';
     form.niveau = 'Débutant';
 };
+
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
 </script>
 
 <template>
@@ -164,10 +175,39 @@ const resetForm = () => {
                 class="p-4 rounded-lg border border-gray-200 dark:border-gray-800">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h3 class="font-semibold">{{ user.pseudo }}</h3>
-                        <p class="text-sm text-gray-500">{{ user.email }}</p>
-                        <p class="text-sm">Niveau: {{ user.niveau }}</p>
-                        <p class="text-sm">Points: {{ user.points }}</p>
+                        <div class="space-y-2">
+                            <div>
+                                <h3 class="font-semibold">{{ user.pseudo }}</h3>
+                                <p class="text-sm text-gray-500">{{ user.email }}</p>
+                            </div>
+                            <div class="flex gap-8">
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-500 mb-2">Informations personnelles</div>
+                                    <div class="space-y-2 text-sm">
+                                        <div>
+                                            <span class="font-medium">Nom : </span>
+                                            <span>{{ user.nom || 'Non renseigné' }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Prénom : </span>
+                                            <span>{{ user.prenom || 'Non renseigné' }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Date de naissance : </span>
+                                            <span>{{ user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Sexe : </span>
+                                            <span>{{ user.sexe || 'Non renseigné' }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Date d'inscription : </span>
+                                            <span>{{ formatDate(user.created_at) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex gap-2 items-center">
                         <Button variant="outline" size="sm" 
