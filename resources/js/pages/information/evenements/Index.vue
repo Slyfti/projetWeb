@@ -10,15 +10,15 @@
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             <!-- Type d'événement -->
                             <div class="space-y-2">
-                                <label for="typeEvents" class="text-sm font-medium text-foreground">Type d'événement</label>
+                                <label for="typeEvents" class="text-sm font-medium text-[#E4F1F1]">Type d'événement</label>
                                 <Select v-model="filters.typeEvents">
-                                    <SelectTrigger>
-                                        <SelectValue :placeholder="'Tous les types'" />
+                                    <SelectTrigger class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] hover:bg-[#6F4786] focus:ring-[#E4F1F1]/20">
+                                        <SelectValue class="text-[#E4F1F1]" :placeholder="'Tous les types'" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent class="bg-gray-900 border-[#E4F1F1]/10 text-[#E4F1F1]">
                                         <SelectGroup>
-                                            <SelectItem value="">Tous les types</SelectItem>
-                                            <SelectItem v-for="type in typesEvenements" :key="type" :value="type">
+                                            <SelectItem value="" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Tous les types</SelectItem>
+                                            <SelectItem v-for="type in typesEvenements" :key="type" :value="type" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">
                                                 {{ type }}
                                             </SelectItem>
                                         </SelectGroup>
@@ -28,29 +28,29 @@
 
                             <!-- Date -->
                             <div class="space-y-2">
-                                <label for="date" class="text-sm font-medium text-foreground">Date spécifique</label>
+                                <label for="date" class="text-sm font-medium text-[#E4F1F1]">Date spécifique</label>
                                 <Input
                                     type="date"
                                     id="date"
                                     v-model="filters.date"
-                                    class="w-full"
+                                    class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] focus:ring-[#6F4786]"
                                 />
                             </div>
 
                             <!-- Période -->
                             <div class="space-y-2">
-                                <label for="periode" class="text-sm font-medium text-foreground">Période</label>
+                                <label for="periode" class="text-sm font-medium text-[#E4F1F1]">Période</label>
                                 <Select v-model="filters.periode">
-                                    <SelectTrigger>
-                                        <SelectValue :placeholder="'Toutes les périodes'" />
+                                    <SelectTrigger class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] hover:bg-[#6F4786] focus:ring-[#E4F1F1]/20">
+                                        <SelectValue class="text-[#E4F1F1]" :placeholder="'Toutes les périodes'" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent class="bg-gray-900 border-[#E4F1F1]/10 text-[#E4F1F1]">
                                         <SelectGroup>
-                                            <SelectItem value="">Toutes les périodes</SelectItem>
-                                            <SelectItem value="aujourd_hui">Aujourd'hui</SelectItem>
-                                            <SelectItem value="cette_semaine">Cette semaine</SelectItem>
-                                            <SelectItem value="ce_mois">Ce mois</SelectItem>
-                                            <SelectItem value="futur">Événements à venir</SelectItem>
+                                            <SelectItem value="" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Toutes les périodes</SelectItem>
+                                            <SelectItem value="aujourd_hui" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Aujourd'hui</SelectItem>
+                                            <SelectItem value="cette_semaine" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Cette semaine</SelectItem>
+                                            <SelectItem value="ce_mois" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Ce mois</SelectItem>
+                                            <SelectItem value="futur" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Événements à venir</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -58,7 +58,7 @@
 
                             <!-- Prix -->
                             <div class="space-y-2 col-span-2">
-                                <label class="text-sm font-medium text-foreground">Prix (€)</label>
+                                <label class="text-sm font-medium text-[#E4F1F1]">Prix (€)</label>
                                 <div class="px-2">
                                     <SliderRoot
                                         v-model="filters.prix"
@@ -68,13 +68,13 @@
                                         :step="5"
                                         class="relative flex w-full touch-none select-none items-center"
                                     >
-                                        <SliderTrack class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
-                                            <SliderRange class="absolute h-full bg-primary" />
+                                        <SliderTrack class="relative h-2 w-full grow overflow-hidden rounded-full bg-gray-900 bg-opacity-90">
+                                            <SliderRange class="absolute h-full bg-[#6F4786]" />
                                         </SliderTrack>
-                                        <SliderThumb class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-                                        <SliderThumb class="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+                                        <SliderThumb class="block h-5 w-5 rounded-full border-2 border-[#E4F1F1]/10 bg-gray-900 bg-opacity-90 text-[#E4F1F1] ring-offset-background transition-colors hover:bg-[#6F4786] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E4F1F1]/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+                                        <SliderThumb class="block h-5 w-5 rounded-full border-2 border-[#E4F1F1]/10 bg-gray-900 bg-opacity-90 text-[#E4F1F1] ring-offset-background transition-colors hover:bg-[#6F4786] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E4F1F1]/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
                                     </SliderRoot>
-                                    <div class="mt-2 flex justify-between text-sm text-muted-foreground">
+                                    <div class="mt-2 flex justify-between text-sm text-[#E4F1F1]/80">
                                         <span>{{ filters.prix[0] }}€</span>
                                         <span>{{ filters.prix[1] }}€</span>
                                     </div>
@@ -83,16 +83,16 @@
 
                             <!-- Disponibilité -->
                             <div class="space-y-2">
-                                <label for="disponibilite" class="text-sm font-medium text-foreground">Disponibilité</label>
+                                <label for="disponibilite" class="text-sm font-medium text-[#E4F1F1]">Disponibilité</label>
                                 <Select v-model="filters.disponibilite">
-                                    <SelectTrigger>
-                                        <SelectValue :placeholder="'Tous'" />
+                                    <SelectTrigger class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] hover:bg-[#6F4786] focus:ring-[#E4F1F1]/20">
+                                        <SelectValue class="text-[#E4F1F1]" :placeholder="'Tous'" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent class="bg-gray-900 border-[#E4F1F1]/10 text-[#E4F1F1]">
                                         <SelectGroup>
-                                            <SelectItem value="">Tous</SelectItem>
-                                            <SelectItem value="disponible">Places disponibles</SelectItem>
-                                            <SelectItem value="complet">Complet</SelectItem>
+                                            <SelectItem value="" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Tous</SelectItem>
+                                            <SelectItem value="disponible" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Places disponibles</SelectItem>
+                                            <SelectItem value="complet" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Complet</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -100,28 +100,28 @@
 
                             <!-- Recherche équipe -->
                             <div class="space-y-2">
-                                <label for="equipe" class="text-sm font-medium text-foreground">Rechercher une équipe</label>
+                                <label for="equipe" class="text-sm font-medium text-[#E4F1F1]">Rechercher une équipe</label>
                                 <Input
                                     type="text"
                                     id="equipe"
                                     v-model="filters.equipe"
                                     placeholder="Nom de l'équipe"
-                                    class="w-full"
+                                    class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] focus:ring-[#6F4786]"
                                 />
                             </div>
 
                             <!-- Tri -->
                             <div class="space-y-2">
-                                <label for="sortBy" class="text-sm font-medium text-foreground">Trier par</label>
+                                <label for="sortBy" class="text-sm font-medium text-[#E4F1F1]">Trier par</label>
                                 <Select v-model="filters.sortBy">
-                                    <SelectTrigger>
-                                        <SelectValue :placeholder="'Date'" />
+                                    <SelectTrigger class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] hover:bg-[#6F4786] focus:ring-[#E4F1F1]/20">
+                                        <SelectValue class="text-[#E4F1F1]" :placeholder="'Date'" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent class="bg-gray-900 border-[#E4F1F1]/10 text-[#E4F1F1]">
                                         <SelectGroup>
-                                            <SelectItem value="dateEvenements">Date</SelectItem>
-                                            <SelectItem value="prix">Prix</SelectItem>
-                                            <SelectItem value="Disponiblilite">Disponibilité</SelectItem>
+                                            <SelectItem value="dateEvenements" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Date</SelectItem>
+                                            <SelectItem value="prix" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Prix</SelectItem>
+                                            <SelectItem value="Disponiblilite" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Disponibilité</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -129,15 +129,15 @@
 
                             <!-- Ordre de tri -->
                             <div class="space-y-2">
-                                <label for="sortOrder" class="text-sm font-medium text-foreground">Ordre</label>
+                                <label for="sortOrder" class="text-sm font-medium text-[#E4F1F1]">Ordre</label>
                                 <Select v-model="filters.sortOrder">
-                                    <SelectTrigger>
-                                        <SelectValue :placeholder="'Croissant'" />
+                                    <SelectTrigger class="w-full bg-gray-900 bg-opacity-90 border-[#E4F1F1]/10 text-[#E4F1F1] hover:bg-[#6F4786] focus:ring-[#E4F1F1]/20">
+                                        <SelectValue class="text-[#E4F1F1]" :placeholder="'Croissant'" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent class="bg-gray-900 border-[#E4F1F1]/10 text-[#E4F1F1]">
                                         <SelectGroup>
-                                            <SelectItem value="asc">Croissant</SelectItem>
-                                            <SelectItem value="desc">Décroissant</SelectItem>
+                                            <SelectItem value="asc" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Croissant</SelectItem>
+                                            <SelectItem value="desc" class="hover:bg-[#6F4786] focus:bg-[#6F4786] text-[#E4F1F1]">Décroissant</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>

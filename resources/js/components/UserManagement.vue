@@ -173,16 +173,16 @@ const formatDate = (dateString: string): string => {
         <div class="grid gap-4">
             <div v-for="user in localUsers" :key="user.id" 
                 class="p-4 rounded-lg border border-gray-200 dark:border-gray-800">
-                <div class="flex justify-between items-start">
-                    <div>
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                    <div class="w-full">
                         <div class="space-y-2">
                             <div>
                                 <h3 class="font-semibold">{{ user.pseudo }}</h3>
                                 <p class="text-sm text-gray-500">{{ user.email }}</p>
                             </div>
-                            <div class="flex gap-8">
-                                <div class="flex-1">
-                                    <div class="font-medium text-gray-500 mb-2">Informations personnelles</div>
+                            <div class="flex flex-col sm:flex-row gap-8">
+                                <div class="w-full sm:w-1/2">
+                                    <h4 class="font-medium text-gray-500 mb-2">Informations personnelles</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
                                             <span class="font-medium">Nom : </span>
@@ -202,14 +202,38 @@ const formatDate = (dateString: string): string => {
                                         </div>
                                         <div>
                                             <span class="font-medium">Date d'inscription : </span>
-                                            <span>{{ formatDate(user.created_at) }}</span>
+                                            <span>{{ new Date(user.created_at).toLocaleDateString('fr-FR') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="w-full sm:w-1/2">
+                                    <h4 class="font-medium text-gray-500 mb-2">Informations du compte</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div>
+                                            <span class="font-medium">Type de membre : </span>
+                                            <span>{{ user.typeMembre }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Niveau : </span>
+                                            <span>{{ user.niveau }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Points : </span>
+                                            <span>{{ user.points }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Vérifié : </span>
+                                            <span :class="user.email_verified_at ? 'text-green-600' : 'text-red-600'">
+                                                {{ user.email_verified_at ? 'Oui' : 'Non' }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center whitespace-nowrap">
                         <Button variant="outline" size="sm" 
                             @click="viewLoginHistory(user)">
                             Historique
