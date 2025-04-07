@@ -26,6 +26,6 @@ class HistoriqueObjet extends Model
 
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'idUtilisateur');
+        return $this->belongsTo(User::class, 'idUtilisateur');
     }
 }

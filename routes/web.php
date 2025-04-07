@@ -7,7 +7,7 @@ use App\Http\Controllers\Information\TeamController;
 use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
 use App\Http\Controllers\EvenementsController;
-use App\Models\Utilisateur;
+use App\Models\User;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {

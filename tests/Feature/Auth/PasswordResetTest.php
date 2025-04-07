@@ -1,6 +1,6 @@
 <?php
 
-// use App\Models\Utilisateur;
+// use App\Models\User;
 // use Illuminate\Auth\Notifications\ResetPassword;
 // use Illuminate\Support\Facades\Notification;
 
@@ -16,7 +16,7 @@
 // test('reset password link can be requested', function () {
 //     Notification::fake();
 
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $this->post('/forgot-password', ['email' => $user->email]);
 
@@ -26,7 +26,7 @@
 // test('reset password screen can be rendered', function () {
 //     Notification::fake();
 
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $this->post('/forgot-password', ['email' => $user->email]);
 
@@ -42,7 +42,7 @@
 // test('password can be reset with valid token', function () {
 //     Notification::fake();
 
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $this->post('/forgot-password', ['email' => $user->email]);
 

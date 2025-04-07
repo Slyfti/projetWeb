@@ -6,7 +6,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\ConnexionUtilisateur;
-use App\Models\Utilisateur;
+use App\Models\User;
 
 class LogSuccessfulLogin
 {
@@ -23,11 +23,11 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event): void
     {
-        if (!($event->user instanceof Utilisateur)) {
+        if (!($event->user instanceof User)) {
             return;
         }
 
-        $user = Utilisateur::find($event->user->id);
+        $user = User::find($event->user->id);
         if (!$user) {
             return;
         }

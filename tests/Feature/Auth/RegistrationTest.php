@@ -8,7 +8,7 @@ test('registration screen can be rendered', function () {
 
 test('new users can register', function () {
     $response = $this->post('/register', [
-        'name' => 'Test Utilisateur',
+        'name' => 'Test User',
         'prenom' => 'Test Prenom',
         'pseudo' => 'TestPseudo',
         'dateNaissance' => '1990-01-01',

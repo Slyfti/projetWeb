@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
-import type { Utilisateur } from '@/types';
+import type { User } from '@/types';
 import { computed } from 'vue';
 
 interface Props {
-    user: Utilisateur;
+    user: User;
     showEmail?: boolean;
 }
 

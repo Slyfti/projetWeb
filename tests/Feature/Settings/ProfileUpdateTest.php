@@ -1,11 +1,11 @@
 <?php
 
-// use App\Models\Utilisateur;
+// use App\Models\User;
 
 // uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 // test('profile page is displayed', function () {
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $response = $this
 //         ->actingAs($user)
@@ -15,12 +15,12 @@
 // });
 
 // test('profile information can be updated', function () {
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $response = $this
 //         ->actingAs($user)
 //         ->patch('/settings/profile', [
-//             'name' => 'Test Utilisateur',
+//             'name' => 'Test User',
 //             'email' => 'test@example.com',
 //         ]);
 
@@ -30,18 +30,18 @@
 
 //     $user->refresh();
 
-//     expect($user->name)->toBe('Test Utilisateur');
+//     expect($user->name)->toBe('Test User');
 //     expect($user->email)->toBe('test@example.com');
 //     expect($user->email_verified_at)->toBeNull();
 // });
 
 // test('email verification status is unchanged when the email address is unchanged', function () {
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $response = $this
 //         ->actingAs($user)
 //         ->patch('/settings/profile', [
-//             'name' => 'Test Utilisateur',
+//             'name' => 'Test User',
 //             'email' => $user->email,
 //         ]);
 
@@ -53,7 +53,7 @@
 // });
 
 // test('user can delete their account', function () {
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $response = $this
 //         ->actingAs($user)
@@ -70,7 +70,7 @@
 // });
 
 // test('correct password must be provided to delete account', function () {
-//     $user = Utilisateur::factory()->create();
+//     $user = User::factory()->create();
 
 //     $response = $this
 //         ->actingAs($user)

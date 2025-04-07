@@ -3,7 +3,7 @@ import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
-    user: Utilisateur;
+    user: User;
 }
 
 export interface BreadcrumbItem {
@@ -42,7 +42,7 @@ export interface PageProps extends InertiaPageProps {
     users: User[];
 }
 
-export interface Utilisateur {
+export interface User {
     id: number;
     pseudo: string;
     email: string;

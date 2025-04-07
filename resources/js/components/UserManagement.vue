@@ -91,7 +91,8 @@ const deleteUser = (user: User) => {
 
     router.delete(`/users/${user.id}`, {
         onSuccess: () => {
-            console.log('Utilisateur supprimé avec succès');
+            console.log('User supprimé avec succès');
+            router.visit('/dashboard', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la suppression de l\'utilisateur');
@@ -186,7 +187,7 @@ const resetForm = () => {
             </div>
         </div>
 
-        <!-- Modal Formulaire Utilisateur -->
+        <!-- Modal Formulaire User -->
         <Dialog v-model:open="showUserForm">
             <DialogContent class="sm:max-w-[500px]">
                 <DialogHeader>
