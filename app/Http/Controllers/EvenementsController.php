@@ -87,8 +87,21 @@ class EvenementsController extends Controller
 
     public function show(Evenement $evenement)
     {
-        return Inertia::render('information/evenements/Show', [
-            'evenement' => $evenement
+        return Inertia::render('information/evenements/EventDetails', [
+            'evenement' => [
+                'id' => $evenement->id,
+                'titre' => $evenement->nomEvenement,
+                'date' => $evenement->dateEvenements,
+                'lieu' => $evenement->lieu,
+                'sport' => $evenement->typeEvents,
+                'meteo' => $evenement->meteo,
+                'equipe_domicile' => [
+                    'nom' => $evenement->equipeDomicile
+                ],
+                'equipe_exterieur' => [
+                    'nom' => $evenement->equipeExterieur
+                ]
+            ]
         ]);
     }
 } 
