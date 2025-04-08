@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    private const POINTS_CREATION = 10;
+    private const POINTS_MODIFICATION = 5;
+    private const POINTS_SUPPRESSION = 15;
+
+    private function addPointsToUser($userId, $points)
+    {
+        $user = User::find($userId);
+        if ($user) {
+            $user->points += $points;
+            $user->save();
+        }
+    }
+
     private function getUsers()
     {
         return User::select('id', 'pseudo', 'email', 'nom', 'prenom', 'niveau', 'points', 'typeMembre', 'sexe', 'dateNaissance', 'created_at')
@@ -78,6 +91,9 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         User::create($validated);
 
+        // Ajouter des points à l'utilisateur qui crée
+        $this->addPointsToUser(auth()->id(), self::POINTS_CREATION);
+
         return redirect()->route('dashboard');
     }
 
@@ -114,12 +130,18 @@ class UserController extends Controller
 
         $user->update($validated);
         
+        // Ajouter des points à l'utilisateur qui modifie
+        $this->addPointsToUser(auth()->id(), self::POINTS_MODIFICATION);
+        
         return redirect()->route('dashboard');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
+        
+        // Ajouter des points à l'utilisateur qui supprime
+        $this->addPointsToUser(auth()->id(), self::POINTS_SUPPRESSION);
         
         return redirect()->route('dashboard');
     }
