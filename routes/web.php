@@ -9,6 +9,7 @@ use App\Http\Controllers\Information\ServiceController;
 use App\Http\Controllers\EvenementsController;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ObjetConnecteController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -44,6 +45,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/users/{user}/login-history', [UserController::class, 'getLoginHistory'])->name('users.loginHistory');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Routes pour la gestion des objets connectés
+    Route::get('/objets-connectes', [ObjetConnecteController::class, 'index'])->name('objets-connectes.index');
+    Route::post('/objets-connectes', [ObjetConnecteController::class, 'store'])->name('objets-connectes.store');
+    Route::put('/objets-connectes/{objet}', [ObjetConnecteController::class, 'update'])->name('objets-connectes.update');
+    Route::delete('/objets-connectes/{objet}', [ObjetConnecteController::class, 'destroy'])->name('objets-connectes.destroy');
 });
 
 require __DIR__.'/settings.php';
