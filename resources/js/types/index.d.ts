@@ -42,8 +42,45 @@ export interface SharedData extends InertiaPageProps {
     ziggy: Config & { location: string };
 }
 
+export interface ObjetConnecte {
+    idObjetsConnectes: number;
+    nom: string;
+    idCategorie: number;
+    descriptionObjetsConnectes: string;
+    etat: 'Actif' | 'Inactif' | 'Maintenance';
+    mode: 'Automatique' | 'Manuel';
+    connectivite: string;
+    niveauBatterie: number;
+    derniereInteraction: string;
+    puissance: number;
+    consommationActuelle: number;
+    dureeVieEstimee: number;
+    dateInstallation: string;
+    derniereMaintenance: string;
+    idZone: number;
+    categorie?: {
+        nom: string;
+    };
+    zone?: {
+        nom: string;
+    };
+}
+
+export interface Categorie {
+    idCategoriesObjets: number;
+    nom: string;
+}
+
+export interface Zone {
+    idZonesStade: number;
+    nom: string;
+}
+
 export interface PageProps extends InertiaPageProps {
     users: User[];
+    objets: ObjetConnecte[];
+    categories: Categorie[];
+    zones: Zone[];
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

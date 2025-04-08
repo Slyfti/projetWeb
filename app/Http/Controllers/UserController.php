@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\ConnexionUtilisateur;
+use App\Models\ObjetConnecte;
+use App\Models\CategorieObjet;
+use App\Models\ZoneStade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -22,12 +25,18 @@ class UserController extends Controller
     {
         try {
             return Inertia::render('Dashboard', [
-                'users' => $this->getUsers()
+                'users' => $this->getUsers(),
+                'objets' => ObjetConnecte::with(['categorie', 'zone'])->get(),
+                'categories' => CategorieObjet::all(),
+                'zones' => ZoneStade::all()
             ]);
         } catch (\Exception $e) {
-            Log::error('Error retrieving users:', ['error' => $e->getMessage()]);
+            Log::error('Error retrieving data:', ['error' => $e->getMessage()]);
             return Inertia::render('Dashboard', [
-                'users' => []
+                'users' => [],
+                'objets' => [],
+                'categories' => [],
+                'zones' => []
             ]);
         }
     }

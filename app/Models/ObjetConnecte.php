@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ObjetConnecte extends Model
 {
@@ -28,14 +29,24 @@ class ObjetConnecte extends Model
         'idZone'
     ];
 
-    public function categorie()
+    protected $casts = [
+        'niveauBatterie' => 'float',
+        'puissance' => 'float',
+        'consommationActuelle' => 'float',
+        'dureeVieEstimee' => 'float',
+        'derniereInteraction' => 'datetime',
+        'dateInstallation' => 'date',
+        'derniereMaintenance' => 'date'
+    ];
+
+    public function categorie(): BelongsTo
     {
-        return $this->belongsTo(CategorieObjet::class, 'idCategorie');
+        return $this->belongsTo(CategorieObjet::class, 'idCategorie', 'idCategoriesObjets');
     }
 
-    public function zone()
+    public function zone(): BelongsTo
     {
-        return $this->belongsTo(ZoneStade::class, 'idZone');
+        return $this->belongsTo(ZoneStade::class, 'idZone', 'idZonesStade');
     }
 
     public function historiques()

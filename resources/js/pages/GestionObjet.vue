@@ -25,22 +25,9 @@ const activeTab = ref('users');
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <Tabs v-model="activeTab" class="w-full">
-                <TabsList class="grid w-full grid-cols-2">
-                    <TabsTrigger value="users">Utilisateurs</TabsTrigger>
-                    <TabsTrigger value="objects">Objets Connectés</TabsTrigger>
-                </TabsList>
-                <TabsContent value="users">
-                    <div class="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <UserManagement :users="users" />
-                    </div>
-                </TabsContent>
-                <TabsContent value="objects">
                     <div class="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                         <ObjectManagement :objets="objets" :categories="categories" :zones="zones" />
                     </div>
-                </TabsContent>
-            </Tabs>
         </div>
     </AppLayout>
 </template>

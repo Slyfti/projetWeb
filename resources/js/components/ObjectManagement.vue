@@ -1,0 +1,452 @@
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useForm, router } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import InputError from '@/components/InputError.vue';
+
+interface ObjetConnecte {
+    idObjetsConnectes: number;
+    nom: string;
+    idCategorie: number;
+    descriptionObjetsConnectes: string;
+    etat: 'Actif' | 'Inactif' | 'Maintenance';
+    mode: 'Automatique' | 'Manuel';
+    connectivite: string;
+    niveauBatterie: number;
+    derniereInteraction: string;
+    puissance: number;
+    consommationActuelle: number;
+    dureeVieEstimee: number;
+    dateInstallation: string;
+    derniereMaintenance: string;
+    idZone: number;
+    categorie?: {
+        nom: string;
+    };
+    zone?: {
+        nom: string;
+    };
+}
+
+interface Categorie {
+    idCategoriesObjets: number;
+    nom: string;
+}
+
+interface Zone {
+    idZonesStade: number;
+    nom: string;
+}
+
+const props = defineProps<{
+    objets: ObjetConnecte[];
+    categories: Categorie[];
+    zones: Zone[];
+}>();
+
+const localObjets = ref<ObjetConnecte[]>([]);
+const selectedObjet = ref<ObjetConnecte | null>(null);
+const showObjectForm = ref(false);
+
+// Mettre à jour les objets locaux quand les props changent
+watch(() => props.objets, (newObjets) => {
+    localObjets.value = [...newObjets];
+}, { immediate: true });
+
+const form = useForm({
+    nom: '',
+    idCategorie: '',
+    descriptionObjetsConnectes: '',
+    etat: 'Actif',
+    mode: 'Automatique',
+    connectivite: '',
+    niveauBatterie: '',
+    puissance: '',
+    consommationActuelle: '',
+    dureeVieEstimee: '',
+    dateInstallation: '',
+    derniereMaintenance: '',
+    derniereInteraction: new Date().toISOString().split('T')[0],
+    idZone: ''
+});
+
+const createObject = () => {
+    form.post('/objets-connectes', {
+        onSuccess: () => {
+            showObjectForm.value = false;
+            form.reset();
+            router.visit('/dashboard', { preserveScroll: true });
+        },
+        onError: () => {
+            console.error('Erreur lors de la création de l\'objet');
+        }
+    });
+};
+
+const deleteObject = (objet: ObjetConnecte) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cet objet ?')) return;
+
+    router.delete(`/objets-connectes/${objet.idObjetsConnectes}`, {
+        onSuccess: () => {
+            console.log('Objet supprimé avec succès');
+            router.visit('/dashboard', { preserveScroll: true });
+        },
+        onError: () => {
+            console.error('Erreur lors de la suppression de l\'objet');
+        }
+    });
+};
+
+const updateObject = () => {
+    if (!selectedObjet.value) return;
+
+    form.put(`/objets-connectes/${selectedObjet.value.idObjetsConnectes}`, {
+        onSuccess: () => {
+            showObjectForm.value = false;
+            form.reset();
+            router.visit('/dashboard', { preserveScroll: true });
+        },
+        onError: () => {
+            console.error('Erreur lors de la mise à jour de l\'objet');
+        }
+    });
+};
+
+const editObject = (objet: ObjetConnecte) => {
+    selectedObjet.value = objet;
+    form.nom = objet.nom;
+    form.idCategorie = objet.idCategorie.toString();
+    form.descriptionObjetsConnectes = objet.descriptionObjetsConnectes;
+    form.etat = objet.etat;
+    form.mode = objet.mode;
+    form.connectivite = objet.connectivite;
+    form.niveauBatterie = objet.niveauBatterie.toString();
+    form.puissance = objet.puissance.toString();
+    form.consommationActuelle = objet.consommationActuelle.toString();
+    form.dureeVieEstimee = objet.dureeVieEstimee.toString();
+    form.dateInstallation = objet.dateInstallation;
+    form.derniereMaintenance = objet.derniereMaintenance;
+    form.derniereInteraction = objet.derniereInteraction;
+    form.idZone = objet.idZone.toString();
+    showObjectForm.value = true;
+};
+
+const resetForm = () => {
+    selectedObjet.value = null;
+    form.reset();
+    form.etat = 'Actif';
+    form.mode = 'Automatique';
+    form.niveauBatterie = '';
+    form.derniereInteraction = new Date().toISOString().split('T')[0];
+};
+
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+};
+</script>
+
+<template>
+    <div class="p-4">
+        <div class="mb-4 flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Gestion des Objets Connectés</h2>
+            <Button @click="resetForm(); showObjectForm = true">Ajouter un objet</Button>
+        </div>
+
+        <div class="grid gap-4">
+            <div v-for="objet in localObjets" :key="objet.idObjetsConnectes" 
+                class="p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                    <div class="w-full">
+                        <div class="space-y-2">
+                            <div>
+                                <h3 class="font-semibold">{{ objet.nom }}</h3>
+                                <p class="text-sm text-gray-500">{{ objet.descriptionObjetsConnectes }}</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-8">
+                                <div class="w-full sm:w-1/2">
+                                    <h4 class="font-medium text-gray-500 mb-2">Informations générales</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div>
+                                            <span class="font-medium">Catégorie : </span>
+                                            <span>{{ objet.categorie?.nom }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Zone : </span>
+                                            <span>{{ objet.zone?.nom }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">État : </span>
+                                            <span :class="{
+                                                'text-green-600': objet.etat === 'Actif',
+                                                'text-red-600': objet.etat === 'Inactif',
+                                                'text-yellow-600': objet.etat === 'Maintenance'
+                                            }">{{ objet.etat }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Mode : </span>
+                                            <span>{{ objet.mode }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="w-full sm:w-1/2">
+                                    <h4 class="font-medium text-gray-500 mb-2">Spécifications techniques</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div>
+                                            <span class="font-medium">Niveau de batterie : </span>
+                                            <span>{{ objet.niveauBatterie }}%</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Puissance : </span>
+                                            <span>{{ objet.puissance }}W</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Consommation actuelle : </span>
+                                            <span>{{ objet.consommationActuelle }}W</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Durée de vie estimée : </span>
+                                            <span>{{ objet.dureeVieEstimee }}h</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Dernière interaction : </span>
+                                            <span>{{ formatDate(objet.derniereInteraction) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 items-center whitespace-nowrap">
+                        <Button variant="outline" size="sm" 
+                            @click="editObject(objet)">
+                            Modifier
+                        </Button>
+                        <Button variant="destructive" size="sm" 
+                            @click="deleteObject(objet)">
+                            Supprimer
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Objet -->
+        <Dialog v-model:open="showObjectForm">
+            <DialogContent class="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>
+                        {{ selectedObjet ? 'Modifier' : 'Ajouter' }} un objet connecté
+                    </DialogTitle>
+                </DialogHeader>
+                <Form @submit="selectedObjet ? updateObject() : createObject()" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Nom -->
+                        <FormField name="nom" class="col-span-2">
+                            <FormLabel>Nom<InputError :message="form.errors.nom" /></FormLabel>
+                            <FormControl>
+                                <Input v-model="form.nom" required placeholder="Nom de l'objet" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Catégorie -->
+                        <FormField name="idCategorie" class="col-span-2">
+                            <FormLabel>Catégorie<InputError :message="form.errors.idCategorie" /></FormLabel>
+                            <Select v-model="form.idCategorie" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner une catégorie" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem v-for="categorie in categories" 
+                                            :key="categorie.idCategoriesObjets" 
+                                            :value="categorie.idCategoriesObjets">
+                                            {{ categorie.nom }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </FormField>
+
+                        <!-- Description -->
+                        <FormField name="descriptionObjetsConnectes" class="col-span-2">
+                            <FormLabel>Description<InputError :message="form.errors.descriptionObjetsConnectes" /></FormLabel>
+                            <FormControl>
+                                <Input v-model="form.descriptionObjetsConnectes" required placeholder="Description de l'objet" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- État -->
+                        <FormField name="etat">
+                            <FormLabel>État<InputError :message="form.errors.etat" /></FormLabel>
+                            <Select v-model="form.etat" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner un état" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="Actif">Actif</SelectItem>
+                                        <SelectItem value="Inactif">Inactif</SelectItem>
+                                        <SelectItem value="Maintenance">Maintenance</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </FormField>
+
+                        <!-- Mode -->
+                        <FormField name="mode">
+                            <FormLabel>Mode<InputError :message="form.errors.mode" /></FormLabel>
+                            <Select v-model="form.mode" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner un mode" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="Automatique">Automatique</SelectItem>
+                                        <SelectItem value="Manuel">Manuel</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </FormField>
+
+                        <!-- Connectivité -->
+                        <FormField name="connectivite" class="col-span-2">
+                            <FormLabel>Connectivité<InputError :message="form.errors.connectivite" /></FormLabel>
+                            <FormControl>
+                                <Input v-model="form.connectivite" required placeholder="Type de connectivité" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Niveau de batterie -->
+                        <FormField name="niveauBatterie">
+                            <FormLabel>Niveau de batterie (%)<InputError :message="form.errors.niveauBatterie" /></FormLabel>
+                            <FormControl>
+                                <Input type="number" v-model="form.niveauBatterie" min="0" max="100" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Puissance -->
+                        <FormField name="puissance">
+                            <FormLabel>Puissance (W)<InputError :message="form.errors.puissance" /></FormLabel>
+                            <FormControl>
+                                <Input type="number" v-model="form.puissance" min="0" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Consommation actuelle -->
+                        <FormField name="consommationActuelle">
+                            <FormLabel>Consommation actuelle (W)<InputError :message="form.errors.consommationActuelle" /></FormLabel>
+                            <FormControl>
+                                <Input type="number" v-model="form.consommationActuelle" min="0" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Durée de vie estimée -->
+                        <FormField name="dureeVieEstimee">
+                            <FormLabel>Durée de vie estimée (h)<InputError :message="form.errors.dureeVieEstimee" /></FormLabel>
+                            <FormControl>
+                                <Input type="number" v-model="form.dureeVieEstimee" min="0" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Date d'installation -->
+                        <FormField name="dateInstallation">
+                            <FormLabel>Date d'installation<InputError :message="form.errors.dateInstallation" /></FormLabel>
+                            <FormControl>
+                                <Input type="date" v-model="form.dateInstallation" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Dernière maintenance -->
+                        <FormField name="derniereMaintenance">
+                            <FormLabel>Dernière maintenance<InputError :message="form.errors.derniereMaintenance" /></FormLabel>
+                            <FormControl>
+                                <Input type="date" v-model="form.derniereMaintenance" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Dernière interaction -->
+                        <FormField name="derniereInteraction">
+                            <FormLabel>Dernière interaction<InputError :message="form.errors.derniereInteraction" /></FormLabel>
+                            <FormControl>
+                                <Input type="date" v-model="form.derniereInteraction" />
+                            </FormControl>
+                        </FormField>
+
+                        <!-- Zone -->
+                        <FormField name="idZone" class="col-span-2">
+                            <FormLabel>Zone<InputError :message="form.errors.idZone" /></FormLabel>
+                            <Select v-model="form.idZone" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Sélectionner une zone" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem v-for="zone in zones" 
+                                            :key="zone.idZonesStade" 
+                                            :value="zone.idZonesStade">
+                                            {{ zone.nom }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </FormField>
+                    </div>
+
+                    <div class="mt-4 flex justify-end gap-2">
+                        <Button type="button" variant="outline" 
+                            @click="resetForm(); showObjectForm = false">
+                            Annuler
+                        </Button>
+                        <Button type="submit" :disabled="form.processing">
+                            {{ selectedObjet ? 'Modifier' : 'Ajouter' }}
+                        </Button>
+                    </div>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    </div>
+</template>
+
+<style scoped>
+:deep(.select-trigger) {
+    height: 2.25rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    font-size: 0.875rem !important;
+}
+
+/* Style pour le formulaire */
+:deep(.dialog-content) {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+</style> 
