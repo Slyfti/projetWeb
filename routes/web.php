@@ -16,6 +16,14 @@ Route::get('/', function () {
 
 // Routes pour le module Information (visiteurs)
 Route::prefix('information')->group(function () {
+    // Routes pour les services
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/restauration', [ServiceController::class, 'restauration'])->name('restauration.index');
+    Route::get('/vip', [ServiceController::class, 'vip'])->name('vip.index');
+    Route::get('/securite', [ServiceController::class, 'securite'])->name('securite.index');
+    Route::get('/medical', [ServiceController::class, 'medical'])->name('medical.index');
+    Route::get('/pmr', [ServiceController::class, 'pmr'])->name('pmr.index');
+    
     // Routes pour les événements
     Route::get('/evenements', [EvenementsController::class, 'index'])->name('evenements.index');
     Route::get('/evenements/{evenement}', [EvenementsController::class, 'show'])->name('evenements.show');
