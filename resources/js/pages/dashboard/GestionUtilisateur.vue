@@ -21,13 +21,13 @@ const activeTab = ref('users');
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Dashboard - Utilisateurs" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                    <div class="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <ObjectManagement :objets="objets" :categories="categories" :zones="zones" />
-                    </div>
+            <div class="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                <UserManagement :users="users" />
+            </div>
         </div>
     </AppLayout>
 </template>

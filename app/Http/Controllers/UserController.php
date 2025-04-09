@@ -37,7 +37,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            return Inertia::render('Dashboard', [
+            return Inertia::render('dashboard/GestionUtilisateur', [
                 'users' => $this->getUsers(),
                 'objets' => ObjetConnecte::with(['categorie', 'zone'])->get(),
                 'categories' => CategorieObjet::all(),
@@ -45,7 +45,7 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Error retrieving data:', ['error' => $e->getMessage()]);
-            return Inertia::render('Dashboard', [
+            return Inertia::render('dashboard/GestionUtilisateur', [
                 'users' => [],
                 'objets' => [],
                 'categories' => [],
@@ -159,7 +159,7 @@ class UserController extends Controller
             ->orderBy('dateConnexion', 'desc')
             ->get();
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('GestionUtilisateur', [
             'users' => $this->getUsers(),
             'connexions' => $connexions
         ]);

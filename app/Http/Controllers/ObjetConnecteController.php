@@ -19,7 +19,7 @@ class ObjetConnecteController extends Controller
         $categories = CategorieObjet::all();
         $zones = ZoneStade::all();
 
-        return Inertia::render('ObjectManagement', [
+        return Inertia::render('dashboard/GestionObjet', [
             'objets' => $objets,
             'categories' => $categories,
             'zones' => $zones,

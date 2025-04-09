@@ -40,7 +40,10 @@ Route::prefix('information')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard et gestion des utilisateurs
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/utilisateurs', [UserController::class, 'index'])->name('utilisateurs');
+    Route::get('/dashboard/objets', [ObjetConnecteController::class, 'index'])->name('objets');
+    Route::redirect("/dashboard","/dashboard/utilisateurs")->name("dashboard");
+
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
