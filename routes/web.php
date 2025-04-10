@@ -10,6 +10,7 @@ use App\Http\Controllers\EvenementsController;
 use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ObjetConnecteController;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -62,6 +63,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/objets-connectes', [ObjetConnecteController::class, 'store'])->name('objets-connectes.store');
     Route::put('/objets-connectes/{objet}', [ObjetConnecteController::class, 'update'])->name('objets-connectes.update');
     Route::delete('/objets-connectes/{objet}', [ObjetConnecteController::class, 'destroy'])->name('objets-connectes.destroy');
+});
+
+// Route de test pour l'envoi d'emails
+Route::get('/test-email', function() {
+    try {
+        Mail::raw('Test email from Astrosphère', function($message) {
+            $message->to('stade.astrosphere@gmail.com')
+                    ->subject('Test Email from Astrosphère');
+        });
+        return 'Email envoyé avec succès!';
+    } catch (\Exception $e) {
+        return 'Erreur lors de l\'envoi de l\'email: ' . $e->getMessage();
+    }
 });
 
 require __DIR__.'/settings.php';

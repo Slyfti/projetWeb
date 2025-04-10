@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogSuccessfulLogin;
+use App\Listeners\SendCustomEmailVerificationNotification;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -17,10 +18,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Login::class => [
-            \App\Listeners\LogSuccessfulLogin::class,
+            LogSuccessfulLogin::class,
         ],
         Registered::class => [
-            SendEmailVerificationNotification::class,
+            SendCustomEmailVerificationNotification::class,
         ],
     ];
 
