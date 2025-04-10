@@ -97,32 +97,40 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'pseudo' => 'unique:utilisateurs,pseudo,' . $user->id,
-            'email' => 'email|unique:utilisateurs,email,' . $user->id,
+            'pseudo' => 'required|unique:utilisateurs,pseudo,' . $user->id,
+            'email' => 'required|email|unique:utilisateurs,email,' . $user->id,
             'nom' => 'nullable|string',
             'prenom' => 'nullable|string',
             'dateNaissance' => 'nullable|date',
             'sexe' => 'nullable|in:Homme,Femme,Autre',
-            'typeMembre' => 'in:Spectateur,Athlète,Entraîneur,Personnel technique,Sécurité,Administratif',
-            'niveau' => 'in:Débutant,Intermédiaire,Avancé,Expert',
+            'typeMembre' => 'required|in:Spectateur,Athlète,Entraîneur,Personnel technique,Sécurité,Administratif',
+            'niveau' => 'required|in:Débutant,Intermédiaire,Avancé,Expert',
             'points' => 'required|integer|min:0'
         ], [
+            'pseudo.required' => 'Le pseudo est obligatoire',
             'pseudo.unique' => 'Ce pseudo est déjà utilisé',
+            'email.required' => 'L\'adresse email est obligatoire',
             'email.email' => 'L\'adresse email n\'est pas valide',
             'email.unique' => 'Cette adresse email est déjà utilisée',
             'nom.string' => 'Le nom doit être une chaîne de caractères',
             'prenom.string' => 'Le prénom doit être une chaîne de caractères',
             'dateNaissance.date' => 'La date de naissance n\'est pas valide',
             'sexe.in' => 'Le sexe doit être Homme, Femme ou Autre',
+            'typeMembre.required' => 'Le type de membre est obligatoire',
             'typeMembre.in' => 'Le type de membre n\'est pas valide',
+            'niveau.required' => 'Le niveau est obligatoire',
             'niveau.in' => 'Le niveau n\'est pas valide',
             'points.required' => 'Le nombre de points est obligatoire',
             'points.integer' => 'Le nombre de points doit être un nombre entier',
             'points.min' => 'Le nombre de points ne peut pas être négatif'
         ]);
 
-        if ($request->has('password')) {
+        // Ne mettre à jour le mot de passe que s'il est fourni
+        if ($request->filled('password')) {
             $validated['password'] = Hash::make($request->password);
+        } else {
+            // Conserver le mot de passe existant
+            unset($validated['password']);
         }
 
         $user->update($validated);
