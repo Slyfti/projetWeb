@@ -19,6 +19,14 @@ return new class extends Migration
             $table->string('equipeExterieur', 100);
             $table->float('prix');
             $table->integer('Disponiblilite');
+            $table->string('lieu', 100);
+            $table->string('meteo', 100);
+            $table->string('ligue', 100);
+            $table->text('consignes_securite');
+            $table->text('activites_autour');
+            $table->string('logo_equipe_domicile');
+            $table->string('logo_equipe_exterieur');
+            $table->string('resultat', 50)->nullable();
             $table->timestamps();
         });
     }
