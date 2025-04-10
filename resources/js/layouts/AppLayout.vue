@@ -14,7 +14,7 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-    <div class="h-full flex flex-col">
+    <div class="h-full flex flex-col ">
         <main class="flex-grow">
             <AppLayout :breadcrumbs="breadcrumbs">
                 <slot />

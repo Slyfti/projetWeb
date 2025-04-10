@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,6 +7,7 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import {
     Form,
@@ -26,6 +27,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import InputError from '@/components/InputError.vue';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/toast/use-toast';
 
 interface ObjetConnecte {
     idObjetsConnectes: number;
@@ -67,9 +72,11 @@ const props = defineProps<{
     zones: Zone[];
 }>();
 
+const { toast } = useToast();
 const localObjets = ref<ObjetConnecte[]>([]);
 const selectedObjet = ref<ObjetConnecte | null>(null);
 const showObjectForm = ref(false);
+const search = ref('');
 
 // Mettre à jour les objets locaux quand les props changent
 watch(() => props.objets, (newObjets) => {
@@ -93,12 +100,31 @@ const form = useForm({
     idZone: ''
 });
 
+const filteredObjets = computed(() => {
+    if (!search.value) return props.objets;
+    const searchLower = search.value.toLowerCase();
+    return props.objets.filter(objet => 
+        objet.nom.toLowerCase().includes(searchLower) ||
+        objet.descriptionObjetsConnectes.toLowerCase().includes(searchLower) ||
+        objet.connectivite.toLowerCase().includes(searchLower) ||
+        objet.categorie?.nom.toLowerCase().includes(searchLower) ||
+        objet.zone?.nom.toLowerCase().includes(searchLower)
+    );
+});
+
+const handleSearch = () => {
+    router.get(route('objets-connectes.index'), { search: search.value }, {
+        preserveState: true,
+        preserveScroll: true
+    });
+};
+
 const createObject = () => {
     form.post('/objets-connectes', {
         onSuccess: () => {
             showObjectForm.value = false;
             form.reset();
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/objets', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la création de l\'objet');
@@ -112,7 +138,7 @@ const deleteObject = (objet: ObjetConnecte) => {
     router.delete(`/objets-connectes/${objet.idObjetsConnectes}`, {
         onSuccess: () => {
             console.log('Objet supprimé avec succès');
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/objets', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la suppression de l\'objet');
@@ -127,7 +153,7 @@ const updateObject = () => {
         onSuccess: () => {
             showObjectForm.value = false;
             form.reset();
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/objets', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la mise à jour de l\'objet');
@@ -139,17 +165,17 @@ const editObject = (objet: ObjetConnecte) => {
     selectedObjet.value = objet;
     form.nom = objet.nom;
     form.idCategorie = objet.idCategorie.toString();
-    form.descriptionObjetsConnectes = objet.descriptionObjetsConnectes;
+    form.descriptionObjetsConnectes = objet.descriptionObjetsConnectes || '';
     form.etat = objet.etat;
     form.mode = objet.mode;
-    form.connectivite = objet.connectivite;
+    form.connectivite = objet.connectivite || '';
     form.niveauBatterie = objet.niveauBatterie.toString();
     form.puissance = objet.puissance.toString();
     form.consommationActuelle = objet.consommationActuelle.toString();
     form.dureeVieEstimee = objet.dureeVieEstimee.toString();
-    form.dateInstallation = objet.dateInstallation;
-    form.derniereMaintenance = objet.derniereMaintenance;
-    form.derniereInteraction = objet.derniereInteraction;
+    form.dateInstallation = objet.dateInstallation ? new Date(objet.dateInstallation).toISOString().split('T')[0] : '';
+    form.derniereMaintenance = objet.derniereMaintenance ? new Date(objet.derniereMaintenance).toISOString().split('T')[0] : '';
+    form.derniereInteraction = objet.derniereInteraction ? new Date(objet.derniereInteraction).toISOString().split('T')[0] : '';
     form.idZone = objet.idZone.toString();
     showObjectForm.value = true;
 };
@@ -174,15 +200,33 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-    <div class="p-4">
-        <div class="mb-4 flex justify-between items-center">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Gestion des Objets Connectés</h2>
-            <Button @click="resetForm(); showObjectForm = true">Ajouter un objet</Button>
+            <div class="flex gap-4">
+                <div class="relative">
+                    <Input
+                        v-model="search"
+                        placeholder="Rechercher un objet..."
+                        class="pr-10"
+                        @keyup.enter="handleSearch"
+                    />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        class="absolute right-0 top-0 h-full px-3"
+                        @click="handleSearch"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </Button>
+                </div>
+                <Button @click="resetForm(); showObjectForm = true">Ajouter un objet</Button>
+            </div>
         </div>
 
         <div class="grid gap-4">
-            <div v-for="objet in localObjets" :key="objet.idObjetsConnectes" 
-                class="p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+            <div v-for="objet in filteredObjets" :key="objet.idObjetsConnectes" 
+                class="p-4 rounded-lg border">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
                         <div class="space-y-2">
@@ -288,7 +332,7 @@ const formatDate = (dateString: string): string => {
                                     <SelectGroup>
                                         <SelectItem v-for="categorie in categories" 
                                             :key="categorie.idCategoriesObjets" 
-                                            :value="categorie.idCategoriesObjets">
+                                            :value="categorie.idCategoriesObjets.toString()">
                                             {{ categorie.nom }}
                                         </SelectItem>
                                     </SelectGroup>
@@ -412,7 +456,7 @@ const formatDate = (dateString: string): string => {
                                     <SelectGroup>
                                         <SelectItem v-for="zone in zones" 
                                             :key="zone.idZonesStade" 
-                                            :value="zone.idZonesStade">
+                                            :value="zone.idZonesStade.toString()">
                                             {{ zone.nom }}
                                         </SelectItem>
                                     </SelectGroup>

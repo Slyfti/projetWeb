@@ -27,31 +27,28 @@ class UserController extends Controller
         }
     }
 
-    private function getUsers()
+    private function getUsers($search = null)
     {
-        return User::select('id', 'pseudo', 'email', 'nom', 'prenom', 'niveau', 'points', 'typeMembre', 'sexe', 'dateNaissance', 'created_at')
-            ->orderBy('pseudo')
-            ->get();
+        $query = User::select('id', 'pseudo', 'email', 'nom', 'prenom', 'niveau', 'points', 'typeMembre', 'sexe', 'dateNaissance', 'created_at');
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('pseudo', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nom', 'like', "%{$search}%")
+                  ->orWhere('prenom', 'like', "%{$search}%");
+            });
+        }
+        
+        return $query->orderBy('pseudo')->get();
     }
 
     public function index()
     {
-        try {
-            return Inertia::render('dashboard/GestionUtilisateur', [
-                'users' => $this->getUsers(),
-                'objets' => ObjetConnecte::with(['categorie', 'zone'])->get(),
-                'categories' => CategorieObjet::all(),
-                'zones' => ZoneStade::all()
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error retrieving data:', ['error' => $e->getMessage()]);
-            return Inertia::render('dashboard/GestionUtilisateur', [
-                'users' => [],
-                'objets' => [],
-                'categories' => [],
-                'zones' => []
-            ]);
-        }
+        $users = User::all();
+        return Inertia::render('dashboard/GestionUtilisateur', [
+            'users' => $users
+        ]);
     }
 
     public function store(Request $request)

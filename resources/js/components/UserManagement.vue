@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { type User } from '@/types';
@@ -29,6 +29,10 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/toast/use-toast';
 
 interface ConnexionLog {
     idConnexionsUtilisateurs: number;
@@ -48,11 +52,27 @@ const props = defineProps<{
     users: User[]
 }>();
 
+const { toast } = useToast();
 const localUsers = ref<User[]>([]);
 const selectedUser = ref<User | null>(null);
 const showUserForm = ref(false);
 const showLoginHistory = ref(false);
 const loginHistory = ref<ConnexionLog[]>([]);
+const search = ref('');
+const isAddDialogOpen = ref(false);
+const isEditDialogOpen = ref(false);
+const newUser = ref({
+    pseudo: '',
+    email: '',
+    password: '',
+    nom: '',
+    prenom: '',
+    dateNaissance: '',
+    sexe: '',
+    typeMembre: '',
+    niveau: '',
+    points: 0
+});
 
 // Mettre à jour les utilisateurs locaux quand les props changent
 watch(() => props.users, (newUsers) => {
@@ -73,12 +93,23 @@ const form = useForm({
     points: 0
 });
 
+const filteredUsers = computed(() => {
+    if (!search.value) return localUsers.value;
+    const searchLower = search.value.toLowerCase();
+    return localUsers.value.filter(user => 
+        user.pseudo.toLowerCase().includes(searchLower) ||
+        user.email.toLowerCase().includes(searchLower) ||
+        user.nom.toLowerCase().includes(searchLower) ||
+        user.prenom.toLowerCase().includes(searchLower)
+    );
+});
+
 const createUser = () => {
     form.post('/users', {
         onSuccess: () => {
             showUserForm.value = false;
             form.reset();
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/utilisateurs', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la création de l\'utilisateur');
@@ -92,7 +123,7 @@ const deleteUser = (user: User) => {
     router.delete(`/users/${user.id}`, {
         onSuccess: () => {
             console.log('User supprimé avec succès');
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/utilisateurs', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la suppression de l\'utilisateur');
@@ -107,7 +138,7 @@ const updateUser = () => {
         onSuccess: () => {
             showUserForm.value = false;
             form.reset();
-            router.visit('/dashboard', { preserveScroll: true });
+            router.visit('/dashboard/utilisateurs', { preserveScroll: true });
         },
         onError: () => {
             console.error('Erreur lors de la mise à jour de l\'utilisateur');
@@ -118,10 +149,18 @@ const updateUser = () => {
 const viewLoginHistory = (user: User) => {
     router.get(`/users/${user.id}/login-history`, {}, {
         preserveState: true,
-        onSuccess: (page: any) => {
-            loginHistory.value = page.props.connexions as ConnexionLog[];
+        onSuccess: (page) => {
+            loginHistory.value = page.props.connexions || [];
             showLoginHistory.value = true;
         },
+        onError: () => {
+            console.error('Erreur lors de la récupération de l\'historique');
+            toast({
+                title: "Erreur",
+                description: "Impossible de récupérer l'historique des connexions",
+                variant: "destructive"
+            });
+        }
     });
 };
 
@@ -161,18 +200,45 @@ const formatDate = (dateString: string): string => {
         minute: '2-digit'
     });
 };
+
+const handleSearch = () => {
+    router.get(route('utilisateurs'), { search: search.value }, {
+        preserveState: true,
+        preserveScroll: true
+    });
+};
 </script>
 
 <template>
-    <div class="p-4">
-        <div class="mb-4 flex justify-between items-center">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Gestion des Utilisateurs</h2>
-            <Button @click="resetForm(); showUserForm = true">Ajouter un utilisateur</Button>
+            <div class="flex gap-4">
+                <div class="relative">
+                    <Input
+                        v-model="search"
+                        placeholder="Rechercher un utilisateur..."
+                        class="pr-10"
+                        @keyup.enter="handleSearch"
+                    />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        class="absolute right-0 top-0 h-full px-3"
+                        @click="handleSearch"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </Button>
+                </div>
+                <Button @click="showUserForm = true">
+                    Ajouter un utilisateur
+                </Button>
+            </div>
         </div>
 
         <div class="grid gap-4">
-            <div v-for="user in localUsers" :key="user.id" 
-                class="p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+            <div v-for="user in filteredUsers" :key="user.id" 
+                class="p-4 rounded-lg border">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
                         <div class="space-y-2">

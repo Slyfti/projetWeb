@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './components/tabs.css';
-
 body,
 html {
     --font-sans:

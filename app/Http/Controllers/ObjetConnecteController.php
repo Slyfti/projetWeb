@@ -13,9 +13,27 @@ use Illuminate\Support\Facades\Auth;
 
 class ObjetConnecteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $objets = ObjetConnecte::with(['categorie', 'zone'])->get();
+        $search = $request->input('search');
+        
+        $query = ObjetConnecte::with(['categorie', 'zone']);
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('descriptionObjetsConnectes', 'like', "%{$search}%")
+                  ->orWhere('connectivite', 'like', "%{$search}%")
+                  ->orWhereHas('categorie', function($q) use ($search) {
+                      $q->where('nomCategorie', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('zone', function($q) use ($search) {
+                      $q->where('nomZone', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        $objets = $query->get();
         $categories = CategorieObjet::all();
         $zones = ZoneStade::all();
 
@@ -23,6 +41,7 @@ class ObjetConnecteController extends Controller
             'objets' => $objets,
             'categories' => $categories,
             'zones' => $zones,
+            'search' => $search
         ]);
     }
 
