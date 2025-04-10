@@ -156,7 +156,7 @@ class UserController extends Controller
             ->orderBy('dateConnexion', 'desc')
             ->get();
 
-        return Inertia::render('GestionUtilisateur', [
+        return Inertia::render('dashboard/GestionUtilisateur', [
             'users' => $this->getUsers(),
             'connexions' => $connexions
         ]);
