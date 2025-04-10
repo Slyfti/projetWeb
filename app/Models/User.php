@@ -13,6 +13,12 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
+    // Seuils de points pour chaque niveau
+    const SEUIL_DEBUTANT = 0;
+    const SEUIL_INTERMEDIAIRE = 100;
+    const SEUIL_AVANCE = 300;
+    const SEUIL_EXPERT = 600;
+
     protected $table = 'utilisateurs';
 
     protected $fillable = [
@@ -87,5 +93,39 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new CustomVerifyEmail);
+    }
+
+    /**
+     * Met à jour le niveau de l'utilisateur en fonction de ses points
+     */
+    public function updateNiveau()
+    {
+        $points = $this->points;
+        $nouveauNiveau = 'Débutant';
+
+        if ($points >= self::SEUIL_EXPERT) {
+            $nouveauNiveau = 'Expert';
+        } elseif ($points >= self::SEUIL_AVANCE) {
+            $nouveauNiveau = 'Avancé';
+        } elseif ($points >= self::SEUIL_INTERMEDIAIRE) {
+            $nouveauNiveau = 'Intermédiaire';
+        }
+
+        if ($this->niveau !== $nouveauNiveau) {
+            $this->niveau = $nouveauNiveau;
+            $this->save();
+        }
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($user) {
+            $user->updateNiveau();
+        });
     }
 }
