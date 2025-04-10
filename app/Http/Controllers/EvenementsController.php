@@ -90,17 +90,26 @@ class EvenementsController extends Controller
         return Inertia::render('information/evenements/EventDetails', [
             'evenement' => [
                 'id' => $evenement->id,
-                'titre' => $evenement->nomEvenement,
+                'titre' => $evenement->nom,
                 'date' => $evenement->dateEvenements,
                 'lieu' => $evenement->lieu,
                 'sport' => $evenement->typeEvents,
                 'meteo' => $evenement->meteo,
+                'ligue' => $evenement->ligue,
+                'description' => $evenement->descriptionEvenements,
+                'consignes_securite' => $evenement->consignes_securite,
+                'activites_autour' => $evenement->activites_autour,
                 'equipe_domicile' => [
-                    'nom' => $evenement->equipeDomicile
+                    'nom' => $evenement->equipeDomicile,
+                    'logo' => $evenement->logo_equipe_domicile
                 ],
                 'equipe_exterieur' => [
-                    'nom' => $evenement->equipeExterieur
-                ]
+                    'nom' => $evenement->equipeExterieur,
+                    'logo' => $evenement->logo_equipe_exterieur
+                ],
+                'resultat' => $evenement->resultat,
+                'prix' => $evenement->prix,
+                'disponibilite' => $evenement->Disponiblilite
             ]
         ]);
     }

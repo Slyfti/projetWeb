@@ -19,7 +19,15 @@ class Evenement extends Model
         'equipeDomicile',
         'equipeExterieur',
         'prix',
-        'Disponiblilite'
+        'Disponiblilite',
+        'lieu',
+        'meteo',
+        'ligue',
+        'consignes_securite',
+        'activites_autour',
+        'logo_equipe_domicile',
+        'logo_equipe_exterieur',
+        'resultat'
     ];
 
     protected $casts = [
