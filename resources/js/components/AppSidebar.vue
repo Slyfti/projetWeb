@@ -19,6 +19,11 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard/objets',
         icon: Globe,
     },
+    {
+        title: 'Événements',
+        href: '/dashboard/evenements',
+        icon: Calendar,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

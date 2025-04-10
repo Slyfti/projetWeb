@@ -92,20 +92,13 @@
                                     <div class="space-y-2 col-span-2">
                                         <label class="text-sm font-medium text-white tracking-[0.05em]">Prix (€)</label>
                                         <div class="px-2">
-                                            <SliderRoot
+                                            <Slider
                                                 v-model="filters.prix"
-                                                :default-value="[0, 300]"
                                                 :min="0"
                                                 :max="300"
                                                 :step="5"
                                                 class="relative flex w-full touch-none select-none items-center"
-                                            >
-                                                <SliderTrack class="relative h-2 w-full grow overflow-hidden rounded-full bg-indigo-900/30">
-                                                    <SliderRange class="absolute h-full bg-cyan-300" />
-                                                </SliderTrack>
-                                                <SliderThumb class="block h-5 w-5 rounded-full border-2 border-indigo-500/30 bg-indigo-900 text-white ring-offset-background transition-colors hover:bg-indigo-800 hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-                                                <SliderThumb class="block h-5 w-5 rounded-full border-2 border-indigo-500/30 bg-indigo-900 text-white ring-offset-background transition-colors hover:bg-indigo-800 hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-                                            </SliderRoot>
+                                            />
                                             <div class="mt-2 flex justify-between text-sm text-white/80">
                                                 <span>{{ filters.prix[0] }}€</span>
                                                 <span>{{ filters.prix[1] }}€</span>
@@ -318,10 +311,10 @@ import { fr } from 'date-fns/locale';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SliderRoot, SliderThumb, SliderTrack, SliderRange } from 'radix-vue';
+import Slider from '@/components/ui/slider/Slider.vue';
 import StadeImg from '@/../img/stade_neon.png';
 
 interface Props {

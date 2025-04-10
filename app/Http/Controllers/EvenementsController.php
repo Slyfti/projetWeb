@@ -6,6 +6,8 @@ use App\Models\Evenement;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActionUtilisateur;
 
 class EvenementsController extends Controller
 {
@@ -85,6 +87,14 @@ class EvenementsController extends Controller
         ]);
     }
 
+    public function adminIndex()
+    {
+        $evenements = Evenement::all();
+        return Inertia::render('dashboard/GestionEvenement', [
+            'evenements' => $evenements
+        ]);
+    }
+
     public function show(Evenement $evenement)
     {
         return Inertia::render('information/evenements/EventDetails', [
@@ -112,5 +122,115 @@ class EvenementsController extends Controller
                 'disponibilite' => $evenement->Disponiblilite
             ]
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:100',
+            'dateEvenements' => 'required|date',
+            'descriptionEvenements' => 'required|string',
+            'typeEvents' => 'required|string|max:100',
+            'equipeDomicile' => 'required|string|max:100',
+            'equipeExterieur' => 'required|string|max:100',
+            'prix' => 'required|numeric|min:0',
+            'Disponiblilite' => 'required|integer|min:0',
+            'lieu' => 'required|string|max:100',
+            'meteo' => 'nullable|string|max:100',
+            'ligue' => 'required|string|max:100',
+            'consignes_securite' => 'nullable|string',
+            'activites_autour' => 'nullable|string',
+            'logo_equipe_domicile' => 'nullable|string',
+            'logo_equipe_exterieur' => 'nullable|string',
+            'resultat' => 'nullable|string|max:50'
+        ]);
+
+        $evenement = Evenement::create($validated);
+
+        // Ajouter des points à l'utilisateur et enregistrer l'action
+        $user = Auth::user();
+        $pointsGagne = 15; // Points gagnés pour l'ajout d'un événement
+
+        // Mettre à jour les points de l'utilisateur
+        $user->points += $pointsGagne;
+        $user->save();
+
+        // Enregistrer l'action
+        ActionUtilisateur::create([
+            'idUtilisateur' => $user->id,
+            'typeAction' => 'Ajout',
+            'entiteCible' => 'Événement',
+            'idCible' => $evenement->idEvenements,
+            'pointsGagne' => $pointsGagne
+        ]);
+
+        return redirect()->back()->with('success', 'Événement créé avec succès. Vous avez gagné ' . $pointsGagne . ' points !');
+    }
+
+    public function update(Request $request, Evenement $evenement)
+    {
+        $validated = $request->validate([
+            'nom' => 'required|string|max:100',
+            'dateEvenements' => 'required|date',
+            'descriptionEvenements' => 'required|string',
+            'typeEvents' => 'required|string|max:100',
+            'equipeDomicile' => 'required|string|max:100',
+            'equipeExterieur' => 'required|string|max:100',
+            'prix' => 'required|numeric|min:0',
+            'Disponiblilite' => 'required|integer|min:0',
+            'lieu' => 'required|string|max:100',
+            'meteo' => 'nullable|string|max:100',
+            'ligue' => 'required|string|max:100',
+            'consignes_securite' => 'nullable|string',
+            'activites_autour' => 'nullable|string',
+            'logo_equipe_domicile' => 'nullable|string',
+            'logo_equipe_exterieur' => 'nullable|string',
+            'resultat' => 'nullable|string|max:50'
+        ]);
+
+        $evenement->update($validated);
+
+        // Ajouter des points à l'utilisateur et enregistrer l'action
+        $user = Auth::user();
+        $pointsGagne = 10; // Points gagnés pour la modification d'un événement
+
+        // Mettre à jour les points de l'utilisateur
+        $user->points += $pointsGagne;
+        $user->save();
+
+        // Enregistrer l'action
+        ActionUtilisateur::create([
+            'idUtilisateur' => $user->id,
+            'typeAction' => 'Modification',
+            'entiteCible' => 'Événement',
+            'idCible' => $evenement->idEvenements,
+            'pointsGagne' => $pointsGagne
+        ]);
+
+        return redirect()->back()->with('success', 'Événement modifié avec succès. Vous avez gagné ' . $pointsGagne . ' points !');
+    }
+
+    public function destroy(Evenement $evenement)
+    {
+        $evenement->delete();
+
+        // Ajouter des points à l'utilisateur et enregistrer l'action
+        $user = Auth::user();
+        $pointsGagne = 5; // Points gagnés pour la suppression d'un événement
+
+        // Mettre à jour les points de l'utilisateur
+        $user->points += $pointsGagne;
+        $user->save();
+
+        // Enregistrer l'action
+        ActionUtilisateur::create([
+            'idUtilisateur' => $user->id,
+            'typeAction' => 'Suppression',
+            'entiteCible' => 'Événement',
+            'idCible' => $evenement->idEvenements,
+            'pointsGagne' => $pointsGagne
+        ]);
+
+        return redirect()->back()->with('success', 'Événement supprimé avec succès. Vous avez gagné ' . $pointsGagne . ' points !');
     }
 } 

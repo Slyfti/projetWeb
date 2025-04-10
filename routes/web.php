@@ -42,12 +42,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard et gestion des utilisateurs
     Route::get('/dashboard/utilisateurs', [UserController::class, 'index'])->name('utilisateurs');
     Route::get('/dashboard/objets', [ObjetConnecteController::class, 'index'])->name('objets');
+    Route::get('/dashboard/evenements', [EvenementsController::class, 'adminIndex'])->name('evenements.admin');
     Route::redirect("/dashboard","/dashboard/utilisateurs")->name("dashboard");
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/users/{user}/login-history', [UserController::class, 'getLoginHistory'])->name('users.loginHistory');
+
+    // Routes pour la gestion des événements (admin)
+    Route::post('/evenements', [EvenementsController::class, 'store'])->name('evenements.store');
+    Route::put('/evenements/{evenement}', [EvenementsController::class, 'update'])->name('evenements.update');
+    Route::delete('/evenements/{evenement}', [EvenementsController::class, 'destroy'])->name('evenements.destroy');
 });
 
 Route::middleware(['auth'])->group(function () {
