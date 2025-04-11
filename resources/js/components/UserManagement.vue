@@ -248,7 +248,7 @@ const handleSearch = () => {
                 class="p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
-                        <div class="flex items-center gap-4 mb-4">
+                        <div class="flex items-start gap-4 mb-4">
                             <Avatar class="h-12 w-12">
                                 <AvatarImage :src="user.avatar || '/default-avatar.png'" />
                                 <AvatarFallback>{{ user.pseudo.charAt(0).toUpperCase() }}</AvatarFallback>
@@ -257,7 +257,7 @@ const handleSearch = () => {
                                 <h3 class="font-semibold text-white tracking-[0.05em]">{{ user.pseudo }}</h3>
                                 <p v-if="isAdmin" class="text-sm text-white/80 tracking-[0.05em]">{{ user.email }}</p>
                             </div>
-                            <div v-if="isAdmin" flex flex-col sm:flex-row gap-8">
+                            <div v-if="isAdmin" class="flex flex-col sm:flex-row gap-8">
                                 <div class="w-full sm:w-1/2">
                                     <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations personnelles</h4>
                                     <div class="space-y-2 text-sm">
@@ -283,8 +283,6 @@ const handleSearch = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
 
                                 <div class="w-full sm:w-1/2">
                                     <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations du compte</h4>
