@@ -382,15 +382,14 @@ const formatDate = (dateString: string) => {
                         <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Description et détails</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Description de l'événement</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">Description de l'événement</h4>
                                 <p class="text-[#E4F1F1]/80">{{ evenement.descriptionEvenements }}</p>
                             </div>
-
-                            <div v-if="evenement.activites_autour">
-                                <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Activités autour du stade</h3>
-                                <p class="text-[#E4F1F1]/80">{{ evenement.activites_autour }}</p>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">Activités autour du stade</h4>
+                                <p class="text-[#E4F1F1]/80">{{ evenement.activites_autour || 'Aucune activité spécifique prévue autour du stade.' }}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -402,70 +401,55 @@ const formatDate = (dateString: string) => {
                         <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Accès et transport</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-2 text-[#E4F1F1]">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7h1a1 1 0 011 1v6.05A2.5 2.5 0 0117.95 16H19a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
-                                </svg>
-                                <div>
-                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En voiture</h3>
-                                    <p class="text-[#E4F1F1]/80">Parking disponible sur place (tarif : 15€). Accès par l'autoroute A1, sortie 2 "Stade de France".</p>
-                                </div>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">En voiture</h4>
+                                <p class="text-[#E4F1F1]/80">Parking disponible sur place. Tarifs et réservation sur notre site.</p>
                             </div>
-
-                            <div class="flex items-start gap-2 text-[#E4F1F1]">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                                </svg>
-                                <div>
-                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En transport en commun</h3>
-                                    <p class="text-[#E4F1F1]/80">Métro ligne 13, station "Saint-Denis - Porte de Paris". RER B, station "La Plaine - Stade de France". Bus 139, 153, 173, 255.</p>
-                                </div>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">En transports en commun</h4>
+                                <p class="text-[#E4F1F1]/80">Métro ligne 13, station Saint-Denis - Porte de Paris. RER D, station Stade de France - Saint-Denis.</p>
                             </div>
-
-                            <div class="flex items-start gap-2 text-[#E4F1F1]">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.414 5a1 1 0 01-1.414 1.414L13 5.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 0112 2zm-7 7a1 1 0 01.707.293l.707.707L15.414 12a1 1 0 01-1.414 1.414L13 12.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 015 9z" clip-rule="evenodd" />
-                                </svg>
-                                <div>
-                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">À pied ou à vélo</h3>
-                                    <p class="text-[#E4F1F1]/80">Parcours fléché depuis le centre-ville (15 minutes à pied). Stationnement vélos disponible.</p>
-                                </div>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">À pied</h4>
+                                <p class="text-[#E4F1F1]/80">10 minutes depuis la station de métro Saint-Denis - Porte de Paris.</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">En vélo</h4>
+                                <p class="text-[#E4F1F1]/80">Parking vélo sécurisé disponible. Station Vélib' à proximité.</p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <!-- Bloc 6: Consignes de sécurité -->
+                <!-- Bloc 6: Sécurité et consignes -->
                 <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
                     <CardHeader>
-                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Consignes de sécurité</CardTitle>
+                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Sécurité et consignes</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div class="space-y-4">
-                            <div v-if="evenement.consignes_securite">
-                                <p class="text-[#E4F1F1]/80">{{ evenement.consignes_securite }}</p>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">Consignes de sécurité</h4>
+                                <p class="text-[#E4F1F1]/80">{{ evenement.consignes_securite || 'Aucune consigne de sécurité spécifique pour cet événement.' }}</p>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white/5 p-4 rounded-lg">
-                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Objets interdits</h3>
-                                    <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
-                                        <li>Bouteilles en verre</li>
-                                        <li>Objets contondants</li>
-                                        <li>Banderoles et drapeaux sur manche</li>
-                                        <li>Pétards et artifices</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-white/5 p-4 rounded-lg">
-                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Recommandations</h3>
-                                    <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
-                                        <li>Arrivez 30 minutes avant le début</li>
-                                        <li>Conservez votre billet sur vous</li>
-                                        <li>Respectez les zones assignées</li>
-                                        <li>En cas d'urgence, contactez un steward</li>
-                                    </ul>
-                                </div>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">Objets interdits</h4>
+                                <ul class="list-inside list-disc text-[#E4F1F1]/80">
+                                    <li>Objets tranchants ou contondants</li>
+                                    <li>Bouteilles en verre</li>
+                                    <li>Objets pyrotechniques</li>
+                                    <li>Banderoles ou drapeaux avec manche</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-2 text-[#E4F1F1]">Recommandations</h4>
+                                <ul class="list-inside list-disc text-[#E4F1F1]/80">
+                                    <li>Arrivez au moins 1h avant le début de l'événement</li>
+                                    <li>Présentez votre billet sur votre smartphone ou imprimé</li>
+                                    <li>Respectez les consignes des agents de sécurité</li>
+                                    <li>En cas d'urgence, contactez le personnel de sécurité</li>
+                                </ul>
                             </div>
                         </div>
                     </CardContent>
@@ -481,7 +465,7 @@ const formatDate = (dateString: string) => {
                             <div class="md:w-1/3">
                                 <div class="bg-white/5 p-4 rounded-lg h-full">
                                     <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Adresse</h3>
-                                    <p class="text-[#E4F1F1]/80 mb-4">{{ getAdresse(evenement.lieu) }}</p>
+                                    <p class="text-[#E4F1F1]/80 mb-4">{{ evenement.lieu }}</p>
                                     <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Horaires d'ouverture</h3>
                                     <p class="text-[#E4F1F1]/80">Portes ouvertes 2h avant le début de l'événement</p>
                                 </div>
