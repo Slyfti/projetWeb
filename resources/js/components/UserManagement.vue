@@ -210,27 +210,30 @@ const handleSearch = () => {
 </script>
 
 <template>
-    <div class="p-6">
+    <div class="p-6 bg-gray-900 bg-opacity-90 shadow-md">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Gestion des Utilisateurs</h2>
+            <h2 class="text-2xl font-bold text-white tracking-[0.05em]">Gestion des Utilisateurs</h2>
             <div class="flex gap-4">
                 <div class="relative">
                     <Input
                         v-model="search"
                         placeholder="Rechercher un utilisateur..."
-                        class="pr-10"
+                        class="pr-10 bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
                         @keyup.enter="handleSearch"
                     />
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="absolute right-0 top-0 h-full px-3"
+                        class="absolute right-0 top-0 h-full px-3 text-white hover:text-cyan-300"
                         @click="handleSearch"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </Button>
                 </div>
-                <Button @click="showUserForm = true">
+                <Button 
+                    @click="showUserForm = true"
+                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
+                >
                     Ajouter un utilisateur
                 </Button>
             </div>
@@ -238,59 +241,59 @@ const handleSearch = () => {
 
         <div class="grid gap-4">
             <div v-for="user in filteredUsers" :key="user.id" 
-                class="p-4 rounded-lg border">
+                class="p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
                         <div class="space-y-2">
                             <div>
-                                <h3 class="font-semibold">{{ user.pseudo }}</h3>
-                                <p class="text-sm text-gray-500">{{ user.email }}</p>
+                                <h3 class="font-semibold text-white tracking-[0.05em]">{{ user.pseudo }}</h3>
+                                <p class="text-sm text-white/80 tracking-[0.05em]">{{ user.email }}</p>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-8">
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations personnelles</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations personnelles</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Nom : </span>
-                                            <span>{{ user.nom || 'Non renseigné' }}</span>
+                                            <span class="font-medium text-white/90">Nom : </span>
+                                            <span class="text-white/80">{{ user.nom || 'Non renseigné' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Prénom : </span>
-                                            <span>{{ user.prenom || 'Non renseigné' }}</span>
+                                            <span class="font-medium text-white/90">Prénom : </span>
+                                            <span class="text-white/80">{{ user.prenom || 'Non renseigné' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Date de naissance : </span>
-                                            <span>{{ user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
+                                            <span class="font-medium text-white/90">Date de naissance : </span>
+                                            <span class="text-white/80">{{ user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Sexe : </span>
-                                            <span>{{ user.sexe || 'Non renseigné' }}</span>
+                                            <span class="font-medium text-white/90">Sexe : </span>
+                                            <span class="text-white/80">{{ user.sexe || 'Non renseigné' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Date d'inscription : </span>
-                                            <span>{{ new Date(user.created_at).toLocaleDateString('fr-FR') }}</span>
+                                            <span class="font-medium text-white/90">Date d'inscription : </span>
+                                            <span class="text-white/80">{{ new Date(user.created_at).toLocaleDateString('fr-FR') }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations du compte</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations du compte</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Type de membre : </span>
-                                            <span>{{ user.typeMembre }}</span>
+                                            <span class="font-medium text-white/90">Type de membre : </span>
+                                            <span class="text-white/80">{{ user.typeMembre }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Niveau : </span>
-                                            <span>{{ user.niveau }}</span>
+                                            <span class="font-medium text-white/90">Niveau : </span>
+                                            <span class="text-white/80">{{ user.niveau }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Points : </span>
-                                            <span>{{ user.points }}</span>
+                                            <span class="font-medium text-white/90">Points : </span>
+                                            <span class="text-white/80">{{ user.points }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Vérifié : </span>
-                                            <span :class="user.email_verified_at ? 'text-green-600' : 'text-red-600'">
+                                            <span class="font-medium text-white/90">Vérifié : </span>
+                                            <span :class="user.email_verified_at ? 'text-cyan-300' : 'text-red-400'">
                                                 {{ user.email_verified_at ? 'Oui' : 'Non' }}
                                             </span>
                                         </div>
@@ -301,15 +304,18 @@ const handleSearch = () => {
                     </div>
                     <div class="flex gap-2 items-center whitespace-nowrap">
                         <Button variant="outline" size="sm" 
-                            @click="viewLoginHistory(user)">
+                            @click="viewLoginHistory(user)"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             Historique
                         </Button>
                         <Button variant="outline" size="sm" 
-                            @click="editUser(user)">
+                            @click="editUser(user)"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             Modifier
                         </Button>
                         <Button variant="destructive" size="sm" 
-                            @click="deleteUser(user)">
+                            @click="deleteUser(user)"
+                            class="bg-red-900/30 hover:bg-red-800/40 border border-red-500/30 hover:border-red-400/50 text-white hover:text-red-300">
                             Supprimer
                         </Button>
                     </div>
@@ -319,9 +325,9 @@ const handleSearch = () => {
 
         <!-- Modal Formulaire User -->
         <Dialog v-model:open="showUserForm">
-            <DialogContent class="sm:max-w-[500px]">
+            <DialogContent class="sm:max-w-[500px] bg-indigo-900/90 border border-indigo-500/30 text-white">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle class="text-white tracking-[0.05em]">
                         {{ selectedUser ? 'Modifier' : 'Ajouter' }} un utilisateur
                     </DialogTitle>
                 </DialogHeader>
@@ -329,74 +335,79 @@ const handleSearch = () => {
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Pseudo -->
                         <FormField name="pseudo" class="col-span-2">
-                            <FormLabel>Pseudo<InputError :message="form.errors.pseudo" /></FormLabel>
-                            
+                            <FormLabel class="text-white/90">Pseudo<InputError :message="form.errors.pseudo" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.pseudo" required placeholder="Pseudo" />
+                                <Input v-model="form.pseudo" required placeholder="Pseudo" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
-                            
                         </FormField>
 
                         <!-- Email -->
                         <FormField name="email" class="col-span-2">
-                            <FormLabel>Email<InputError :message="form.errors.email" /></FormLabel>
+                            <FormLabel class="text-white/90">Email<InputError :message="form.errors.email" /></FormLabel>
                             <FormControl>
-                                <Input type="email" v-model="form.email" required placeholder="email@example.com" />
+                                <Input type="email" v-model="form.email" required placeholder="email@example.com" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Mot de passe -->
                         <FormField name="password" v-if="!selectedUser" class="col-span-2">
-                            <FormLabel>Mot de passe<InputError :message="form.errors.password" /></FormLabel>
+                            <FormLabel class="text-white/90">Mot de passe<InputError :message="form.errors.password" /></FormLabel>
                             <FormControl>
-                                <Input type="password" v-model="form.password" required placeholder="Mot de passe" />
+                                <Input type="password" v-model="form.password" required placeholder="Mot de passe" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Confirmation mot de passe -->
                         <FormField name="password_confirmation" v-if="!selectedUser" class="col-span-2">
-                            <FormLabel>Confirmation du mot de passe<InputError :message="form.errors.password_confirmation" /></FormLabel>
+                            <FormLabel class="text-white/90">Confirmation du mot de passe<InputError :message="form.errors.password_confirmation" /></FormLabel>
                             <FormControl>
-                                <Input type="password" v-model="form.password_confirmation" required placeholder="Confirmation mot de passe" />
+                                <Input type="password" v-model="form.password_confirmation" required placeholder="Confirmation mot de passe" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Nom -->
                         <FormField name="nom">
-                            <FormLabel>Nom<InputError :message="form.errors.nom" /></FormLabel>
+                            <FormLabel class="text-white/90">Nom<InputError :message="form.errors.nom" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.nom" placeholder="Nom" />
+                                <Input v-model="form.nom" placeholder="Nom" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Prénom -->
                         <FormField name="prenom">
-                            <FormLabel>Prénom<InputError :message="form.errors.prenom" /></FormLabel>
+                            <FormLabel class="text-white/90">Prénom<InputError :message="form.errors.prenom" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.prenom" placeholder="Prénom" />
+                                <Input v-model="form.prenom" placeholder="Prénom" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Date de naissance -->
                         <FormField name="dateNaissance">
-                            <FormLabel>Date de naissance<InputError :message="form.errors.dateNaissance" /></FormLabel>
+                            <FormLabel class="text-white/90">Date de naissance<InputError :message="form.errors.dateNaissance" /></FormLabel>
                             <FormControl>
-                                <Input type="date" v-model="form.dateNaissance" />
+                                <Input type="date" v-model="form.dateNaissance" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
 
                         <!-- Sexe -->
                         <FormField name="sexe">
-                            <FormLabel>Sexe<InputError :message="form.errors.sexe" /></FormLabel>
+                            <FormLabel class="text-white/90">Sexe<InputError :message="form.errors.sexe" /></FormLabel>
                             <Select v-model="form.sexe" required>
-                                <SelectTrigger>
+                                <SelectTrigger class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                                     <SelectValue placeholder="Sélectionner un sexe" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent class="bg-indigo-900/90 border-indigo-500/30 text-white">
                                     <SelectGroup>
-                                        <SelectItem value="Femme">Femme</SelectItem>
-                                        <SelectItem value="Homme">Homme</SelectItem>
-                                        <SelectItem value="Autre">Autre</SelectItem>
+                                        <SelectItem value="Femme" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Femme</SelectItem>
+                                        <SelectItem value="Homme" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Homme</SelectItem>
+                                        <SelectItem value="Autre" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Autre</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -404,19 +415,19 @@ const handleSearch = () => {
 
                         <!-- Type de membre -->
                         <FormField name="typeMembre">
-                            <FormLabel>Type de membre<InputError :message="form.errors.typeMembre" /></FormLabel>
+                            <FormLabel class="text-white/90">Type de membre<InputError :message="form.errors.typeMembre" /></FormLabel>
                             <Select v-model="form.typeMembre" required>
-                                <SelectTrigger>
+                                <SelectTrigger class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                                     <SelectValue placeholder="Sélectionner un type" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent class="bg-indigo-900/90 border-indigo-500/30 text-white">
                                     <SelectGroup>
-                                        <SelectItem value="Spectateur">Spectateur</SelectItem>
-                                        <SelectItem value="Athlète">Athlète</SelectItem>
-                                        <SelectItem value="Entraîneur">Entraîneur</SelectItem>
-                                        <SelectItem value="Personnel technique">Personnel technique</SelectItem>
-                                        <SelectItem value="Sécurité">Sécurité</SelectItem>
-                                        <SelectItem value="Administratif">Administratif</SelectItem>
+                                        <SelectItem value="Spectateur" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Spectateur</SelectItem>
+                                        <SelectItem value="Athlète" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Athlète</SelectItem>
+                                        <SelectItem value="Entraîneur" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Entraîneur</SelectItem>
+                                        <SelectItem value="Personnel technique" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Personnel technique</SelectItem>
+                                        <SelectItem value="Sécurité" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Sécurité</SelectItem>
+                                        <SelectItem value="Administratif" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Administratif</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -424,17 +435,17 @@ const handleSearch = () => {
 
                         <!-- Niveau -->
                         <FormField name="niveau">
-                            <FormLabel>Niveau<InputError :message="form.errors.niveau" /></FormLabel>
+                            <FormLabel class="text-white/90">Niveau<InputError :message="form.errors.niveau" /></FormLabel>
                             <Select v-model="form.niveau" required>
-                                <SelectTrigger>
+                                <SelectTrigger class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                                     <SelectValue placeholder="Choisir un niveau" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent class="bg-indigo-900/90 border-indigo-500/30 text-white">
                                     <SelectGroup>
-                                        <SelectItem value="Débutant">Débutant</SelectItem>
-                                        <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                                        <SelectItem value="Avancé">Avancé</SelectItem>
-                                        <SelectItem value="Expert">Expert</SelectItem>
+                                        <SelectItem value="Débutant" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Débutant</SelectItem>
+                                        <SelectItem value="Intermédiaire" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Intermédiaire</SelectItem>
+                                        <SelectItem value="Avancé" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Avancé</SelectItem>
+                                        <SelectItem value="Expert" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">Expert</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -442,19 +453,22 @@ const handleSearch = () => {
 
                         <!-- Points -->
                         <FormField name="points">
-                            <FormLabel>Points<InputError :message="form.errors.points" /></FormLabel>
+                            <FormLabel class="text-white/90">Points<InputError :message="form.errors.points" /></FormLabel>
                             <FormControl>
-                                <Input type="number" v-model="form.points" min="0" />
+                                <Input type="number" v-model="form.points" min="0" 
+                                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300" />
                             </FormControl>
                         </FormField>
                     </div>
 
                     <div class="mt-4 flex justify-end gap-2">
                         <Button type="button" variant="outline" 
-                            @click="resetForm(); showUserForm = false">
+                            @click="resetForm(); showUserForm = false"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             Annuler
                         </Button>
-                        <Button type="submit" :disabled="form.processing">
+                        <Button type="submit" :disabled="form.processing"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             {{ selectedUser ? 'Modifier' : 'Ajouter' }}
                         </Button>
                     </div>
@@ -464,17 +478,17 @@ const handleSearch = () => {
 
         <!-- Modal Historique de Connexion -->
         <Dialog v-model:open="showLoginHistory">
-            <DialogContent>
+            <DialogContent class="bg-indigo-900/90 border border-indigo-500/30 text-white">
                 <DialogHeader>
-                    <DialogTitle>Historique de connexion</DialogTitle>
+                    <DialogTitle class="text-white tracking-[0.05em]">Historique de connexion</DialogTitle>
                 </DialogHeader>
                 <div class="max-h-96 overflow-y-auto">
                     <div v-for="log in loginHistory" :key="log.idConnexionsUtilisateurs" 
-                        class="py-2 border-b last:border-0">
-                        <p class="text-sm">
+                        class="py-2 border-b border-indigo-500/30 last:border-0">
+                        <p class="text-sm text-white/90">
                             {{ new Date(log.dateConnexion).toLocaleString() }}
                         </p>
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-white/80">
                             Points gagnés: {{ log.pointsGagne }}
                         </p>
                     </div>
