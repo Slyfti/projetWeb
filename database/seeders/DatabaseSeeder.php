@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             SportEventSeeder::class,
             EvenementsSeeder::class,
             UtilisateursSeeder::class,
+            ActionsUtilisateursSeeder::class,
         ]);
     }
 }

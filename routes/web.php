@@ -10,6 +10,7 @@ use App\Http\Controllers\EvenementsController;
 use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ObjetConnecteController;
+use App\Http\Controllers\RapportController;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/utilisateurs', [UserController::class, 'index'])->name('utilisateurs');
     Route::get('/dashboard/objets', [ObjetConnecteController::class, 'index'])->name('objets');
     Route::get('/dashboard/evenements', [EvenementsController::class, 'adminIndex'])->name('evenements.admin');
+    Route::get('/dashboard/rapports', [RapportController::class, 'index'])->name('rapports');
     Route::redirect("/dashboard","/dashboard/utilisateurs")->name("dashboard");
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
