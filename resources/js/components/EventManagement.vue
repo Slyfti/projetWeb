@@ -82,13 +82,13 @@ const form = useForm({
     equipeExterieur: '',
     prix: '',
     Disponiblilite: '',
-    lieu: '',
+    lieu: 'Stade Astrophere, 123 Avenue des Champions, 75000 Paris',
     meteo: '',
     ligue: '',
     consignes_securite: 'Interdiction d\'apporter des objets dangereux. Les sacs seront fouillés à l\'entrée.\n\nObjets interdits\n\n    Bouteilles en verre\n    Objets contondants\n    Banderoles et drapeaux sur manche\n    Pétards et artifices\n\nRecommandations\n\n    Arrivez 30 minutes avant le début\n    Conservez votre billet sur vous\n    Respectez les zones assignées\n    En cas d\'urgence, contactez un steward',
     activites_autour: 'Boutique officielle, restaurants, bars, zone de restauration rapide.',
-    logo_equipe_domicile: '',
-    logo_equipe_exterieur: '',
+    logo_equipe_domicile: null as File | null,
+    logo_equipe_exterieur: null as File | null,
     resultat: ''
 });
 
@@ -289,6 +289,49 @@ const formatDate = (dateString: string): string => {
         minute: '2-digit'
     });
 };
+
+// Fonction pour générer une météo aléatoire basée sur la date
+const genererMeteo = () => {
+    if (!form.dateEvenements) return;
+
+    const date = new Date(form.dateEvenements);
+    const mois = date.getMonth();
+    const heure = date.getHours();
+
+    // Conditions météo basées sur la saison et l'heure
+    const conditions = [
+        'Ensoleillé',
+        'Nuageux',
+        'Pluvieux',
+        'Orageux',
+        'Brouillard'
+    ];
+
+    // Températures basées sur la saison
+    let temperature;
+    if (mois >= 2 && mois <= 4) { // Printemps
+        temperature = Math.floor(Math.random() * 10) + 10; // 10-20°C
+    } else if (mois >= 5 && mois <= 7) { // Été
+        temperature = Math.floor(Math.random() * 15) + 20; // 20-35°C
+    } else if (mois >= 8 && mois <= 10) { // Automne
+        temperature = Math.floor(Math.random() * 10) + 10; // 10-20°C
+    } else { // Hiver
+        temperature = Math.floor(Math.random() * 10) + 0; // 0-10°C
+    }
+
+    // Sélection aléatoire de la condition météo
+    const condition = conditions[Math.floor(Math.random() * conditions.length)];
+    
+    form.meteo = `${condition}, ${temperature}°C`;
+};
+
+// Fonction pour gérer le changement de fichier
+const handleFileChange = (event: Event, field: 'logo_equipe_domicile' | 'logo_equipe_exterieur') => {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+        form[field] = input.files[0];
+    }
+};
 </script>
 
 <template>
@@ -475,120 +518,179 @@ const formatDate = (dateString: string): string => {
                                                                 {{ ligue }}
                                                             </SelectItem>
                                                         </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Veuillez d'abord sélectionner un sport</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </FormControl>
-                        </FormField>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Veuillez d'abord sélectionner un sport</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </FormControl>
+        </FormField>
 
-                        <!-- Équipe à domicile -->
-                        <FormField name="equipeDomicile">
-                            <FormLabel>Équipe à domicile<InputError :message="form.errors.equipeDomicile" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.equipeDomicile" required placeholder="Équipe à domicile" />
-                            </FormControl>
-                        </FormField>
+        <!-- Équipe à domicile -->
+        <FormField name="equipeDomicile">
+            <FormLabel>Équipe à domicile<InputError :message="form.errors.equipeDomicile" /></FormLabel>
+            <FormControl>
+                <Input v-model="form.equipeDomicile" required placeholder="Équipe à domicile" />
+            </FormControl>
+        </FormField>
 
-                        <!-- Équipe à l'extérieur -->
-                        <FormField name="equipeExterieur">
-                            <FormLabel>Équipe à l'extérieur<InputError :message="form.errors.equipeExterieur" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.equipeExterieur" required placeholder="Équipe à l'extérieur" />
-                            </FormControl>
-                        </FormField>
+        <!-- Équipe à l'extérieur -->
+        <FormField name="equipeExterieur">
+            <FormLabel>Équipe à l'extérieur<InputError :message="form.errors.equipeExterieur" /></FormLabel>
+            <FormControl>
+                <Input v-model="form.equipeExterieur" required placeholder="Équipe à l'extérieur" />
+            </FormControl>
+        </FormField>
 
-                        <!-- Prix -->
-                        <FormField name="prix">
-                            <FormLabel>Prix (€)<InputError :message="form.errors.prix" /></FormLabel>
-                            <FormControl>
-                                <Input type="number" v-model="form.prix" min="0" step="0.01" required />
-                            </FormControl>
-                        </FormField>
+        <!-- Prix -->
+        <FormField name="prix">
+            <FormLabel>Prix (€)<InputError :message="form.errors.prix" /></FormLabel>
+            <FormControl>
+                <Input type="number" v-model="form.prix" min="0" step="0.01" required />
+            </FormControl>
+        </FormField>
 
-                        <!-- Disponibilité -->
-                        <FormField name="Disponiblilite">
-                            <FormLabel>Disponibilité<InputError :message="form.errors.Disponiblilite" /></FormLabel>
-                            <FormControl>
-                                <Input type="number" v-model="form.Disponiblilite" min="0" required />
-                            </FormControl>
-                        </FormField>
+        <!-- Disponibilité -->
+        <FormField name="Disponiblilite">
+            <FormLabel>Disponibilité<InputError :message="form.errors.Disponiblilite" /></FormLabel>
+            <FormControl>
+                <Input type="number" v-model="form.Disponiblilite" min="0" required />
+            </FormControl>
+        </FormField>
 
-                        <!-- Lieu -->
-                        <FormField name="lieu" class="col-span-2">
-                            <FormLabel>Lieu<InputError :message="form.errors.lieu" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.lieu" required placeholder="Lieu de l'événement" />
-                            </FormControl>
-                        </FormField>
+        <!-- Lieu -->
+        <FormField name="lieu" class="col-span-2">
+            <FormLabel>Lieu<InputError :message="form.errors.lieu" /></FormLabel>
+            <FormControl>
+                <Input v-model="form.lieu" required disabled class="bg-indigo-900/30 border border-indigo-500/30 text-white cursor-not-allowed" />
+            </FormControl>
+        </FormField>
 
-                        <!-- Météo -->
-                        <FormField name="meteo">
-                            <FormLabel>Météo<InputError :message="form.errors.meteo" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.meteo" placeholder="Conditions météo" />
-                            </FormControl>
-                        </FormField>
+        <!-- Météo -->
+        <FormField name="meteo">
+            <FormLabel>Météo<InputError :message="form.errors.meteo" /></FormLabel>
+            <FormControl>
+                <div class="flex gap-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <Input 
+                                        v-model="form.meteo" 
+                                        placeholder="Conditions météo" 
+                                        readonly 
+                                        class="bg-indigo-900/30 border border-indigo-500/30 text-white cursor-not-allowed" 
+                                    />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>La météo sera générée automatiquement en fonction de la date sélectionnée</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div>
+                                    <Button 
+                                        type="button" 
+                                        variant="outline" 
+                                        size="icon"
+                                        :disabled="!form.dateEvenements"
+                                        class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
+                                        @click="genererMeteo"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                                    </Button>
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Veuillez d'abord sélectionner une date</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            </FormControl>
+        </FormField>
 
-                        <!-- Consignes de sécurité -->
-                        <FormField name="consignes_securite" class="col-span-2">
-                            <FormLabel>Consignes de sécurité<InputError :message="form.errors.consignes_securite" /></FormLabel>
-                            <FormControl>
-                                <textarea 
-                                    v-model="form.consignes_securite" 
-                                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    placeholder="Interdiction d'apporter des objets dangereux. Les sacs seront fouillés à l'entrée."
-                                />
-                            </FormControl>
-                        </FormField>
+        <!-- Consignes de sécurité -->
+        <FormField name="consignes_securite" class="col-span-2">
+            <FormLabel>Consignes de sécurité<InputError :message="form.errors.consignes_securite" /></FormLabel>
+            <FormControl>
+                <textarea 
+                    v-model="form.consignes_securite" 
+                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Interdiction d'apporter des objets dangereux. Les sacs seront fouillés à l'entrée."
+                />
+            </FormControl>
+        </FormField>
 
-                        <!-- Activités autour -->
-                        <FormField name="activites_autour" class="col-span-2">
-                            <FormLabel>Activités autour<InputError :message="form.errors.activites_autour" /></FormLabel>
-                            <FormControl>
-                                <textarea 
-                                    v-model="form.activites_autour" 
-                                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    placeholder="Activités autour de l'événement"
-                                />
-                            </FormControl>
-                        </FormField>
+        <!-- Activités autour -->
+        <FormField name="activites_autour" class="col-span-2">
+            <FormLabel>Activités autour<InputError :message="form.errors.activites_autour" /></FormLabel>
+            <FormControl>
+                <textarea 
+                    v-model="form.activites_autour" 
+                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Activités autour de l'événement"
+                />
+            </FormControl>
+        </FormField>
 
-                        <!-- Logo équipe domicile -->
-                        <FormField name="logo_equipe_domicile">
-                            <FormLabel>Logo équipe domicile<InputError :message="form.errors.logo_equipe_domicile" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.logo_equipe_domicile" placeholder="URL du logo" />
-                            </FormControl>
-                        </FormField>
-
-                        <!-- Logo équipe extérieur -->
-                        <FormField name="logo_equipe_exterieur">
-                            <FormLabel>Logo équipe extérieur<InputError :message="form.errors.logo_equipe_exterieur" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.logo_equipe_exterieur" placeholder="URL du logo" />
-                            </FormControl>
-                        </FormField>
+        <!-- Logo équipe domicile -->
+        <FormField name="logo_equipe_domicile">
+            <FormLabel>Logo équipe domicile<InputError :message="form.errors.logo_equipe_domicile" /></FormLabel>
+            <FormControl>
+                <div class="flex items-center gap-2">
+                    <Input 
+                        type="file" 
+                        accept="image/*"
+                        @change="(e) => handleFileChange(e, 'logo_equipe_domicile')"
+                        class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
+                    />
+                    <div v-if="form.logo_equipe_domicile" class="text-sm text-white/80">
+                        {{ form.logo_equipe_domicile.name }}
                     </div>
+                </div>
+            </FormControl>
+        </FormField>
 
-                    <div class="mt-4 flex justify-end gap-2">
-                        <Button type="button" variant="outline" 
-                            @click="resetForm(); showEventForm = false">
-                            Annuler
-                        </Button>
-                        <Button type="submit" :disabled="form.processing">
-                            {{ selectedEvenement ? 'Modifier' : 'Ajouter' }}
-                        </Button>
+        <!-- Logo équipe extérieur -->
+        <FormField name="logo_equipe_exterieur">
+            <FormLabel>Logo équipe extérieur<InputError :message="form.errors.logo_equipe_exterieur" /></FormLabel>
+            <FormControl>
+                <div class="flex items-center gap-2">
+                    <Input 
+                        type="file" 
+                        accept="image/*"
+                        @change="(e) => handleFileChange(e, 'logo_equipe_exterieur')"
+                        class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
+                    />
+                    <div v-if="form.logo_equipe_exterieur" class="text-sm text-white/80">
+                        {{ form.logo_equipe_exterieur.name }}
                     </div>
-                </Form>
-            </DialogContent>
-        </Dialog>
+                </div>
+            </FormControl>
+        </FormField>
     </div>
+
+    <div class="mt-4 flex justify-end gap-2">
+        <Button type="button" variant="outline" 
+            @click="resetForm(); showEventForm = false">
+            Annuler
+        </Button>
+        <Button type="submit" :disabled="form.processing">
+            {{ selectedEvenement ? 'Modifier' : 'Ajouter' }}
+        </Button>
+    </div>
+</Form>
+</DialogContent>
+</Dialog>
+</div>
 </template>
 
 <style scoped>
