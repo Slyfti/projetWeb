@@ -101,27 +101,23 @@ class EvenementsController extends Controller
     {
         return Inertia::render('information/evenements/EventDetails', [
             'evenement' => [
-                'id' => $evenement->id,
-                'titre' => $evenement->nom,
-                'date' => $evenement->dateEvenements,
+                'id' => $evenement->idEvenements,
+                'nom' => $evenement->nom,
+                'dateEvenements' => $evenement->dateEvenements,
                 'lieu' => $evenement->lieu,
-                'sport' => $evenement->typeEvents,
+                'typeEvents' => $evenement->typeEvents,
                 'meteo' => $evenement->meteo,
                 'ligue' => $evenement->ligue,
-                'description' => $evenement->descriptionEvenements,
+                'descriptionEvenements' => $evenement->descriptionEvenements,
                 'consignes_securite' => $evenement->consignes_securite,
                 'activites_autour' => $evenement->activites_autour,
-                'equipe_domicile' => [
-                    'nom' => $evenement->equipeDomicile,
-                    'logo' => $evenement->logo_equipe_domicile
-                ],
-                'equipe_exterieur' => [
-                    'nom' => $evenement->equipeExterieur,
-                    'logo' => $evenement->logo_equipe_exterieur
-                ],
+                'equipeDomicile' => $evenement->equipeDomicile,
+                'equipeExterieur' => $evenement->equipeExterieur,
+                'logo_equipe_domicile' => $evenement->logo_equipe_domicile,
+                'logo_equipe_exterieur' => $evenement->logo_equipe_exterieur,
                 'resultat' => $evenement->resultat,
                 'prix' => $evenement->prix,
-                'disponibilite' => $evenement->Disponiblilite
+                'Disponiblilite' => $evenement->Disponiblilite
             ]
         ]);
     }
@@ -132,17 +128,11 @@ class EvenementsController extends Controller
 
         // Créer le nom du fichier
         $fileName = Str::slug($equipeName) . '_logo.png';
-        $path = 'public/images/logos/' . $fileName;
+        
+        // Stocker le fichier dans public/images/logos
+        $file->move(public_path('images/logos'), $fileName);
 
-        // Supprimer l'ancien fichier s'il existe
-        if (Storage::exists($path)) {
-            Storage::delete($path);
-        }
-
-        // Enregistrer le nouveau fichier
-        $file->storeAs('public/images/logos', $fileName);
-
-        return 'logos/' . $fileName;
+        return $fileName;
     }
 
     public function store(Request $request)
@@ -166,10 +156,6 @@ class EvenementsController extends Controller
             'resultat' => 'nullable|string|max:50'
         ]);
 
-        // Définir les logos par défaut
-        $validated['logo_equipe_domicile'] = 'logos/default_home.png';
-        $validated['logo_equipe_exterieur'] = 'logos/default_away.png';
-
         // Gérer l'upload des logos si des fichiers sont fournis
         if ($request->hasFile('logo_equipe_domicile')) {
             $validated['logo_equipe_domicile'] = $this->handleLogoUpload(
@@ -177,6 +163,8 @@ class EvenementsController extends Controller
                 $validated['equipeDomicile'],
                 'domicile'
             );
+        } else {
+            $validated['logo_equipe_domicile'] = 'default_home.png';
         }
 
         if ($request->hasFile('logo_equipe_exterieur')) {
@@ -185,6 +173,8 @@ class EvenementsController extends Controller
                 $validated['equipeExterieur'],
                 'exterieur'
             );
+        } else {
+            $validated['logo_equipe_exterieur'] = 'default_away.png';
         }
 
         // Si la météo n'est pas fournie, mettre une valeur par défaut

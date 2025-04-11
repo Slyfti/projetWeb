@@ -9,26 +9,22 @@ import { onMounted } from 'vue';
 const props = defineProps<{
     evenement: {
         id: number;
-        titre: string;
-        date: string;
+        nom: string;
+        dateEvenements: string;
         lieu: string;
-        sport: string;
-        meteo?: string;
+        typeEvents: string;
+        meteo: string;
         ligue: string;
-        description: string;
-        consignes_securite?: string;
-        activites_autour?: string;
-        equipe_domicile: {
-            nom: string;
-            logo?: string;
-        };
-        equipe_exterieur: {
-            nom: string;
-            logo?: string;
-        };
-        resultat?: string;
+        descriptionEvenements: string;
+        consignes_securite: string;
+        activites_autour: string;
+        equipeDomicile: string;
+        equipeExterieur: string;
+        logo_equipe_domicile: string;
+        logo_equipe_exterieur: string;
+        resultat: string;
         prix: number;
-        disponibilite: number;
+        Disponiblilite: number;
     };
 }>();
 
@@ -101,8 +97,8 @@ const getLieu = (): string => {
     }
     
     // Sinon, essayer de l'extraire de la description
-    if (props.evenement.description) {
-        const lieuExtrait = extractLieuFromDescription(props.evenement.description);
+    if (props.evenement.descriptionEvenements) {
+        const lieuExtrait = extractLieuFromDescription(props.evenement.descriptionEvenements);
         if (lieuExtrait) {
             return lieuExtrait;
         }
@@ -115,8 +111,8 @@ const getLieu = (): string => {
 // Fonction pour obtenir l'adresse du stade
 const getAdresse = (lieu: string): string => {
     // Si le lieu est vide ou non défini, essayer de l'extraire de la description
-    if (!lieu && props.evenement.description) {
-        const lieuExtrait = extractLieuFromDescription(props.evenement.description);
+    if (!lieu && props.evenement.descriptionEvenements) {
+        const lieuExtrait = extractLieuFromDescription(props.evenement.descriptionEvenements);
         if (lieuExtrait) {
             return stadeAdresses[lieuExtrait] || 'Adresse non disponible';
         }
@@ -210,6 +206,20 @@ const handleImageError = (event: Event) => {
         parent.appendChild(fallback);
     }
 };
+
+const formatDate = (dateString: string) => {
+    if (!dateString) return 'Date non disponible';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Date non disponible';
+    return date.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
 </script>
 
 <template>
@@ -232,16 +242,9 @@ const handleImageError = (event: Event) => {
 
                 <!-- Titre de la page -->
                 <div class="mb-8 text-center">
-                    <h1 class="text-4xl font-bold text-white tracking-[0.05em] mb-2">{{ evenement.titre }}</h1>
+                    <h1 class="text-4xl font-bold text-white tracking-[0.05em] mb-2">{{ evenement.nom }}</h1>
                     <p class="text-white/80 tracking-[0.05em]">
-                        {{ new Date(evenement.date).toLocaleDateString('fr-FR', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        }) }}
+                        {{ formatDate(evenement.dateEvenements) }}
                     </p>
                 </div>
 
@@ -262,7 +265,7 @@ const handleImageError = (event: Event) => {
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                                     </svg>
-                                    <span>{{ evenement.sport }} {{ evenement.ligue }}</span>
+                                    <span>{{ evenement.typeEvents }} {{ evenement.ligue }}</span>
                                 </div>
 
                                 <div v-if="evenement.meteo" class="flex items-center gap-2 text-white">
@@ -286,7 +289,7 @@ const handleImageError = (event: Event) => {
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                                     </svg>
-                                    <span>Places disponibles : {{ evenement.disponibilite }}</span>
+                                    <span>Places disponibles : {{ evenement.Disponiblilite }}</span>
                                 </div>
                             </div>
                         </div>
@@ -304,19 +307,13 @@ const handleImageError = (event: Event) => {
                                 <div class="bg-white/5 p-4 rounded-lg">
                                     <div class="flex justify-center mb-4">
                                         <img 
-                                            v-if="getLogoPath(evenement.equipe_domicile)" 
-                                            :src="getLogoPath(evenement.equipe_domicile)" 
-                                            :alt="evenement.equipe_domicile.nom"
+                                            :src="`/images/logos/${evenement.logo_equipe_domicile}`"
+                                            :alt="evenement.equipeDomicile"
                                             class="h-32 w-32 object-contain"
                                             @error="handleImageError"
                                         />
-                                        <div v-else class="h-32 w-32 flex items-center justify-center bg-white/10 rounded-full">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-[#E4F1F1]/40" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
                                     </div>
-                                    <div class="text-lg font-medium text-[#E4F1F1]">{{ evenement.equipe_domicile.nom }}</div>
+                                    <div class="text-lg font-medium text-[#E4F1F1]">{{ evenement.equipeDomicile }}</div>
                                     <div class="text-sm text-[#E4F1F1]/60">Domicile</div>
                                 </div>
                             </div>
@@ -325,186 +322,180 @@ const handleImageError = (event: Event) => {
                                 <div class="bg-white/5 p-4 rounded-lg">
                                     <div class="flex justify-center mb-4">
                                         <img 
-                                            v-if="getLogoPath(evenement.equipe_exterieur)" 
-                                            :src="getLogoPath(evenement.equipe_exterieur)" 
-                                            :alt="evenement.equipe_exterieur.nom"
+                                            :src="`/images/logos/${evenement.logo_equipe_exterieur}`"
+                                            :alt="evenement.equipeExterieur"
                                             class="h-32 w-32 object-contain"
                                             @error="handleImageError"
                                         />
-                                        <div v-else class="h-32 w-32 flex items-center justify-center bg-white/10 rounded-full">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-[#E4F1F1]/40" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
                                     </div>
-                                    <div class="text-lg font-medium text-[#E4F1F1]">{{ evenement.equipe_exterieur.nom }}</div>
+                                    <div class="text-lg font-medium text-[#E4F1F1]">{{ evenement.equipeExterieur }}</div>
                                     <div class="text-sm text-[#E4F1F1]/60">Extérieur</div>
                                 </div>
                             </div>
                         </div>
 
-                <!-- Résultat avec statistiques -->
-                <div v-if="evenement.resultat" class="mt-8">
-                    <h3 class="text-xl font-semibold mb-4 text-[#E4F1F1] text-center">Résultat</h3>
-                    <div class="flex justify-center items-center gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="text-2xl font-bold text-[#E4F1F1]">{{ evenement.equipe_domicile.nom }}</div>
-                            <div class="text-4xl font-bold" 
-                                 :class="{
-                                    'text-green-400': evenement.resultat === 'victoire',
-                                    'text-red-400': evenement.resultat === 'defaite',
-                                    'text-gray-400': evenement.resultat === 'nul'
-                                 }">
-                                {{ getScore(evenement.resultat, 'domicile') }}
+                        <!-- Résultat avec statistiques -->
+                        <div v-if="evenement.resultat" class="mt-8">
+                            <h3 class="text-xl font-semibold mb-4 text-[#E4F1F1] text-center">Résultat</h3>
+                            <div class="flex justify-center items-center gap-4">
+                                <div class="flex flex-col items-center">
+                                    <div class="text-2xl font-bold text-[#E4F1F1]">{{ evenement.equipeDomicile }}</div>
+                                    <div class="text-4xl font-bold" 
+                                         :class="{
+                                            'text-green-400': evenement.resultat === 'victoire',
+                                            'text-red-400': evenement.resultat === 'defaite',
+                                            'text-gray-400': evenement.resultat === 'nul'
+                                         }">
+                                        {{ getScore(evenement.resultat, 'domicile') }}
+                                    </div>
+                                </div>
+                                <div class="text-2xl font-bold text-[#E4F1F1]">-</div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-2xl font-bold text-[#E4F1F1]">{{ evenement.equipeExterieur }}</div>
+                                    <div class="text-4xl font-bold" 
+                                         :class="{
+                                            'text-green-400': evenement.resultat === 'defaite',
+                                            'text-red-400': evenement.resultat === 'victoire',
+                                            'text-gray-400': evenement.resultat === 'nul'
+                                         }">
+                                        {{ getScore(evenement.resultat, 'exterieur') }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <div class="inline-flex items-center px-4 py-2 rounded-full" 
+                                     :class="{
+                                        'bg-green-500/20 text-green-400': evenement.resultat === 'victoire',
+                                        'bg-red-500/20 text-red-400': evenement.resultat === 'defaite',
+                                        'bg-gray-500/20 text-gray-400': evenement.resultat === 'nul'
+                                     }">
+                                    {{ evenement.resultat.charAt(0).toUpperCase() + evenement.resultat.slice(1) }}
+                                </div>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold text-[#E4F1F1]">-</div>
-                        <div class="flex flex-col items-center">
-                            <div class="text-2xl font-bold text-[#E4F1F1]">{{ evenement.equipe_exterieur.nom }}</div>
-                            <div class="text-4xl font-bold" 
-                                 :class="{
-                                    'text-green-400': evenement.resultat === 'defaite',
-                                    'text-red-400': evenement.resultat === 'victoire',
-                                    'text-gray-400': evenement.resultat === 'nul'
-                                 }">
-                                {{ getScore(evenement.resultat, 'exterieur') }}
+                    </CardContent>
+                </Card>
+
+                <!-- Bloc 4: Description et détails -->
+                <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
+                    <CardHeader>
+                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Description et détails</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Description de l'événement</h3>
+                                <p class="text-[#E4F1F1]/80">{{ evenement.descriptionEvenements }}</p>
+                            </div>
+
+                            <div v-if="evenement.activites_autour">
+                                <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Activités autour du stade</h3>
+                                <p class="text-[#E4F1F1]/80">{{ evenement.activites_autour }}</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <div class="inline-flex items-center px-4 py-2 rounded-full" 
-                             :class="{
-                                'bg-green-500/20 text-green-400': evenement.resultat === 'victoire',
-                                'bg-red-500/20 text-red-400': evenement.resultat === 'defaite',
-                                'bg-gray-500/20 text-gray-400': evenement.resultat === 'nul'
-                             }">
-                            {{ evenement.resultat.charAt(0).toUpperCase() + evenement.resultat.slice(1) }}
-                        </div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                    </CardContent>
+                </Card>
 
-        <!-- Bloc 4: Description et détails -->
-        <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
-            <CardHeader>
-                <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Description et détails</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div class="space-y-6">
-                    <div>
-                        <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Description de l'événement</h3>
-                        <p class="text-[#E4F1F1]/80">{{ evenement.description }}</p>
-                    </div>
+                <!-- Bloc 5: Accès et transport -->
+                <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
+                    <CardHeader>
+                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Accès et transport</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-2 text-[#E4F1F1]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7h1a1 1 0 011 1v6.05A2.5 2.5 0 0117.95 16H19a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                                </svg>
+                                <div>
+                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En voiture</h3>
+                                    <p class="text-[#E4F1F1]/80">Parking disponible sur place (tarif : 15€). Accès par l'autoroute A1, sortie 2 "Stade de France".</p>
+                                </div>
+                            </div>
 
-                    <div v-if="evenement.activites_autour">
-                        <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Activités autour du stade</h3>
-                        <p class="text-[#E4F1F1]/80">{{ evenement.activites_autour }}</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                            <div class="flex items-start gap-2 text-[#E4F1F1]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En transport en commun</h3>
+                                    <p class="text-[#E4F1F1]/80">Métro ligne 13, station "Saint-Denis - Porte de Paris". RER B, station "La Plaine - Stade de France". Bus 139, 153, 173, 255.</p>
+                                </div>
+                            </div>
 
-        <!-- Bloc 5: Accès et transport -->
-        <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
-            <CardHeader>
-                <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Accès et transport</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-2 text-[#E4F1F1]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7h1a1 1 0 011 1v6.05A2.5 2.5 0 0117.95 16H19a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
-                        </svg>
-                        <div>
-                            <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En voiture</h3>
-                            <p class="text-[#E4F1F1]/80">Parking disponible sur place (tarif : 15€). Accès par l'autoroute A1, sortie 2 "Stade de France".</p>
+                            <div class="flex items-start gap-2 text-[#E4F1F1]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.414 5a1 1 0 01-1.414 1.414L13 5.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 0112 2zm-7 7a1 1 0 01.707.293l.707.707L15.414 12a1 1 0 01-1.414 1.414L13 12.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 015 9z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">À pied ou à vélo</h3>
+                                    <p class="text-[#E4F1F1]/80">Parcours fléché depuis le centre-ville (15 minutes à pied). Stationnement vélos disponible.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </CardContent>
+                </Card>
 
-                    <div class="flex items-start gap-2 text-[#E4F1F1]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                        </svg>
-                        <div>
-                            <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">En transport en commun</h3>
-                            <p class="text-[#E4F1F1]/80">Métro ligne 13, station "Saint-Denis - Porte de Paris". RER B, station "La Plaine - Stade de France". Bus 139, 153, 173, 255.</p>
+                <!-- Bloc 6: Consignes de sécurité -->
+                <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
+                    <CardHeader>
+                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Consignes de sécurité</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="space-y-4">
+                            <div v-if="evenement.consignes_securite">
+                                <p class="text-[#E4F1F1]/80">{{ evenement.consignes_securite }}</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-white/5 p-4 rounded-lg">
+                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Objets interdits</h3>
+                                    <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
+                                        <li>Bouteilles en verre</li>
+                                        <li>Objets contondants</li>
+                                        <li>Banderoles et drapeaux sur manche</li>
+                                        <li>Pétards et artifices</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 p-4 rounded-lg">
+                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Recommandations</h3>
+                                    <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
+                                        <li>Arrivez 30 minutes avant le début</li>
+                                        <li>Conservez votre billet sur vous</li>
+                                        <li>Respectez les zones assignées</li>
+                                        <li>En cas d'urgence, contactez un steward</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </CardContent>
+                </Card>
 
-                    <div class="flex items-start gap-2 text-[#E4F1F1]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.414 5a1 1 0 01-1.414 1.414L13 5.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 0112 2zm-7 7a1 1 0 01.707.293l.707.707L15.414 12a1 1 0 01-1.414 1.414L13 12.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707.707-.707A1 1 0 015 9z" clip-rule="evenodd" />
-                        </svg>
-                        <div>
-                            <h3 class="text-lg font-medium mb-1 text-[#E4F1F1]">À pied ou à vélo</h3>
-                            <p class="text-[#E4F1F1]/80">Parcours fléché depuis le centre-ville (15 minutes à pied). Stationnement vélos disponible.</p>
+                <!-- Bloc 7: Localisation -->
+                <Card class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Localisation</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3">
+                                <div class="bg-white/5 p-4 rounded-lg h-full">
+                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Adresse</h3>
+                                    <p class="text-[#E4F1F1]/80 mb-4">{{ getAdresse(evenement.lieu) }}</p>
+                                    <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Horaires d'ouverture</h3>
+                                    <p class="text-[#E4F1F1]/80">Portes ouvertes 2h avant le début de l'événement</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3">
+                                <div id="map" class="h-[400px] w-full rounded-lg overflow-hidden"></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <!-- Bloc 6: Consignes de sécurité -->
-        <Card class="bg-white/10 backdrop-blur-sm border-none mb-6">
-            <CardHeader>
-                <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Consignes de sécurité</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div class="space-y-4">
-                    <div v-if="evenement.consignes_securite">
-                        <p class="text-[#E4F1F1]/80">{{ evenement.consignes_securite }}</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white/5 p-4 rounded-lg">
-                            <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Objets interdits</h3>
-                            <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
-                                <li>Bouteilles en verre</li>
-                                <li>Objets contondants</li>
-                                <li>Banderoles et drapeaux sur manche</li>
-                                <li>Pétards et artifices</li>
-                            </ul>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-lg">
-                            <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Recommandations</h3>
-                            <ul class="list-disc list-inside text-[#E4F1F1]/80 space-y-1">
-                                <li>Arrivez 30 minutes avant le début</li>
-                                <li>Conservez votre billet sur vous</li>
-                                <li>Respectez les zones assignées</li>
-                                <li>En cas d'urgence, contactez un steward</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <!-- Bloc 7: Localisation -->
-        <Card class="bg-white/10 backdrop-blur-sm border-none">
-            <CardHeader>
-                <CardTitle class="text-xl font-semibold text-[#E4F1F1]">Localisation</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="md:w-1/3">
-                        <div class="bg-white/5 p-4 rounded-lg h-full">
-                            <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Adresse</h3>
-                            <p class="text-[#E4F1F1]/80 mb-4">{{ getAdresse(evenement.lieu) }}</p>
-                            <h3 class="text-lg font-medium mb-2 text-[#E4F1F1]">Horaires d'ouverture</h3>
-                            <p class="text-[#E4F1F1]/80">Portes ouvertes 2h avant le début de l'événement</p>
-                        </div>
-                    </div>
-                    <div class="md:w-2/3">
-                        <div id="map" class="h-[400px] w-full rounded-lg overflow-hidden"></div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                    </CardContent>
+                </Card>
+            </div>
+        </main>
+        <Footer />
     </div>
-</main>
-<Footer />
-</div>
 </template>
 
 <style>
