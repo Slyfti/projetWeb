@@ -87,8 +87,8 @@ const form = useForm({
     ligue: '',
     consignes_securite: 'Interdiction d\'apporter des objets dangereux. Les sacs seront fouillés à l\'entrée.\n\nObjets interdits\n\n    Bouteilles en verre\n    Objets contondants\n    Banderoles et drapeaux sur manche\n    Pétards et artifices\n\nRecommandations\n\n    Arrivez 30 minutes avant le début\n    Conservez votre billet sur vous\n    Respectez les zones assignées\n    En cas d\'urgence, contactez un steward',
     activites_autour: 'Boutique officielle, restaurants, bars, zone de restauration rapide.',
-    logo_equipe_domicile: null as File | null,
-    logo_equipe_exterieur: null as File | null,
+    logo_equipe_domicile: 'logos/default_home.png',
+    logo_equipe_exterieur: 'logos/default_away.png',
     resultat: ''
 });
 
@@ -256,7 +256,7 @@ const updateEvent = () => {
 const editEvent = (evenement: Evenement) => {
     selectedEvenement.value = evenement;
     form.nom = evenement.nom;
-    form.dateEvenements = evenement.dateEvenements ? new Date(evenement.dateEvenements).toISOString().split('T')[0] : '';
+    form.dateEvenements = evenement.dateEvenements ? new Date(evenement.dateEvenements).toISOString().slice(0, 16) : '';
     form.descriptionEvenements = evenement.descriptionEvenements || '';
     form.typeEvents = evenement.typeEvents;
     form.equipeDomicile = evenement.equipeDomicile;
@@ -330,7 +330,17 @@ const handleFileChange = (event: Event, field: 'logo_equipe_domicile' | 'logo_eq
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
         form[field] = input.files[0];
+    } else {
+        form[field] = field === 'logo_equipe_domicile' ? 'logos/default_home.png' : 'logos/default_away.png';
     }
+};
+
+// Fonction pour obtenir l'URL de l'image
+const getImageUrl = (image: string | File) => {
+    if (image instanceof File) {
+        return URL.createObjectURL(image);
+    }
+    return `/images/${image}`;
 };
 </script>
 
@@ -645,15 +655,27 @@ const handleFileChange = (event: Event, field: 'logo_equipe_domicile' | 'logo_eq
         <FormField name="logo_equipe_domicile">
             <FormLabel>Logo équipe domicile<InputError :message="form.errors.logo_equipe_domicile" /></FormLabel>
             <FormControl>
-                <div class="flex items-center gap-2">
-                    <Input 
-                        type="file" 
-                        accept="image/*"
-                        @change="(e) => handleFileChange(e, 'logo_equipe_domicile')"
-                        class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
-                    />
-                    <div v-if="form.logo_equipe_domicile" class="text-sm text-white/80">
-                        {{ form.logo_equipe_domicile.name }}
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-4">
+                        <img 
+                            :src="getImageUrl(form.logo_equipe_domicile)" 
+                            alt="Logo équipe domicile"
+                            class="w-16 h-16 object-contain border border-indigo-500/30 rounded-lg"
+                        />
+                        <div class="flex-1">
+                            <Input 
+                                type="file" 
+                                accept="image/*"
+                                @change="(e) => handleFileChange(e, 'logo_equipe_domicile')"
+                                class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
+                            />
+                            <div v-if="form.logo_equipe_domicile && form.logo_equipe_domicile !== 'logos/default_home.png'" class="text-sm text-white/80 mt-2">
+                                {{ form.logo_equipe_domicile.name }}
+                            </div>
+                            <div v-else class="text-sm text-white/80 mt-2">
+                                Logo domicile par défaut
+                            </div>
+                        </div>
                     </div>
                 </div>
             </FormControl>
@@ -663,15 +685,27 @@ const handleFileChange = (event: Event, field: 'logo_equipe_domicile' | 'logo_eq
         <FormField name="logo_equipe_exterieur">
             <FormLabel>Logo équipe extérieur<InputError :message="form.errors.logo_equipe_exterieur" /></FormLabel>
             <FormControl>
-                <div class="flex items-center gap-2">
-                    <Input 
-                        type="file" 
-                        accept="image/*"
-                        @change="(e) => handleFileChange(e, 'logo_equipe_exterieur')"
-                        class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
-                    />
-                    <div v-if="form.logo_equipe_exterieur" class="text-sm text-white/80">
-                        {{ form.logo_equipe_exterieur.name }}
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-4">
+                        <img 
+                            :src="getImageUrl(form.logo_equipe_exterieur)" 
+                            alt="Logo équipe extérieur"
+                            class="w-16 h-16 object-contain border border-indigo-500/30 rounded-lg"
+                        />
+                        <div class="flex-1">
+                            <Input 
+                                type="file" 
+                                accept="image/*"
+                                @change="(e) => handleFileChange(e, 'logo_equipe_exterieur')"
+                                class="bg-indigo-900/30 border border-indigo-500/30 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/50 file:text-white hover:file:bg-indigo-400/50"
+                            />
+                            <div v-if="form.logo_equipe_exterieur && form.logo_equipe_exterieur !== 'logos/default_away.png'" class="text-sm text-white/80 mt-2">
+                                {{ form.logo_equipe_exterieur.name }}
+                            </div>
+                            <div v-else class="text-sm text-white/80 mt-2">
+                                Logo extérieur par défaut
+                            </div>
+                        </div>
                     </div>
                 </div>
             </FormControl>

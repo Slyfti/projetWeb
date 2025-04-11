@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActionUtilisateur;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EvenementsController extends Controller
 {
@@ -124,6 +126,25 @@ class EvenementsController extends Controller
         ]);
     }
 
+    private function handleLogoUpload($file, $equipeName, $type)
+    {
+        if (!$file) return null;
+
+        // Créer le nom du fichier
+        $fileName = Str::slug($equipeName) . '_logo.png';
+        $path = 'public/images/logos/' . $fileName;
+
+        // Supprimer l'ancien fichier s'il existe
+        if (Storage::exists($path)) {
+            Storage::delete($path);
+        }
+
+        // Enregistrer le nouveau fichier
+        $file->storeAs('public/images/logos', $fileName);
+
+        return 'logos/' . $fileName;
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -136,14 +157,40 @@ class EvenementsController extends Controller
             'prix' => 'required|numeric|min:0',
             'Disponiblilite' => 'required|integer|min:0',
             'lieu' => 'required|string|max:100',
-            'meteo' => 'nullable|string|max:100',
+            'meteo' => 'required|string|max:100',
             'ligue' => 'required|string|max:100',
             'consignes_securite' => 'nullable|string',
             'activites_autour' => 'nullable|string',
-            'logo_equipe_domicile' => 'nullable|string',
-            'logo_equipe_exterieur' => 'nullable|string',
+            'logo_equipe_domicile' => 'nullable',
+            'logo_equipe_exterieur' => 'nullable',
             'resultat' => 'nullable|string|max:50'
         ]);
+
+        // Définir les logos par défaut
+        $validated['logo_equipe_domicile'] = 'logos/default_home.png';
+        $validated['logo_equipe_exterieur'] = 'logos/default_away.png';
+
+        // Gérer l'upload des logos si des fichiers sont fournis
+        if ($request->hasFile('logo_equipe_domicile')) {
+            $validated['logo_equipe_domicile'] = $this->handleLogoUpload(
+                $request->file('logo_equipe_domicile'),
+                $validated['equipeDomicile'],
+                'domicile'
+            );
+        }
+
+        if ($request->hasFile('logo_equipe_exterieur')) {
+            $validated['logo_equipe_exterieur'] = $this->handleLogoUpload(
+                $request->file('logo_equipe_exterieur'),
+                $validated['equipeExterieur'],
+                'exterieur'
+            );
+        }
+
+        // Si la météo n'est pas fournie, mettre une valeur par défaut
+        if (empty($validated['meteo'])) {
+            $validated['meteo'] = 'Météo non disponible';
+        }
 
         $evenement = Evenement::create($validated);
 
@@ -179,14 +226,40 @@ class EvenementsController extends Controller
             'prix' => 'required|numeric|min:0',
             'Disponiblilite' => 'required|integer|min:0',
             'lieu' => 'required|string|max:100',
-            'meteo' => 'nullable|string|max:100',
+            'meteo' => 'required|string|max:100',
             'ligue' => 'required|string|max:100',
             'consignes_securite' => 'nullable|string',
             'activites_autour' => 'nullable|string',
-            'logo_equipe_domicile' => 'nullable|string',
-            'logo_equipe_exterieur' => 'nullable|string',
+            'logo_equipe_domicile' => 'nullable',
+            'logo_equipe_exterieur' => 'nullable',
             'resultat' => 'nullable|string|max:50'
         ]);
+
+        // Conserver les logos existants par défaut
+        $validated['logo_equipe_domicile'] = $evenement->logo_equipe_domicile;
+        $validated['logo_equipe_exterieur'] = $evenement->logo_equipe_exterieur;
+
+        // Gérer l'upload des logos si des fichiers sont fournis
+        if ($request->hasFile('logo_equipe_domicile')) {
+            $validated['logo_equipe_domicile'] = $this->handleLogoUpload(
+                $request->file('logo_equipe_domicile'),
+                $validated['equipeDomicile'],
+                'domicile'
+            );
+        }
+
+        if ($request->hasFile('logo_equipe_exterieur')) {
+            $validated['logo_equipe_exterieur'] = $this->handleLogoUpload(
+                $request->file('logo_equipe_exterieur'),
+                $validated['equipeExterieur'],
+                'exterieur'
+            );
+        }
+
+        // Si la météo n'est pas fournie, mettre une valeur par défaut
+        if (empty($validated['meteo'])) {
+            $validated['meteo'] = 'Météo non disponible';
+        }
 
         $evenement->update($validated);
 
