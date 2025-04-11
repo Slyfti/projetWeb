@@ -15,7 +15,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Utilisateurs',
         href: '/dashboard/utilisateurs',
-        icon: LayoutGrid,
+        icon: Users,
     },
     {
         title: 'Objets',
@@ -32,14 +32,9 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        title: 'Dépot GitHub',
+        href: 'https://github.com/Slyfti/projetWeb',
         icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
     },
 ];
 </script>

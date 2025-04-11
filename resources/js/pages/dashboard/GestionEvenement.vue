@@ -28,7 +28,7 @@ interface Evenement {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Gestion des événements',
+        title: 'Événements',
         href: '/dashboard/evenements',
     },
 ];
