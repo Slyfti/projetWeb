@@ -12,7 +12,7 @@ const page = usePage<SharedData>();
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel class="text-white/80 tracking-[0.05em]">Panel administrateur</SidebarGroupLabel>
+        <SidebarGroupLabel class="text-white/80 tracking-[0.05em]">Dashboard</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <SidebarMenuButton 

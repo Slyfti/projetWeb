@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Gestion des objets',
+        title: 'Objets',
         href: '/dashboard/objets',
     },
 ];
@@ -21,7 +21,7 @@ const activeTab = ref('users');
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Dashboard - Objets" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">

@@ -4,15 +4,18 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Calendar, Users, Ticket, Globe } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import type { SharedData } from '@/types';
+
+const page = usePage<SharedData>();
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Utilisateurs',
         href: '/dashboard/utilisateurs',
-        icon: LayoutGrid,
+        icon: Users,
     },
     {
         title: 'Objets',
@@ -23,19 +26,15 @@ const mainNavItems: NavItem[] = [
         title: 'Événements',
         href: '/dashboard/evenements',
         icon: Calendar,
+        showForTypes: ['Personnel technique', 'Sécurité', 'Administratif']
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        title: 'Dépot GitHub',
+        href: 'https://github.com/Slyfti/projetWeb',
         icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
     },
 ];
 </script>
@@ -54,8 +53,9 @@ const footerNavItems: NavItem[] = [
             </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent class="bg-gray-900 bg-opacity-90">
-            <NavMain :items="mainNavItems" />
+
+        <SidebarContent>
+            <NavMain  class="bg-gray-900 bg-opacity-90" :items="mainNavItems.filter(item => !item.showForTypes || item.showForTypes.includes(page.props.auth.user.typeMembre))" />
         </SidebarContent>
 
         <SidebarFooter class="bg-gray-900 bg-opacity-90 border-t border-indigo-500/30">

@@ -322,14 +322,15 @@ const formatDate = (dateString: string): string => {
 
         <!-- Modal Formulaire Événement -->
         <Dialog v-model:open="showEventForm">
-            <DialogContent class="sm:max-w-[500px] bg-indigo-900/90 border border-indigo-500/30 text-white">
+
+            <DialogContent class="sm:max-w-[90vw] md:max-w-[600px] max-h-[90vh] overflow-y-auto bg-indigo-900/90 border border-indigo-500/30 text-white">
                 <DialogHeader>
                     <DialogTitle class="text-white tracking-[0.05em]">
                         {{ selectedEvenement ? 'Modifier' : 'Ajouter' }} un événement
                     </DialogTitle>
                 </DialogHeader>
                 <Form @submit="selectedEvenement ? updateEvent() : createEvent()" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Nom -->
                         <FormField name="nom" class="col-span-2">
                             <FormLabel>Nom<InputError :message="form.errors.nom" /></FormLabel>
@@ -486,5 +487,37 @@ const formatDate = (dateString: string): string => {
 :deep(.dialog-content) {
     max-height: 90vh;
     overflow-y: auto;
+    padding: 1.5rem;
+}
+
+:deep(.form-field) {
+    margin-bottom: 1rem;
+}
+
+:deep(.form-label) {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+:deep(.form-control) {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+}
+
+:deep(.form-control:focus) {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+:deep(.form-message) {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
 }
 </style> 
