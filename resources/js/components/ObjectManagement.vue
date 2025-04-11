@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -31,6 +31,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast/use-toast';
+import type { PageProps } from '@/types';
 
 interface ObjetConnecte {
     idObjetsConnectes: number;
@@ -75,8 +76,16 @@ const props = defineProps<{
 const { toast } = useToast();
 const localObjets = ref<ObjetConnecte[]>([]);
 const selectedObjet = ref<ObjetConnecte | null>(null);
-const showObjectForm = ref(false);
+const showObjetForm = ref(false);
 const search = ref('');
+const isAddDialogOpen = ref(false);
+const isEditDialogOpen = ref(false);
+
+const page = usePage<PageProps>();
+const isAuthorized = computed(() => {
+    const auth = page.props.auth as { user: { typeMembre: string } };
+    return ['Personnel technique', 'Sécurité', 'Administratif'].includes(auth.user.typeMembre);
+});
 
 // Mettre à jour les objets locaux quand les props changent
 watch(() => props.objets, (newObjets) => {
@@ -122,7 +131,7 @@ const handleSearch = () => {
 const createObject = () => {
     form.post('/objets-connectes', {
         onSuccess: () => {
-            showObjectForm.value = false;
+            showObjetForm.value = false;
             form.reset();
             router.visit('/dashboard/objets', { preserveScroll: true });
         },
@@ -151,7 +160,7 @@ const updateObject = () => {
 
     form.put(`/objets-connectes/${selectedObjet.value.idObjetsConnectes}`, {
         onSuccess: () => {
-            showObjectForm.value = false;
+            showObjetForm.value = false;
             form.reset();
             router.visit('/dashboard/objets', { preserveScroll: true });
         },
@@ -177,7 +186,7 @@ const editObject = (objet: ObjetConnecte) => {
     form.derniereMaintenance = objet.derniereMaintenance ? new Date(objet.derniereMaintenance).toISOString().split('T')[0] : '';
     form.derniereInteraction = objet.derniereInteraction ? new Date(objet.derniereInteraction).toISOString().split('T')[0] : '';
     form.idZone = objet.idZone.toString();
-    showObjectForm.value = true;
+    showObjetForm.value = true;
 };
 
 const resetForm = () => {
@@ -220,7 +229,9 @@ const formatDate = (dateString: string): string => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </Button>
                 </div>
-                <Button @click="resetForm(); showObjectForm = true">Ajouter un objet</Button>
+                <Button v-if="isAuthorized" @click="showObjetForm = true">
+                    Ajouter un objet
+                </Button>
             </div>
         </div>
 
@@ -290,11 +301,11 @@ const formatDate = (dateString: string): string => {
                         </div>
                     </div>
                     <div class="flex gap-2 items-center whitespace-nowrap">
-                        <Button variant="outline" size="sm" 
+                        <Button v-if="isAuthorized" variant="outline" size="sm" 
                             @click="editObject(objet)">
                             Modifier
                         </Button>
-                        <Button variant="destructive" size="sm" 
+                        <Button v-if="isAuthorized" variant="destructive" size="sm" 
                             @click="deleteObject(objet)">
                             Supprimer
                         </Button>
@@ -304,7 +315,7 @@ const formatDate = (dateString: string): string => {
         </div>
 
         <!-- Modal Formulaire Objet -->
-        <Dialog v-model:open="showObjectForm">
+        <Dialog v-model:open="showObjetForm">
             <DialogContent class="sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle>
@@ -467,7 +478,7 @@ const formatDate = (dateString: string): string => {
 
                     <div class="mt-4 flex justify-end gap-2">
                         <Button type="button" variant="outline" 
-                            @click="resetForm(); showObjectForm = false">
+                            @click="resetForm(); showObjetForm = false">
                             Annuler
                         </Button>
                         <Button type="submit" :disabled="form.processing">

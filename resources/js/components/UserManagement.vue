@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type User } from '@/types';
 import {
     Dialog,
@@ -33,15 +34,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast/use-toast';
+import type { PageProps } from '@/types';
 
 interface ConnexionLog {
     idConnexionsUtilisateurs: number;
     dateConnexion: string;
     pointsGagne: number;
-}
-
-interface PageProps {
-    connexions: ConnexionLog[];
 }
 
 interface ApiResponse {
@@ -72,6 +70,12 @@ const newUser = ref({
     typeMembre: '',
     niveau: '',
     points: 0
+});
+
+const page = usePage<PageProps>();
+const isAdmin = computed(() => {
+    const auth = page.props.auth as { user: User };
+    return auth.user.typeMembre === 'Administratif';
 });
 
 // Mettre à jour les utilisateurs locaux quand les props changent
@@ -230,7 +234,7 @@ const handleSearch = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </Button>
                 </div>
-                <Button @click="showUserForm = true">
+                <Button v-if="isAdmin" @click="showUserForm = true">
                     Ajouter un utilisateur
                 </Button>
             </div>
@@ -241,74 +245,78 @@ const handleSearch = () => {
                 class="p-4 rounded-lg border">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
-                        <div class="space-y-2">
+                        <div class="flex items-center gap-4 mb-4">
+                            <Avatar class="h-12 w-12">
+                                <AvatarImage :src="user.avatar || '/default-avatar.png'" />
+                                <AvatarFallback>{{ user.pseudo.charAt(0).toUpperCase() }}</AvatarFallback>
+                            </Avatar>
                             <div>
                                 <h3 class="font-semibold">{{ user.pseudo }}</h3>
-                                <p class="text-sm text-gray-500">{{ user.email }}</p>
+                                <p v-if="isAdmin" class="text-sm text-gray-500">{{ user.email }}</p>
                             </div>
-                            <div class="flex flex-col sm:flex-row gap-8">
-                                <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations personnelles</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div>
-                                            <span class="font-medium">Nom : </span>
-                                            <span>{{ user.nom || 'Non renseigné' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Prénom : </span>
-                                            <span>{{ user.prenom || 'Non renseigné' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Date de naissance : </span>
-                                            <span>{{ user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Sexe : </span>
-                                            <span>{{ user.sexe || 'Non renseigné' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Date d'inscription : </span>
-                                            <span>{{ new Date(user.created_at).toLocaleDateString('fr-FR') }}</span>
-                                        </div>
+                        </div>
+                        <div v-if="isAdmin" class="flex flex-col sm:flex-row gap-8">
+                            <div class="w-full sm:w-1/2">
+                                <h4 class="font-medium text-gray-500 mb-2">Informations personnelles</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div>
+                                        <span class="font-medium">Nom : </span>
+                                        <span>{{ user.nom || 'Non renseigné' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Prénom : </span>
+                                        <span>{{ user.prenom || 'Non renseigné' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Date de naissance : </span>
+                                        <span>{{ user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString('fr-FR') : 'Non renseignée' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Sexe : </span>
+                                        <span>{{ user.sexe || 'Non renseigné' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Date d'inscription : </span>
+                                        <span>{{ new Date(user.created_at).toLocaleDateString('fr-FR') }}</span>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations du compte</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div>
-                                            <span class="font-medium">Type de membre : </span>
-                                            <span>{{ user.typeMembre }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Niveau : </span>
-                                            <span>{{ user.niveau }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Points : </span>
-                                            <span>{{ user.points }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium">Vérifié : </span>
-                                            <span :class="user.email_verified_at ? 'text-green-600' : 'text-red-600'">
-                                                {{ user.email_verified_at ? 'Oui' : 'Non' }}
-                                            </span>
-                                        </div>
+                            <div class="w-full sm:w-1/2">
+                                <h4 class="font-medium text-gray-500 mb-2">Informations du compte</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div>
+                                        <span class="font-medium">Type de membre : </span>
+                                        <span>{{ user.typeMembre }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Niveau : </span>
+                                        <span>{{ user.niveau }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Points : </span>
+                                        <span>{{ user.points }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">Vérifié : </span>
+                                        <span :class="user.email_verified_at ? 'text-green-600' : 'text-red-600'">
+                                            {{ user.email_verified_at ? 'Oui' : 'Non' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="flex gap-2 items-center whitespace-nowrap">
-                        <Button variant="outline" size="sm" 
+                        <Button v-if="isAdmin" variant="outline" size="sm" 
                             @click="viewLoginHistory(user)">
                             Historique
                         </Button>
-                        <Button variant="outline" size="sm" 
+                        <Button v-if="isAdmin" variant="outline" size="sm" 
                             @click="editUser(user)">
                             Modifier
                         </Button>
-                        <Button variant="destructive" size="sm" 
+                        <Button v-if="isAdmin" variant="destructive" size="sm" 
                             @click="deleteUser(user)">
                             Supprimer
                         </Button>
