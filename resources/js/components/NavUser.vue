@@ -6,6 +6,7 @@ import { type SharedData, type User } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { ChevronsUpDown } from 'lucide-vue-next';
 import UserMenuContent from './UserMenuContent.vue';
+import ExperienceBar from '@/components/ExperienceBar.vue';
 
 const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
@@ -27,7 +28,7 @@ const { isMobile, state } = useSidebar();
                     :side="isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'"
                     align="end" 
                     :side-offset="4"
-                >
+                >   <ExperienceBar :user-id="user.id" />
                     <UserMenuContent :user="user" />
                 </DropdownMenuContent>
             </DropdownMenu>
