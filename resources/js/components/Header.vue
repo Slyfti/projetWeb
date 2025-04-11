@@ -10,6 +10,11 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const page = usePage();
+const isAuthenticated = computed(() => page.props.auth?.user);
 </script>
 
 <style>
@@ -43,8 +48,11 @@ import {
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <NavigationMenuLink :href="route('login')" class="tracking-[0.05em] bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300 px-4 py-2 rounded-md transition-all duration-300">
-                            Connexion / Inscription
+                        <NavigationMenuLink 
+                            :href="isAuthenticated ? route('dashboard') : route('login')" 
+                            class="tracking-[0.05em] bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300 px-4 py-2 rounded-md transition-all duration-300"
+                        >
+                            {{ isAuthenticated ? 'Dashboard' : 'Connexion / Inscription' }}
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                 </NavigationMenuList>

@@ -19,106 +19,116 @@ defineProps<{
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-gradient-to-tr from-indigo-900 to-gray-900">
+    <div class="min-h-screen flex flex-col bg-gradient-to-tr from-[#6F4786] to-[#2D0B47]">
         <Header />
-        <main class="flex-grow py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <h1 class="text-4xl font-bold text-white tracking-[0.05em] mb-8 text-center">Nos Services</h1>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Service Restauration -->
-                    <div v-if="services['Restauration']" class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Restauration</h2>
-                            <p class="text-white/80 mb-4">
-                                {{ services['Restauration'][0]?.descriptionServices || 'Découvrez nos différents points de restauration dans le stade' }}
-                            </p>
-                            <Link :href="route('restauration.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    Voir les options
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-[#E4F1F1] mb-8">Nos Services</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Service Restauration -->
+                <Card v-if="services['Restauration']" class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Restauration</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            {{ services['Restauration'][0]?.descriptionServices || 'Découvrez nos différents points de restauration dans le stade' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('restauration.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                Voir les options
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
 
-                    <!-- Service Billetterie -->
-                    <div class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Billetterie</h2>
-                            <p class="text-white/80 mb-4">
-                                Réservez vos places pour les prochains événements
-                            </p>
-                            <Link :href="route('evenements.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    Voir les événements
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+                <!-- Service Billetterie -->
+                <Card class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Billetterie</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            Réservez vos places pour les prochains événements
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('evenements.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                Voir les événements
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
 
-                    <!-- Service VIP -->
-                    <div v-if="services['VIP']" class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Espace VIP</h2>
-                            <p class="text-white/80 mb-4">
-                                {{ services['VIP'][0]?.descriptionServices || 'Profitez d\'une expérience premium dans nos loges VIP' }}
-                            </p>
-                            <Link :href="route('vip.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    Découvrir
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+                <!-- Service VIP -->
+                <Card v-if="services['VIP']" class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Espace VIP</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            {{ services['VIP'][0]?.descriptionServices || 'Profitez d\'une expérience premium dans nos loges VIP' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('vip.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                Découvrir
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
 
-                    <!-- Service Sécurité -->
-                    <div v-if="services['Sécurité']" class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Sécurité</h2>
-                            <p class="text-white/80 mb-4">
-                                {{ services['Sécurité'][0]?.descriptionServices || 'Informations sur la sécurité et les consignes du stade' }}
-                            </p>
-                            <Link :href="route('securite.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    En savoir plus
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+                <!-- Service Sécurité -->
+                <Card v-if="services['Sécurité']" class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Sécurité</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            {{ services['Sécurité'][0]?.descriptionServices || 'Informations sur la sécurité et les consignes du stade' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('securite.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                En savoir plus
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
 
-                    <!-- Service Médical -->
-                    <div v-if="services['Médical']" class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Service Médical</h2>
-                            <p class="text-white/80 mb-4">
-                                {{ services['Médical'][0]?.descriptionServices || 'Points d\'accueil médical et informations de santé' }}
-                            </p>
-                            <Link :href="route('medical.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    Localiser
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+                <!-- Service Médical -->
+                <Card v-if="services['Médical']" class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Service Médical</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            {{ services['Médical'][0]?.descriptionServices || 'Points d\'accueil médical et informations de santé' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('medical.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                Localiser
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
 
-                    <!-- Service PMR -->
-                    <div v-if="services['Assistance']" class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
-                        <div class="p-6">
-                            <h2 class="text-xl font-medium text-white tracking-[0.05em] mb-2">Accessibilité PMR</h2>
-                            <p class="text-white/80 mb-4">
-                                {{ services['Assistance'][0]?.descriptionServices || 'Services et aménagements pour les personnes à mobilité réduite' }}
-                            </p>
-                            <Link :href="route('pmr.index')">
-                                <Button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-                                    Informations
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+                <!-- Service PMR -->
+                <Card v-if="services['Assistance']" class="bg-white/10 backdrop-blur-sm border-none">
+                    <CardHeader>
+                        <CardTitle class="text-[#E4F1F1]">Accessibilité PMR</CardTitle>
+                        <CardDescription class="text-[#E4F1F1]/80">
+                            {{ services['Assistance'][0]?.descriptionServices || 'Services et aménagements pour les personnes à mobilité réduite' }}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Link :href="route('pmr.index')">
+                            <Button class="w-full bg-[#6F4786] hover:bg-[#5A3A6B] text-white">
+                                Informations
+                            </Button>
+                        </Link>
+                    </CardContent>
+                </Card>
             </div>
-        </main>
+      </main>
         <Footer />
     </div>
-</template>
+  </template>
   
