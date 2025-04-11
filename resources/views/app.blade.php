@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
@@ -26,7 +26,7 @@
             }
 
             html.dark {
-                background-color: oklch(0.145 0 0);
+                background-color: #0d1126;
             }
         </style>
 
