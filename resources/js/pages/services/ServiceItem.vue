@@ -1,38 +1,37 @@
 <template>
-    <section
-      class="flex flex-col md:flex-row items-center gap-6 p-6 border border-[#6F4786] rounded-2xl bg-white/5"
-    >
-      <div class="flex-1 text-center md:text-left">
-        <h2 class="text-[#40B584] text-xl font-semibold mb-2">{{ title }}</h2>
-        <p class="text-sm mb-4">{{ text }}</p>
-        <a
-          href="#"
-          class="inline-block bg-[#2D9CDB] hover:bg-[#C471ED] text-[#E4F1F1] px-4 py-2 rounded-xl transition"
-        >
-          {{ button }}
-        </a>
-      </div>
-      <div
-        class="w-full md:w-40 h-32 bg-gray-700 rounded-lg flex-shrink-0"
-      >
-        <img
-          :src="imageUrl"
-          :alt="title"
-          class="w-full h-full object-cover rounded-lg"
-        />
-      </div>
-    </section>
-  </template>
+    <div class="min-h-screen flex flex-col bg-gradient-to-tr from-indigo-900 to-gray-900">
+        <Header />
+        <main class="flex-grow py-12">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="overflow-hidden rounded-lg border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm">
+                    <div class="p-6">
+                        <h1 class="text-4xl font-bold text-white tracking-[0.05em] mb-8 text-center">{{ title }}</h1>
+                        <p class="text-white/80 mb-8">{{ text }}</p>
+                        <div class="flex justify-center">
+                            <Button class="bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+                                {{ buttonText }}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <img :src="image" :alt="title" class="w-full rounded-lg shadow-lg" />
+                </div>
+            </div>
+        </main>
+        <Footer />
+    </div>
+</template>
   
-  <script setup>
-  defineProps({
-    title: String,
-    text: String,
-    button: String,
-    imageUrl: {
-      type: String,
-      default: 'https://via.placeholder.com/150'
-    }
-  })
-  </script>
+<script setup>
+defineProps({
+  title: String,
+  text: String,
+  buttonText: String,
+  image: {
+    type: String,
+    default: 'https://via.placeholder.com/150'
+  }
+})
+</script>
   
