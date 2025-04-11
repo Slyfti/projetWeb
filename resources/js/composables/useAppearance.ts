@@ -1,6 +1,6 @@
 import { onMounted, ref } from 'vue';
 
-type Appearance = 'light' | 'dark' | 'system';
+type Appearance = 'dark';
 
 export function updateTheme(value: Appearance) {
     if (typeof window === 'undefined') {
@@ -63,28 +63,20 @@ export function initializeTheme() {
 }
 
 export function useAppearance() {
-    const appearance = ref<Appearance>('system');
+    const appearance = ref<Appearance>('dark');
 
     onMounted(() => {
         initializeTheme();
-
-        const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
-
-        if (savedAppearance) {
-            appearance.value = savedAppearance;
-        }
+        // Force le thème sombre, peu importe ce qui est sauvegardé
+        updateAppearance('dark');
     });
 
     function updateAppearance(value: Appearance) {
-        appearance.value = value;
-
-        // Store in localStorage for client-side persistence...
-        localStorage.setItem('appearance', value);
-
-        // Store in cookie for SSR...
-        setCookie('appearance', value);
-
-        updateTheme(value);
+        // Force toujours la valeur 'dark'
+        appearance.value = 'dark';
+        localStorage.setItem('appearance', 'dark');
+        setCookie('appearance', 'dark');
+        updateTheme('dark');
     }
 
     return {
