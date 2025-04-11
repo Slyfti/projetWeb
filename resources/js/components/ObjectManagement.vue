@@ -200,89 +200,98 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-    <div class="p-6">
+    <div class="p-6 bg-gray-900 bg-opacity-90 shadow-md">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Gestion des Objets Connectés</h2>
+            <h2 class="text-2xl font-bold text-white tracking-[0.05em]">Gestion des Objets Connectés</h2>
             <div class="flex gap-4">
                 <div class="relative">
                     <Input
                         v-model="search"
                         placeholder="Rechercher un objet..."
-                        class="pr-10"
+                        class="pr-10 bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
                         @keyup.enter="handleSearch"
                     />
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="absolute right-0 top-0 h-full px-3"
+                        class="absolute right-0 top-0 h-full px-3 text-white hover:text-cyan-300"
                         @click="handleSearch"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </Button>
                 </div>
-                <Button @click="resetForm(); showObjectForm = true">Ajouter un objet</Button>
+                <Button 
+                    @click="showObjectForm = true"
+                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
+                >
+                    Ajouter un objet
+                </Button>
             </div>
         </div>
 
         <div class="grid gap-4">
             <div v-for="objet in filteredObjets" :key="objet.idObjetsConnectes" 
-                class="p-4 rounded-lg border">
+                class="p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
                         <div class="space-y-2">
                             <div>
-                                <h3 class="font-semibold">{{ objet.nom }}</h3>
-                                <p class="text-sm text-gray-500">{{ objet.descriptionObjetsConnectes }}</p>
+                                <h3 class="font-semibold text-white tracking-[0.05em]">{{ objet.nom }}</h3>
+                                <p class="text-sm text-white/80 tracking-[0.05em]">{{ objet.descriptionObjetsConnectes }}</p>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-8">
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations générales</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations générales</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Catégorie : </span>
-                                            <span>{{ objet.categorie?.nom }}</span>
+                                            <span class="font-medium text-white/90">Catégorie : </span>
+                                            <span class="text-white/80">{{ objet.categorie?.nom || 'Non renseignée' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Zone : </span>
-                                            <span>{{ objet.zone?.nom }}</span>
+                                            <span class="font-medium text-white/90">Zone : </span>
+                                            <span class="text-white/80">{{ objet.zone?.nom || 'Non renseignée' }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">État : </span>
+                                            <span class="font-medium text-white/90">État : </span>
                                             <span :class="{
-                                                'text-green-600': objet.etat === 'Actif',
-                                                'text-red-600': objet.etat === 'Inactif',
-                                                'text-yellow-600': objet.etat === 'Maintenance'
+                                                'text-green-400': objet.etat === 'Actif',
+                                                'text-red-400': objet.etat === 'Inactif',
+                                                'text-yellow-400': objet.etat === 'Maintenance'
                                             }">{{ objet.etat }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Mode : </span>
-                                            <span>{{ objet.mode }}</span>
+                                            <span class="font-medium text-white/90">Mode : </span>
+                                            <span class="text-white/80">{{ objet.mode }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium text-white/90">Connectivité : </span>
+                                            <span class="text-white/80">{{ objet.connectivite }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Spécifications techniques</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations techniques</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Niveau de batterie : </span>
-                                            <span>{{ objet.niveauBatterie }}%</span>
+                                            <span class="font-medium text-white/90">Niveau de batterie : </span>
+                                            <span class="text-white/80">{{ objet.niveauBatterie }}%</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Puissance : </span>
-                                            <span>{{ objet.puissance }}W</span>
+                                            <span class="font-medium text-white/90">Puissance : </span>
+                                            <span class="text-white/80">{{ objet.puissance }}W</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Consommation actuelle : </span>
-                                            <span>{{ objet.consommationActuelle }}W</span>
+                                            <span class="font-medium text-white/90">Consommation actuelle : </span>
+                                            <span class="text-white/80">{{ objet.consommationActuelle }}W</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Durée de vie estimée : </span>
-                                            <span>{{ objet.dureeVieEstimee }}h</span>
+                                            <span class="font-medium text-white/90">Durée de vie estimée : </span>
+                                            <span class="text-white/80">{{ objet.dureeVieEstimee }} heures</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Dernière interaction : </span>
-                                            <span>{{ formatDate(objet.derniereInteraction) }}</span>
+                                            <span class="font-medium text-white/90">Dernière interaction : </span>
+                                            <span class="text-white/80">{{ formatDate(objet.derniereInteraction) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -291,11 +300,13 @@ const formatDate = (dateString: string): string => {
                     </div>
                     <div class="flex gap-2 items-center whitespace-nowrap">
                         <Button variant="outline" size="sm" 
-                            @click="editObject(objet)">
+                            @click="editObject(objet)"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             Modifier
                         </Button>
                         <Button variant="destructive" size="sm" 
-                            @click="deleteObject(objet)">
+                            @click="deleteObject(objet)"
+                            class="bg-red-900/30 hover:bg-red-800/40 border border-red-500/30 hover:border-red-400/50 text-white hover:text-red-300">
                             Supprimer
                         </Button>
                     </div>
@@ -305,9 +316,9 @@ const formatDate = (dateString: string): string => {
 
         <!-- Modal Formulaire Objet -->
         <Dialog v-model:open="showObjectForm">
-            <DialogContent class="sm:max-w-[500px]">
+            <DialogContent class="sm:max-w-[500px] bg-indigo-900/90 border border-indigo-500/30 text-white">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle class="text-white tracking-[0.05em]">
                         {{ selectedObjet ? 'Modifier' : 'Ajouter' }} un objet connecté
                     </DialogTitle>
                 </DialogHeader>
