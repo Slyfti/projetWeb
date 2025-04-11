@@ -214,85 +214,90 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-    <div class="p-6">
+    <div class="p-6 bg-gray-900 bg-opacity-90 shadow-md">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Gestion des Événements</h2>
+            <h2 class="text-2xl font-bold text-white tracking-[0.05em]">Gestion des Événements</h2>
             <div class="flex gap-4">
                 <div class="relative">
                     <Input
                         v-model="search"
                         placeholder="Rechercher un événement..."
-                        class="pr-10"
+                        class="pr-10 bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
                         @keyup.enter="handleSearch"
                     />
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="absolute right-0 top-0 h-full px-3"
+                        class="absolute right-0 top-0 h-full px-3 text-white hover:text-cyan-300"
                         @click="handleSearch"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </Button>
                 </div>
-                <Button @click="resetForm(); showEventForm = true">Ajouter un événement</Button>
+                <Button 
+                    @click="showEventForm = true"
+                    class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300"
+                >
+                    Ajouter un événement
+                </Button>
             </div>
         </div>
 
         <div class="grid gap-4">
             <div v-for="evenement in filteredEvenements" :key="evenement.idEvenements" 
-                class="p-4 rounded-lg border">
+                class="p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                     <div class="w-full">
                         <div class="space-y-2">
                             <div>
-                                <h3 class="font-semibold">{{ evenement.nom }}</h3>
-                                <p class="text-sm text-gray-500">{{ evenement.descriptionEvenements }}</p>
+                                <h3 class="font-semibold text-white tracking-[0.05em]">{{ evenement.nom }}</h3>
+                                <p class="text-sm text-white/80 tracking-[0.05em]">{{ evenement.descriptionEvenements }}</p>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-8">
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Informations générales</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations générales</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Date : </span>
-                                            <span>{{ formatDate(evenement.dateEvenements) }}</span>
+                                            <span class="font-medium text-white/90">Date : </span>
+                                            <span class="text-white/80">{{ formatDate(evenement.dateEvenements) }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Lieu : </span>
-                                            <span>{{ evenement.lieu }}</span>
+                                            <span class="font-medium text-white/90">Lieu : </span>
+                                            <span class="text-white/80">{{ evenement.lieu }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Type : </span>
-                                            <span>{{ evenement.typeEvents }}</span>
+                                            <span class="font-medium text-white/90">Type : </span>
+                                            <span class="text-white/80">{{ evenement.typeEvents }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Ligue : </span>
-                                            <span>{{ evenement.ligue }}</span>
+                                            <span class="font-medium text-white/90">Ligue : </span>
+                                            <span class="text-white/80">{{ evenement.ligue }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="w-full sm:w-1/2">
-                                    <h4 class="font-medium text-gray-500 mb-2">Détails de l'événement</h4>
+                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Détails de l'événement</h4>
                                     <div class="space-y-2 text-sm">
                                         <div>
-                                            <span class="font-medium">Équipe à domicile : </span>
-                                            <span>{{ evenement.equipeDomicile }}</span>
+                                            <span class="font-medium text-white/90">Équipe à domicile : </span>
+                                            <span class="text-white/80">{{ evenement.equipeDomicile }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Équipe à l'extérieur : </span>
-                                            <span>{{ evenement.equipeExterieur }}</span>
+                                            <span class="font-medium text-white/90">Équipe à l'extérieur : </span>
+                                            <span class="text-white/80">{{ evenement.equipeExterieur }}</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Prix : </span>
-                                            <span>{{ evenement.prix }}€</span>
+                                            <span class="font-medium text-white/90">Prix : </span>
+                                            <span class="text-white/80">{{ evenement.prix }}€</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Disponibilité : </span>
-                                            <span>{{ evenement.Disponiblilite }} places</span>
+                                            <span class="font-medium text-white/90">Disponibilité : </span>
+                                            <span class="text-white/80">{{ evenement.Disponiblilite }} places</span>
                                         </div>
                                         <div>
-                                            <span class="font-medium">Météo : </span>
-                                            <span>{{ evenement.meteo }}</span>
+                                            <span class="font-medium text-white/90">Météo : </span>
+                                            <span class="text-white/80">{{ evenement.meteo }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -301,11 +306,13 @@ const formatDate = (dateString: string): string => {
                     </div>
                     <div class="flex gap-2 items-center whitespace-nowrap">
                         <Button variant="outline" size="sm" 
-                            @click="editEvent(evenement)">
+                            @click="editEvent(evenement)"
+                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
                             Modifier
                         </Button>
                         <Button variant="destructive" size="sm" 
-                            @click="deleteEvent(evenement)">
+                            @click="deleteEvent(evenement)"
+                            class="bg-red-900/30 hover:bg-red-800/40 border border-red-500/30 hover:border-red-400/50 text-white hover:text-red-300">
                             Supprimer
                         </Button>
                     </div>
@@ -315,9 +322,10 @@ const formatDate = (dateString: string): string => {
 
         <!-- Modal Formulaire Événement -->
         <Dialog v-model:open="showEventForm">
-            <DialogContent class="sm:max-w-[90vw] md:max-w-[600px] max-h-[90vh] overflow-y-auto">
+
+            <DialogContent class="sm:max-w-[90vw] md:max-w-[600px] max-h-[90vh] overflow-y-auto bg-indigo-900/90 border border-indigo-500/30 text-white">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle class="text-white tracking-[0.05em]">
                         {{ selectedEvenement ? 'Modifier' : 'Ajouter' }} un événement
                     </DialogTitle>
                 </DialogHeader>

@@ -25,9 +25,9 @@ const activeTab = ref('users');
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                    <div class="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <ObjectManagement :objets="objets" :categories="categories" :zones="zones" />
-                    </div>
+            <div class="relative overflow-hidden rounded-xl border border-indigo-500/30 bg-gray-900 bg-opacity-90 shadow-md backdrop-blur-sm transition-all duration-300">
+                <ObjectManagement :objets="objets" :categories="categories" :zones="zones" />
+            </div>
         </div>
     </AppLayout>
 </template>
