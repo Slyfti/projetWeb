@@ -76,7 +76,7 @@ const props = defineProps<{
 const { toast } = useToast();
 const localObjets = ref<ObjetConnecte[]>([]);
 const selectedObjet = ref<ObjetConnecte | null>(null);
-const showObjetForm = ref(false);
+const showObjectForm = ref(false);
 const search = ref('');
 const isAddDialogOpen = ref(false);
 const isEditDialogOpen = ref(false);
@@ -131,7 +131,7 @@ const handleSearch = () => {
 const createObject = () => {
     form.post('/objets-connectes', {
         onSuccess: () => {
-            showObjetForm.value = false;
+            showObjectForm.value = false;
             form.reset();
             router.visit('/dashboard/objets', { preserveScroll: true });
         },
@@ -160,7 +160,7 @@ const updateObject = () => {
 
     form.put(`/objets-connectes/${selectedObjet.value.idObjetsConnectes}`, {
         onSuccess: () => {
-            showObjetForm.value = false;
+            showObjectForm.value = false;
             form.reset();
             router.visit('/dashboard/objets', { preserveScroll: true });
         },
@@ -186,7 +186,7 @@ const editObject = (objet: ObjetConnecte) => {
     form.derniereMaintenance = objet.derniereMaintenance ? new Date(objet.derniereMaintenance).toISOString().split('T')[0] : '';
     form.derniereInteraction = objet.derniereInteraction ? new Date(objet.derniereInteraction).toISOString().split('T')[0] : '';
     form.idZone = objet.idZone.toString();
-    showObjetForm.value = true;
+    showObjectForm.value = true;
 };
 
 const resetForm = () => {
@@ -238,87 +238,67 @@ const formatDate = (dateString: string): string => {
             </div>
         </div>
 
-        <div class="grid gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <div v-for="objet in filteredObjets" :key="objet.idObjetsConnectes" 
-                class="p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
-                <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
-                    <div class="w-full">
-                        <div class="space-y-2">
-                            <div>
-                                <h3 class="font-semibold text-white tracking-[0.05em]">{{ objet.nom }}</h3>
-                                <p class="text-sm text-white/80 tracking-[0.05em]">{{ objet.descriptionObjetsConnectes }}</p>
-                            </div>
-                            <div class="flex flex-col sm:flex-row gap-8">
-                                <div class="w-full sm:w-1/2">
-                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations générales</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div>
-                                            <span class="font-medium text-white/90">Catégorie : </span>
-                                            <span class="text-white/80">{{ objet.categorie?.nom || 'Non renseignée' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Zone : </span>
-                                            <span class="text-white/80">{{ objet.zone?.nom || 'Non renseignée' }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">État : </span>
-                                            <span :class="{
-                                                'text-green-400': objet.etat === 'Actif',
-                                                'text-red-400': objet.etat === 'Inactif',
-                                                'text-yellow-400': objet.etat === 'Maintenance'
-                                            }">{{ objet.etat }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Mode : </span>
-                                            <span class="text-white/80">{{ objet.mode }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Connectivité : </span>
-                                            <span class="text-white/80">{{ objet.connectivite }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                class="relative p-4 rounded-lg border border-indigo-500/30 bg-indigo-900/30 hover:bg-indigo-800/40 hover:border-indigo-400/50 shadow-md backdrop-blur-sm transition-all duration-300">
+                <!-- Icône en haut à droite -->
+                <div class="absolute top-2 right-2">
+                    <div class="w-10 h-10 rounded-full bg-indigo-800/50 flex items-center justify-center">
+                        <svg v-if="objet.categorie?.nom.toLowerCase().includes('caméra')" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera text-white"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                        <svg v-else-if="objet.categorie?.nom.toLowerCase().includes('capteur')" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity text-white"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <svg v-else-if="objet.categorie?.nom.toLowerCase().includes('éclairage')" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb text-white"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-device text-white"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                    </div>
+                </div>
 
-                                <div class="w-full sm:w-1/2">
-                                    <h4 class="font-bold text-white tracking-[0.05em] mb-2">Informations techniques</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div>
-                                            <span class="font-medium text-white/90">Niveau de batterie : </span>
-                                            <span class="text-white/80">{{ objet.niveauBatterie }}%</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Puissance : </span>
-                                            <span class="text-white/80">{{ objet.puissance }}W</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Consommation actuelle : </span>
-                                            <span class="text-white/80">{{ objet.consommationActuelle }}W</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Durée de vie estimée : </span>
-                                            <span class="text-white/80">{{ objet.dureeVieEstimee }} heures</span>
-                                        </div>
-                                        <div>
-                                            <span class="font-medium text-white/90">Dernière interaction : </span>
-                                            <span class="text-white/80">{{ formatDate(objet.derniereInteraction) }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- En-tête de la carte -->
+                <div class="mb-4">
+                    <h3 class="font-semibold text-white tracking-[0.05em] text-lg">{{ objet.nom }}</h3>
+                    <p class="text-sm text-white/80 tracking-[0.05em] line-clamp-2">{{ objet.descriptionObjetsConnectes }}</p>
+                </div>
+
+                <!-- État et Mode -->
+                <div class="flex gap-2 mb-4">
+                    <Badge :class="{
+                        'bg-green-500/20 text-green-400': objet.etat === 'Actif',
+                        'bg-red-500/20 text-red-400': objet.etat === 'Inactif',
+                        'bg-yellow-500/20 text-yellow-400': objet.etat === 'Maintenance'
+                    }">
+                        {{ objet.etat }}
+                    </Badge>
+                    <Badge class="bg-indigo-500/20 text-indigo-400">
+                        {{ objet.mode }}
+                    </Badge>
+                </div>
+
+                <!-- Informations principales -->
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery text-white/70"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="22" y1="11" x2="22" y2="11"/></svg>
+                        <span class="text-white/70">{{ objet.niveauBatterie }}%</span>
                     </div>
-                    <div class="flex gap-2 items-center whitespace-nowrap">
-                        <Button v-if="isAuthorized"  variant="outline" size="sm" 
-                            @click="editObject(objet)"
-                            class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
-                            Modifier
-                        </Button>
-                        <Button v-if="isAuthorized" variant="destructive" size="sm" 
-                            @click="deleteObject(objet)"
-                            class="bg-red-900/30 hover:bg-red-800/40 border border-red-500/30 hover:border-red-400/50 text-white hover:text-red-300">
-                            Supprimer
-                        </Button>
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap text-white/70"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <span class="text-white/70">{{ objet.puissance }}W</span>
                     </div>
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin text-white/70"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span class="text-white/70">{{ objet.zone?.nom || 'Zone non définie' }}</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="absolute bottom-4 right-4 flex gap-2">
+                    <Button v-if="isAuthorized" variant="outline" size="sm" 
+                        @click="editObject(objet)"
+                        class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                    </Button>
+                    <Button v-if="isAuthorized" variant="destructive" size="sm" 
+                        @click="deleteObject(objet)"
+                        class="bg-red-900/30 hover:bg-red-800/40 border border-red-500/30 hover:border-red-400/50 text-white hover:text-red-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </Button>
                 </div>
             </div>
         </div>
@@ -487,7 +467,7 @@ const formatDate = (dateString: string): string => {
 
                     <div class="mt-4 flex justify-end gap-2">
                         <Button type="button" variant="outline" 
-                            @click="resetForm(); showObjetForm = false">
+                            @click="resetForm(); showObjectForm = false">
                             Annuler
                         </Button>
                         <Button type="submit" :disabled="form.processing">
