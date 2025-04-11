@@ -31,6 +31,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast/use-toast';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface Evenement {
     idEvenements: number;
@@ -79,11 +85,83 @@ const form = useForm({
     lieu: '',
     meteo: '',
     ligue: '',
-    consignes_securite: '',
-    activites_autour: '',
+    consignes_securite: 'Interdiction d\'apporter des objets dangereux. Les sacs seront fouillés à l\'entrée.\n\nObjets interdits\n\n    Bouteilles en verre\n    Objets contondants\n    Banderoles et drapeaux sur manche\n    Pétards et artifices\n\nRecommandations\n\n    Arrivez 30 minutes avant le début\n    Conservez votre billet sur vous\n    Respectez les zones assignées\n    En cas d\'urgence, contactez un steward',
+    activites_autour: 'Boutique officielle, restaurants, bars, zone de restauration rapide.',
     logo_equipe_domicile: '',
     logo_equipe_exterieur: '',
     resultat: ''
+});
+
+// Liste des sports disponibles
+const sports = [
+    'Football',
+    'Basketball',
+    'Rugby',
+    'Tennis',
+    'Handball',
+    'Volleyball',
+    'Athlétisme',
+    'Natation'
+];
+
+// Liste des ligues par sport
+const liguesParSport = {
+    'Football': [
+        'Ligue 1',
+        'Ligue 2',
+        'Ligue des Champions',
+        'Ligue Europa',
+        'Coupe de France',
+        'Coupe de la Ligue'
+    ],
+    'Basketball': [
+        'LNB Pro A',
+        'LNB Pro B',
+        'EuroLeague',
+        'Coupe de France'
+    ],
+    'Rugby': [
+        'Top 14',
+        'Pro D2',
+        'Champions Cup',
+        'Challenge Cup',
+        'Tournoi des Six Nations'
+    ],
+    'Tennis': [
+        'ATP Tour',
+        'WTA Tour',
+        'Grand Chelem',
+        'Masters 1000'
+    ],
+    'Handball': [
+        'Lidl Starligue',
+        'ProLigue',
+        'Ligue des Champions',
+        'Coupe de France'
+    ],
+    'Volleyball': [
+        'Ligue A',
+        'Ligue B',
+        'Coupe de France',
+        'Champions League'
+    ],
+    'Athlétisme': [
+        'Championnats du Monde',
+        'Championnats d\'Europe',
+        'Diamond League',
+        'Championnats de France'
+    ],
+    'Natation': [
+        'Championnats du Monde',
+        'Championnats d\'Europe',
+        'Championnats de France',
+        'Coupe du Monde'
+    ]
+};
+
+// Liste des ligues disponibles en fonction du sport sélectionné
+const liguesDisponibles = computed(() => {
+    return liguesParSport[form.typeEvents] || [];
 });
 
 const filteredEvenements = computed(() => {
@@ -351,7 +429,12 @@ const formatDate = (dateString: string): string => {
                         <FormField name="descriptionEvenements" class="col-span-2">
                             <FormLabel>Description<InputError :message="form.errors.descriptionEvenements" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.descriptionEvenements" required placeholder="Description de l'événement" />
+                                <textarea 
+                                    v-model="form.descriptionEvenements" 
+                                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    required 
+                                    placeholder="Description détaillée de l'événement"
+                                />
                             </FormControl>
                         </FormField>
 
@@ -359,7 +442,18 @@ const formatDate = (dateString: string): string => {
                         <FormField name="typeEvents">
                             <FormLabel>Type<InputError :message="form.errors.typeEvents" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.typeEvents" required placeholder="Type d'événement" />
+                                <Select v-model="form.typeEvents" required>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionner un sport" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem v-for="sport in sports" :key="sport" :value="sport">
+                                                {{ sport }}
+                                            </SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                         </FormField>
 
@@ -367,7 +461,29 @@ const formatDate = (dateString: string): string => {
                         <FormField name="ligue">
                             <FormLabel>Ligue<InputError :message="form.errors.ligue" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.ligue" required placeholder="Ligue" />
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <div>
+                                                <Select v-model="form.ligue" required :disabled="!form.typeEvents">
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Sélectionner une ligue" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectItem v-for="ligue in liguesDisponibles" :key="ligue" :value="ligue">
+                                                                {{ ligue }}
+                                                            </SelectItem>
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Veuillez d'abord sélectionner un sport</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </FormControl>
                         </FormField>
 
@@ -423,7 +539,11 @@ const formatDate = (dateString: string): string => {
                         <FormField name="consignes_securite" class="col-span-2">
                             <FormLabel>Consignes de sécurité<InputError :message="form.errors.consignes_securite" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.consignes_securite" placeholder="Consignes de sécurité" />
+                                <textarea 
+                                    v-model="form.consignes_securite" 
+                                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    placeholder="Interdiction d'apporter des objets dangereux. Les sacs seront fouillés à l'entrée."
+                                />
                             </FormControl>
                         </FormField>
 
@@ -431,7 +551,11 @@ const formatDate = (dateString: string): string => {
                         <FormField name="activites_autour" class="col-span-2">
                             <FormLabel>Activités autour<InputError :message="form.errors.activites_autour" /></FormLabel>
                             <FormControl>
-                                <Input v-model="form.activites_autour" placeholder="Activités autour de l'événement" />
+                                <textarea 
+                                    v-model="form.activites_autour" 
+                                    class="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    placeholder="Activités autour de l'événement"
+                                />
                             </FormControl>
                         </FormField>
 
@@ -448,14 +572,6 @@ const formatDate = (dateString: string): string => {
                             <FormLabel>Logo équipe extérieur<InputError :message="form.errors.logo_equipe_exterieur" /></FormLabel>
                             <FormControl>
                                 <Input v-model="form.logo_equipe_exterieur" placeholder="URL du logo" />
-                            </FormControl>
-                        </FormField>
-
-                        <!-- Résultat -->
-                        <FormField name="resultat" class="col-span-2">
-                            <FormLabel>Résultat<InputError :message="form.errors.resultat" /></FormLabel>
-                            <FormControl>
-                                <Input v-model="form.resultat" placeholder="Résultat du match" />
                             </FormControl>
                         </FormField>
                     </div>
