@@ -32,8 +32,8 @@ Route::prefix('information')->group(function () {
     Route::get('/evenements/{evenement}', [EvenementsController::class, 'show'])->name('evenements.show');
     
     // Routes pour les billets
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::get('/tickets', [\App\Http\Controllers\Information\TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Information\TicketController::class, 'show'])->name('tickets.show');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -67,6 +67,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/objets-connectes', [ObjetConnecteController::class, 'store'])->name('objets-connectes.store');
     Route::put('/objets-connectes/{objet}', [ObjetConnecteController::class, 'update'])->name('objets-connectes.update');
     Route::delete('/objets-connectes/{objet}', [ObjetConnecteController::class, 'destroy'])->name('objets-connectes.destroy');
+
+    // Routes pour les tickets
+    Route::get('/dashboard/tickets', [\App\Http\Controllers\TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/dashboard/tickets/admin', [\App\Http\Controllers\TicketController::class, 'adminIndex'])->name('tickets.admin.index');
+    Route::get('/dashboard/tickets/{id}', [\App\Http\Controllers\TicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets', [\App\Http\Controllers\TicketController::class, 'store'])->name('tickets.store');
+    Route::put('/tickets/{id}', [\App\Http\Controllers\TicketController::class, 'update'])->name('tickets.update');
+    Route::post('/tickets/{id}/cancel', [\App\Http\Controllers\TicketController::class, 'cancel'])->name('tickets.cancel');
+    Route::delete('/tickets/{id}', [\App\Http\Controllers\TicketController::class, 'destroy'])->name('tickets.destroy');
 });
 
 // Route de test pour l'envoi d'emails
