@@ -19,13 +19,18 @@ class RapportController extends Controller
         $zones = \App\Models\ZoneStade::all();
 
         // Récupération des points utilisateurs par jour
-        $pointsUtilisateurs = ActionUtilisateur::select(
-            DB::raw('DATE(dateAction) as date'),
-            DB::raw('SUM(pointsGagne) as points')
-        )
-        ->groupBy(DB::raw('DATE(dateAction)'))
-        ->orderBy(DB::raw('DATE(dateAction)'))
-        ->get();
+        $pointsUtilisateurs = ActionUtilisateur::all()
+            ->groupBy(function($action) {
+                return Carbon::parse($action->dateAction)->format('Y-m-d');
+            })
+            ->map(function($group) {
+                return [
+                    'date' => $group->first()->dateAction->format('Y-m-d'),
+                    'points' => $group->sum('pointsGagne')
+                ];
+            })
+            ->values()
+            ->sortBy('date');
 
         return Inertia::render('dashboard/GestionRapport', [
             'objets' => $objets,
