@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         showForTypes: ['Personnel technique', 'Sécurité', 'Administratif']
     },
     {
+        title: 'Tickets',
+        href: '/dashboard/tickets',
+        icon: Ticket,
+    },
+    {
         title: 'Rapports',
         href: '/dashboard/rapports',
         icon: BarChart,

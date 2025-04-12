@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useToast } from '@/components/ui/toast/use-toast';
+
+const { toast } = useToast();
+const isProcessing = ref(false);
 
 const props = defineProps<{
     evenement: {
@@ -220,6 +224,45 @@ const formatDate = (dateString: string) => {
         minute: '2-digit'
     });
 };
+
+const acheterTicket = () => {
+    if (isProcessing.value) return;
+    
+    if (props.evenement.Disponiblilite <= 0) {
+        toast({
+            title: "Impossible d'acheter un ticket",
+            description: "Désolé, il n'y a plus de places disponibles pour cet événement.",
+            variant: "destructive"
+        });
+        return;
+    }
+    
+    isProcessing.value = true;
+    
+    router.post('/tickets', {
+        idEvenements: props.evenement.id,
+        typePlace: 'Standard',
+        notes: `Ticket acheté pour l'événement ${props.evenement.nom}`
+    }, {
+        onSuccess: () => {
+            toast({
+                title: "Ticket acheté avec succès",
+                description: "Votre ticket a été généré et est disponible dans votre espace personnel.",
+                variant: "default"
+            });
+        },
+        onError: (errors) => {
+            toast({
+                title: "Erreur lors de l'achat du ticket",
+                description: "Une erreur est survenue lors de l'achat de votre ticket. Veuillez réessayer.",
+                variant: "destructive"
+            });
+        },
+        onFinish: () => {
+            isProcessing.value = false;
+        }
+    });
+};
 </script>
 
 <template>
@@ -290,6 +333,22 @@ const formatDate = (dateString: string) => {
                                         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                                     </svg>
                                     <span>Places disponibles : {{ evenement.Disponiblilite }}</span>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <Button 
+                                        @click="acheterTicket" 
+                                        :disabled="isProcessing || evenement.Disponiblilite <= 0"
+                                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                                            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+                                        </svg>
+                                        <span v-if="isProcessing">Traitement en cours...</span>
+                                        <span v-else-if="evenement.Disponiblilite <= 0">Plus de places disponibles</span>
+                                        <span v-else>Acheter un ticket</span>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
