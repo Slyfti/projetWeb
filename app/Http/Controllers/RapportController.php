@@ -26,17 +26,18 @@ class RapportController extends Controller
             ->map(function($group) {
                 return [
                     'date' => Carbon::parse($group->first()->dateAction)->format('Y-m-d'),
-                    'points' => $group->sum('pointsGagne')
+                    'points' => (float)$group->sum('pointsGagne')
                 ];
             })
             ->values()
-            ->sortBy('date');
+            ->sortBy('date')
+            ->all();
 
         return Inertia::render('dashboard/GestionRapport', [
             'objets' => $objets,
             'categories' => $categories,
             'zones' => $zones,
-            'pointsUtilisateurs' => $pointsUtilisateurs
+            'pointsUtilisateurs' => collect($pointsUtilisateurs)->values()->all()
         ]);
     }
 } 

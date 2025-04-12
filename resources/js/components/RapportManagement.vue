@@ -135,7 +135,7 @@ const yFormatter = (tick: number | Date, i: number, ticks: (number | Date)[]) =>
         <!-- Graphique des points utilisateurs -->
         <Card class="bg-indigo-900/30 border-indigo-500/30">
             <CardHeader>
-                <CardTitle class="text-white">Évolution des Points Utilisateurs</CardTitle>
+                <CardTitle class="text-white">Nombre de points journaliers gagnés</CardTitle>
             </CardHeader>
             <CardContent>
                 <div class="h-[400px]">
@@ -156,7 +156,7 @@ const yFormatter = (tick: number | Date, i: number, ticks: (number | Date)[]) =>
         <!-- Distribution par catégorie -->
         <Card class="bg-indigo-900/30 border-indigo-500/30">
             <CardHeader>
-                <CardTitle class="text-white">Distribution par Catégorie</CardTitle>
+                <CardTitle class="text-white">Distribution par catégorie</CardTitle>
             </CardHeader>
             <CardContent>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
