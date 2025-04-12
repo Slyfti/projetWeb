@@ -23,8 +23,8 @@ class RapportController extends Controller
             DB::raw('DATE(dateAction) as date'),
             DB::raw('SUM(pointsGagne) as points')
         )
-        ->groupBy('date')
-        ->orderBy('date')
+        ->groupBy(DB::raw('DATE(dateAction)'))
+        ->orderBy(DB::raw('DATE(dateAction)'))
         ->get();
 
         return Inertia::render('dashboard/GestionRapport', [
