@@ -25,7 +25,7 @@ class RapportController extends Controller
             })
             ->map(function($group) {
                 return [
-                    'date' => $group->first()->dateAction->format('Y-m-d'),
+                    'date' => Carbon::parse($group->first()->dateAction)->format('Y-m-d'),
                     'points' => $group->sum('pointsGagne')
                 ];
             })
