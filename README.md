@@ -30,23 +30,13 @@ Si vous n'avez pas Make installé, vous pouvez l'installer avec les commandes su
 sudo apt-get install make
 ```
 
-```bash
-# Sur macOS (avec Homebrew)
-brew install make
-```
-
-```bash
-# Sur Windows (avec Chocolatey)
-choco install make
-```
-
 ## Installation rapide avec Make
 
 Pour une installation et un lancement rapides du projet, vous pouvez utiliser les commandes Make suivantes :
 
 ```bash
 # Cloner le projet
-git clone git@github.com:Slyfti/projetWeb.git
+git clone https://github.com/Slyfti/projetWeb.git
 ```
 
 ```bash
@@ -65,7 +55,7 @@ Le site sera accessible à l'adresse : http://localhost:8000
 ### 1. Cloner le projet
 
 ```bash
-git clone git@github.com:Slyfti/projetWeb.git
+git clone https://github.com/Slyfti/projetWeb.git
 ```
 
 ```bash
@@ -119,13 +109,13 @@ npm run build
 ### En mode développement
 
 ```bash
-# Lancer le serveur Laravel
-php artisan serve
+# Build le serveur Laravel
+npm run build
 ```
 
 ```bash
-# Dans un autre terminal, lancer Vite pour le hot reloading (optionnel)
-npm run dev
+# Lancer le serveur Laravel
+php artisan serve
 ```
 
 Le site sera accessible à l'adresse : http://localhost:8000
