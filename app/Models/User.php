@@ -96,6 +96,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Vérifie si l'utilisateur a suffisamment de points pour atteindre un niveau donné
+     */
+    public function peutAtteindreNiveau($niveau)
+    {
+        $pointsRequis = match($niveau) {
+            'Expert' => self::SEUIL_EXPERT,
+            'Avancé' => self::SEUIL_AVANCE,
+            'Intermédiaire' => self::SEUIL_INTERMEDIAIRE,
+            'Débutant' => self::SEUIL_DEBUTANT,
+            default => 0
+        };
+
+        return $this->points >= $pointsRequis;
+    }
+
+    /**
      * Met à jour le niveau de l'utilisateur en fonction de ses points
      */
     public function updateNiveau()
@@ -111,7 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $nouveauNiveau = 'Intermédiaire';
         }
 
-        if ($this->niveau !== $nouveauNiveau) {
+        if ($this->niveau !== $nouveauNiveau && $this->peutAtteindreNiveau($nouveauNiveau)) {
             $this->niveau = $nouveauNiveau;
             $this->save();
         }

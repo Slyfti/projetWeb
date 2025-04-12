@@ -20,7 +20,7 @@ class ProfileUpdateRequest extends FormRequest
             'prenom' => ['nullable', 'string', 'max:255'],
             'dateNaissance' => ['nullable', 'date'],
             'sexe' => ['nullable', 'in:Homme,Femme,Autre'],
-            'typeMembre' => ['required', 'in:Spectateur,Athlète,Entraîneur,Personnel technique,Sécurité,Administratif'],
+            'typeMembre' => ['nullable', 'in:Spectateur,Athlète,Entraîneur,Personnel technique,Sécurité,Administratif'],
             'niveau' => ['required', 'in:Débutant,Intermédiaire,Avancé,Expert'],
             'email' => [
                 'required',

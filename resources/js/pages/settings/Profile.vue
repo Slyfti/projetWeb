@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
@@ -38,6 +39,19 @@ const form = useForm({
     niveau: user.niveau,
     email: user.email,
 });
+
+const points = ref(user.points || 0);
+
+const niveaux = [
+    { value: 'Débutant', points: 0 },
+    { value: 'Intermédiaire', points: 100 },
+    { value: 'Avancé', points: 300 },
+    { value: 'Expert', points: 600 }
+];
+
+const estNiveauAccessible = (niveauPoints: number) => {
+    return points.value >= niveauPoints;
+};
 
 const submit = () => {
     form.patch(route('profile.update'), {
@@ -90,7 +104,7 @@ const submit = () => {
 
                     <div class="grid gap-2">
                         <Label for="typeMembre">Type de membre</Label>
-                        <Select v-model="form.typeMembre" required>
+                        <Select v-model="form.typeMembre" disabled>
                             <SelectTrigger>
                                 <SelectValue placeholder="Sélectionnez un type de membre" />
                             </SelectTrigger>
@@ -104,6 +118,9 @@ const submit = () => {
                             </SelectContent>
                         </Select>
                         <InputError class="mt-2" :message="form.errors.typeMembre" />
+                        <p class="text-sm text-muted-foreground">
+                            Le type de membre ne peut pas être modifié
+                        </p>
                     </div>
 
                     <div class="grid gap-2">
@@ -113,13 +130,21 @@ const submit = () => {
                                 <SelectValue placeholder="Sélectionnez un niveau" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Débutant">Débutant</SelectItem>
-                                <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                                <SelectItem value="Avancé">Avancé</SelectItem>
-                                <SelectItem value="Expert">Expert</SelectItem>
+                                <SelectItem 
+                                    v-for="niveau in niveaux" 
+                                    :key="niveau.value"
+                                    :value="niveau.value"
+                                    :disabled="!estNiveauAccessible(niveau.points)"
+                                    :class="{ 'opacity-50 cursor-not-allowed': !estNiveauAccessible(niveau.points) }"
+                                >
+                                    {{ niveau.value }} ({{ niveau.points }} points)
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError class="mt-2" :message="form.errors.niveau" />
+                        <p class="text-sm text-muted-foreground">
+                            Points actuels : {{ points }}
+                        </p>
                     </div>
 
                     <div class="grid gap-2">

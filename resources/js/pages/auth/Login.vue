@@ -71,7 +71,7 @@ const submit = () => {
                     <InputError :message="form.errors.password" />
                 </div>
 
-                <div class="flex items-center justify-between" :tabindex="3">
+                <div class="flex items-center justify-between hidden" :tabindex="3">
                     <Label for="remember" class="flex items-center space-x-3">
                         <Checkbox id="remember" v-model:checked="form.remember" :tabindex="4" />
                         <span>Se rappeler de moi</span>

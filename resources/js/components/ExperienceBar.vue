@@ -12,11 +12,11 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 
 const progress = computed(() => {
-    return Math.min(Math.max((points.value / 300) * 100, 0), 100);
+    return Math.min(Math.max((points.value / 600) * 100, 0), 100);
 });
 
 const ticks = computed(() => {
-    return Array.from({ length: 7 }, (_, i) => i * 50);
+    return [100, 300, 600];
 });
 
 const fetchPoints = async () => {
@@ -57,12 +57,12 @@ onMounted(() => {
                 v-for="tick in ticks"
                 :key="tick"
                 class="absolute h-full w-[1px] bg-blue-400/30 dark:bg-cyan-400/30"
-                :style="{ left: `${(tick / 300) * 100}%` }"
+                :style="{ left: `${(tick / 600) * 100}%` }"
             ></div>
             
             <!-- Points actuels -->
             <div class="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-blue-100 dark:text-cyan-100">
-                {{ points }}/300
+                {{ points }}/600
             </div>
         </div>
     </div>

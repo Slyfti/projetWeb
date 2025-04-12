@@ -24,7 +24,6 @@ const form = useForm({
     pseudo:'',
     dateNaissance:'',
     sexe:'',
-    typeMembre:'',
     photo:'',
     email: '',
     password: '',
@@ -74,40 +73,19 @@ const submit = () => {
                 <!--rajouter-->
                 <div class="grid gap-2">
                     <Label for="sexe">Sexe</Label>
-                    <RadioGroup default-value="femme" v-model="form.sexe">
-                        <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="femme" value="Femme" />
-                            <Label for="option-one">Femme</Label>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="homme" value="Homme" />
-                            <Label for="homme">Homme</Label>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <RadioGroupItem id="autre" value="Autre" />
-                            <Label for="autre">Autre</Label>
-                        </div>
-                    </RadioGroup>
-                </div>
-
-                <!--rajouter-->
-                <div class="grid gap-2">
-                    <Label for="typeMembre">Type membre</Label>
-                    <Select v-model="form.typeMembre">
+                    <Select v-model="form.sexe">
                         <SelectTrigger>
-                        <SelectValue placeholder="Selectionner un type de membre" />
+                            <SelectValue placeholder="Sélectionner votre sexe" />
                         </SelectTrigger>
                         <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value="Spectateur">Spectateur</SelectItem>
-                            <SelectItem value="Athlète">Athlète</SelectItem>
-                            <SelectItem value="Entraîneur">Entraîneur</SelectItem>
-                            <SelectItem value="Personnel technique">Personnel technique</SelectItem>
-                            <SelectItem value="Sécurité">Sécurité</SelectItem>
-                            <SelectItem value="Administratif">Administratif</SelectItem>
-                        </SelectGroup>
+                            <SelectGroup>
+                                <SelectItem value="Femme">Femme</SelectItem>
+                                <SelectItem value="Homme">Homme</SelectItem>
+                                <SelectItem value="Autre">Autre</SelectItem>
+                            </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <InputError :message="form.errors.sexe" />
                 </div>
 
                 <!--rajouter-->
@@ -120,7 +98,7 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Addresse mail</Label>
+                    <Label for="email">Adresse mail</Label>
                     <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="mail@example.com" />
                     <InputError :message="form.errors.email" />
                 </div>
@@ -148,7 +126,7 @@ const submit = () => {
                         :tabindex="4"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
-                        placeholder="confirmation mot de passe"
+                        placeholder="Confirmation mot de passe"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
