@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Information\SportEventController;
-use App\Http\Controllers\Information\TeamController;
 use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\Information\ServiceController;
 use App\Http\Controllers\EvenementsController;
@@ -31,10 +30,6 @@ Route::prefix('information')->group(function () {
     // Routes pour les événements
     Route::get('/evenements', [EvenementsController::class, 'index'])->name('evenements.index');
     Route::get('/evenements/{evenement}', [EvenementsController::class, 'show'])->name('evenements.show');
-    
-    // Routes pour les équipes
-    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
-    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
     
     // Routes pour les billets
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
