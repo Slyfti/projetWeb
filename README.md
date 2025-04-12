@@ -139,10 +139,6 @@ make build
 make run
 ```
 
-```bash
-# Lancement du serveur avec hot reloading
-make dev
-```
 
 ```bash
 # Nettoyage des fichiers générés
@@ -157,11 +153,6 @@ make fresh-seed
 ```bash
 # Installation complète et lancement du site
 make setup
-```
-
-```bash
-# Installation complète et lancement du site avec hot reloading
-make setup-dev
 ```
 
 ## Commandes utiles
