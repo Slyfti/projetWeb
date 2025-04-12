@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ObjetConnecteController;
 use App\Http\Controllers\RapportController;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\DatabaseController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/objets', [ObjetConnecteController::class, 'index'])->name('objets');
     Route::get('/dashboard/evenements', [EvenementsController::class, 'adminIndex'])->name('evenements.admin');
     Route::get('/dashboard/rapports', [RapportController::class, 'index'])->name('rapports');
+    Route::get('/dashboard/gestion-bdd', [DatabaseController::class, 'index'])->name('gestion-bdd');
+    Route::get('/api/export-database', [DatabaseController::class, 'export'])->name('export-database');
+    Route::get('/api/export-sqlite', [DatabaseController::class, 'exportSqlite'])->name('export-sqlite');
     Route::redirect("/dashboard","/dashboard/utilisateurs")->name("dashboard");
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');

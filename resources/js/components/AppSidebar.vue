@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Calendar, Users, Ticket, Globe, BarChart } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Calendar, Users, Ticket, Globe, BarChart, Database } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import type { SharedData } from '@/types';
 
@@ -32,6 +32,12 @@ const mainNavItems: NavItem[] = [
         title: 'Rapports',
         href: '/dashboard/rapports',
         icon: BarChart,
+        showForTypes: ['Administratif']
+    },
+    {
+        title: 'Base de données',
+        href: '/dashboard/gestion-bdd',
+        icon: Database,
         showForTypes: ['Administratif']
     },
 ];
