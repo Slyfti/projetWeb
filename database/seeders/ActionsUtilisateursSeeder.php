@@ -37,10 +37,10 @@ class ActionsUtilisateursSeeder extends Seeder
                 $dateAction = $date->copy()->addHours(rand(0, 23))->addMinutes(rand(0, 59));
                 
                 DB::table('actionsUtilisateurs')->insert([
-                    'idUtilisateur' => rand(1, 5), // Supposons que nous avons 5 utilisateurs
+                    'idUtilisateur' => rand(1, 4), // Nous avons 4 utilisateurs
                     'typeAction' => $type,
                     'entiteCible' => $entite,
-                    'idCible' => rand(1, 10),
+                    'idCible' => rand(1, 5), // Réduire aussi le nombre d'IDs cibles pour éviter les erreurs
                     'dateAction' => $dateAction,
                     'pointsGagne' => $points
                 ]);

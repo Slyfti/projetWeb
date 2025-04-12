@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             ZonesStadeSeeder::class,
             ServicesSeeder::class,
             ObjetsConnectesSeeder::class,
-            TeamSeeder::class,
             SportEventSeeder::class,
             EvenementsSeeder::class,
             UtilisateursSeeder::class,
