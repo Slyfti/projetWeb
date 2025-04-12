@@ -7,9 +7,8 @@ import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Calendar, Users, Ticket, Globe, BarChart, Database } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
-import type { SharedData } from '@/types';
 
-const page = usePage<SharedData>();
+const page = usePage();
 
 const mainNavItems: NavItem[] = [
     {
@@ -29,9 +28,15 @@ const mainNavItems: NavItem[] = [
         showForTypes: ['Personnel technique', 'Sécurité', 'Administratif']
     },
     {
-        title: 'Tickets',
+        title: 'Mes tickets',
         href: '/dashboard/tickets',
         icon: Ticket,
+    },
+    {
+        title: 'Gestion des tickets',
+        href: '/dashboard/tickets/admin',
+        icon: Ticket,
+        showForTypes: ['Administratif']
     },
     {
         title: 'Rapports',

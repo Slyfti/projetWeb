@@ -31,7 +31,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast/use-toast';
-import type { PageProps } from '@/types';
+import type { PageProps as InertiaPageProps } from '@inertiajs/core/types/types';
 
 interface TicketWithRelations extends Ticket {
     evenement: {
@@ -61,11 +61,17 @@ const search = ref('');
 const isDetailsDialogOpen = ref(false);
 const selectedTicket = ref<TicketWithRelations | null>(null);
 
-const page = usePage<PageProps>();
+const page = usePage();
 const isAdmin = computed(() => {
     if (props.isAdmin !== undefined) return props.isAdmin;
     const auth = page.props.auth as { user: any };
     return auth.user.typeMembre === 'Administratif';
+});
+
+const pageTitle = computed(() => {
+    return window.location.pathname.includes('/tickets/admin') 
+        ? 'Gestion des tickets' 
+        : 'Mes tickets';
 });
 
 const form = useForm({
@@ -176,7 +182,7 @@ const deleteTicket = (ticket: TicketWithRelations) => {
         variant: "default"
     });
 
-    router.delete(`/tickets/${ticket.idTicket}`, {}, {
+    router.delete(`/tickets/${ticket.idTicket}`, {
         onSuccess: () => {
             // Afficher un message de succès
             toast({
@@ -185,8 +191,8 @@ const deleteTicket = (ticket: TicketWithRelations) => {
                 variant: "default"
             });
             
-            // Recharger les données sans actualiser la page
-            router.reload({ only: ['tickets'] });
+            // Recharger la page pour mettre à jour la liste des tickets
+            router.visit(route('tickets.index'), { preserveScroll: true });
         },
         onError: () => {
             toast({
@@ -220,7 +226,7 @@ const handleSearch = () => {
 <template>
     <Card>
         <CardHeader>
-            <h2 class="text-2xl font-bold">Gestion des tickets</h2>
+            <h2 class="text-2xl font-bold">{{ pageTitle }}</h2>
         </CardHeader>
         <div class="p-4">
             <Table>
