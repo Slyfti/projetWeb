@@ -183,6 +183,8 @@ php artisan migrate:fresh --seed
 - `resources/` : Contient les vues, assets CSS/JS, etc.
 - `routes/` : Définition des routes de l'application
 
+- `wireframes/` : Contient les maquettes
+- `ING1_GI2_g6_rapport_devWeb_projet_astrosphère.pdf` : Rapport du projet
 ## Fonctionnalités principales
 
 - Gestion des utilisateurs

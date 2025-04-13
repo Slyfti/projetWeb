@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'Comfortaa';
-    src: url('../fonts/Comfortaa-VariableFont_wght.ttf') format('truetype');
+    src: url('/resources//font/Comfortaa-VariableFont_wght.ttf') format('truetype');
     font-weight: 300 700;
     font-style: normal;
 }
