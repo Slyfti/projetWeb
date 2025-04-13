@@ -20,6 +20,7 @@ Le projet inclut plusieurs comptes utilisateurs de test avec différents niveaux
 | tech_martin | martin@stade.fr | tech123 | Personnel technique | Avancé |
 | coach_pierre | pierre@stade.fr | coach123 | Entraîneur | Expert |
 | secu_marie | marie@stade.fr | secu123 | Sécurité | Intermédiaire |
+| spec_antoine | antoine@stade.fr | spec123 | Spectateur | Intermédiaire |
 
 ### Installation de Make
 
