@@ -146,13 +146,21 @@
                         <!-- Statut -->
                         <FormField name="estActif" class="col-span-2">
                             <FormLabel class="text-white/90">Statut<InputError :message="form.errors.estActif" /></FormLabel>
-                            <FormControl>
-                                <div class="flex items-center space-x-2">
-                                    <input type="checkbox" v-model="form.estActif" 
-                                        class="h-4 w-4 rounded border-indigo-500/30 bg-indigo-900/30 text-indigo-600 focus:ring-indigo-500" />
-                                    <label class="text-sm text-white/80">Service actif</label>
-                                </div>
-                            </FormControl>
+                            <Select v-model="form.estActif">
+                                <SelectTrigger class="bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300">
+                                    <SelectValue :placeholder="form.estActif ? 'Actif' : 'Inactif'" />
+                                </SelectTrigger>
+                                <SelectContent class="bg-indigo-900/90 border-indigo-500/30 text-white">
+                                    <SelectGroup>
+                                        <SelectItem :value="true" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">
+                                            Actif
+                                        </SelectItem>
+                                        <SelectItem :value="false" class="hover:bg-indigo-800/40 hover:text-cyan-300 text-white">
+                                            Inactif
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </FormField>
                     </div>
 
