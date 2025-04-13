@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('nom');
             $table->foreignId('idCategorie')->constrained('categoriesServices', 'idCategoriesServices');
             $table->text('descriptionServices');
+            $table->string('image')->nullable();
             $table->boolean('estActif')->default(true);
         });
     }

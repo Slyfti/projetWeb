@@ -127,10 +127,16 @@ class EvenementsController extends Controller
         if (!$file) return null;
 
         // Créer le nom du fichier
-        $fileName = Str::slug($equipeName) . '_logo.png';
+        $fileName = Str::slug($equipeName) . '_logo_' . $type . '_' . time() . '.' . $file->getClientOriginalExtension();
+        
+        // S'assurer que le répertoire existe
+        $directory = public_path('images/logos');
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
         
         // Stocker le fichier dans public/images/logos
-        $file->move(public_path('images/logos'), $fileName);
+        $file->move($directory, $fileName);
 
         return $fileName;
     }
@@ -206,7 +212,8 @@ class EvenementsController extends Controller
 
     public function update(Request $request, Evenement $evenement)
     {
-        $validated = $request->validate([
+        // Règles de validation de base
+        $rules = [
             'nom' => 'required|string|max:100',
             'dateEvenements' => 'required|date',
             'descriptionEvenements' => 'required|string',
@@ -220,10 +227,19 @@ class EvenementsController extends Controller
             'ligue' => 'required|string|max:100',
             'consignes_securite' => 'nullable|string',
             'activites_autour' => 'nullable|string',
-            'logo_equipe_domicile' => 'nullable',
-            'logo_equipe_exterieur' => 'nullable',
             'resultat' => 'nullable|string|max:50'
-        ]);
+        ];
+
+        // Règles spécifiques pour les fichiers
+        if ($request->hasFile('logo_equipe_domicile')) {
+            $rules['logo_equipe_domicile'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+        
+        if ($request->hasFile('logo_equipe_exterieur')) {
+            $rules['logo_equipe_exterieur'] = 'image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+
+        $validated = $request->validate($rules);
 
         // Conserver les logos existants par défaut
         $validated['logo_equipe_domicile'] = $evenement->logo_equipe_domicile;
@@ -231,6 +247,14 @@ class EvenementsController extends Controller
 
         // Gérer l'upload des logos si des fichiers sont fournis
         if ($request->hasFile('logo_equipe_domicile')) {
+            // Supprimer l'ancien logo s'il n'est pas celui par défaut
+            if ($evenement->logo_equipe_domicile !== 'default_home.png') {
+                $oldPath = public_path('images/logos/' . $evenement->logo_equipe_domicile);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+            
             $validated['logo_equipe_domicile'] = $this->handleLogoUpload(
                 $request->file('logo_equipe_domicile'),
                 $validated['equipeDomicile'],
@@ -239,6 +263,14 @@ class EvenementsController extends Controller
         }
 
         if ($request->hasFile('logo_equipe_exterieur')) {
+            // Supprimer l'ancien logo s'il n'est pas celui par défaut
+            if ($evenement->logo_equipe_exterieur !== 'default_away.png') {
+                $oldPath = public_path('images/logos/' . $evenement->logo_equipe_exterieur);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+            
             $validated['logo_equipe_exterieur'] = $this->handleLogoUpload(
                 $request->file('logo_equipe_exterieur'),
                 $validated['equipeExterieur'],
@@ -296,4 +328,4 @@ class EvenementsController extends Controller
 
         return redirect()->back()->with('success', 'Événement supprimé avec succès. Vous avez gagné ' . $pointsGagne . ' points !');
     }
-} 
+}

@@ -15,6 +15,7 @@ class Service extends Model
         'nom',
         'idCategorie',
         'descriptionServices',
+        'image',
         'estActif'
     ];
 

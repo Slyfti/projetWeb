@@ -48,7 +48,7 @@
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Services</h3>
                             <p class="text-gray-600 mb-4">Découvrez tous les services disponibles dans le stade.</p>
                             <Link
-                                :href="route('services.index')"
+                                :href="route('services.show')"
                                 class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 Voir les services

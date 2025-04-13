@@ -14,42 +14,42 @@ class ServicesSeeder extends Seeder
                 'nom' => 'Restauration Tribune Nord',
                 'idCategorie' => 1, // Restauration
                 'descriptionServices' => 'Service de restauration rapide et boissons dans la tribune nord',
+                'image' => '/images/services/restauration.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Sécurité Générale',
+                'nom' => 'Sécurité générale',
                 'idCategorie' => 2, // Sécurité
                 'descriptionServices' => 'Service de sécurité et surveillance du stade',
+                'image' => '/images/services/securite.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Nettoyage Tribune Sud',
-                'idCategorie' => 3, // Nettoyage
-                'descriptionServices' => 'Service de nettoyage et maintenance de la tribune sud',
-                'estActif' => true,
-            ],
-            [
-                'nom' => 'Billetterie Principale',
+                'nom' => 'Billetterie principale',
                 'idCategorie' => 4, // Billetterie
                 'descriptionServices' => 'Service de vente et contrôle des billets',
+                'image' => '/images/services/billeterie.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Assistance PMR',
-                'idCategorie' => 5, // Assistance
-                'descriptionServices' => 'Service d\'assistance aux personnes à mobilité réduite',
-                'estActif' => true,
-            ],
-            [
-                'nom' => 'Infirmerie Centrale',
+                'nom' => 'Infirmerie centrale',
                 'idCategorie' => 6, // Médical
                 'descriptionServices' => 'Service médical et premiers secours',
+                'image' => '/images/services/infirmerie.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Service VIP Lounge',
+                'nom' => 'Service VIP',
                 'idCategorie' => 7, // VIP
                 'descriptionServices' => 'Service premium pour les espaces VIP avec restauration et conciergerie',
+                'image' => '/images/services/vip.png',
+                'estActif' => true,
+            ],
+            [
+                'nom' => 'Infirmerie mobile',
+                'idCategorie' => 6, // Médical
+                'descriptionServices' => 'Soins médicaux rapides et efficaces',
+                'image' => '/images/services/ambulance.png',
                 'estActif' => true,
             ],
         ];

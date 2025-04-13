@@ -5,7 +5,7 @@ import AstrosphereImg from '@/../img/Astrosphere.jpeg';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-gradient-to-tr from-[#6F4786] to-[#2D0B47]">
+    <div class="min-h-screen flex flex-col bg-gradient-to-tr from-indigo-900 to-gray-900">
         <Header />
         <main class="flex-grow flex flex-col items-center justify-center text-center p-6">
             <img :src="AstrosphereImg" alt="Stade Astrosphère" class="w-4/5 max-w-xl rounded-lg shadow-lg mb-6">
