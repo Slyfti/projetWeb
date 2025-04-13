@@ -18,35 +18,35 @@ class ServicesSeeder extends Seeder
                 'estActif' => true,
             ],
             [
-                'nom' => 'Sécurité Générale',
+                'nom' => 'Sécurité générale',
                 'idCategorie' => 2, // Sécurité
                 'descriptionServices' => 'Service de sécurité et surveillance du stade',
                 'image' => '/images/services/securite.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Billetterie Principale',
+                'nom' => 'Billetterie principale',
                 'idCategorie' => 4, // Billetterie
                 'descriptionServices' => 'Service de vente et contrôle des billets',
                 'image' => '/images/services/billeterie.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Infirmerie Centrale',
+                'nom' => 'Infirmerie centrale',
                 'idCategorie' => 6, // Médical
                 'descriptionServices' => 'Service médical et premiers secours',
                 'image' => '/images/services/infirmerie.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Service VIP Lounge',
+                'nom' => 'Service VIP',
                 'idCategorie' => 7, // VIP
                 'descriptionServices' => 'Service premium pour les espaces VIP avec restauration et conciergerie',
                 'image' => '/images/services/vip.png',
                 'estActif' => true,
             ],
             [
-                'nom' => 'Infirmerie Mobile',
+                'nom' => 'Infirmerie mobile',
                 'idCategorie' => 6, // Médical
                 'descriptionServices' => 'Soins médicaux rapides et efficaces',
                 'image' => '/images/services/ambulance.png',

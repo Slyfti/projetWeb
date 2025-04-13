@@ -47,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/evenements', [EvenementsController::class, 'store'])->name('evenements.store');
     Route::put('/evenements/{evenement}', [EvenementsController::class, 'update'])->name('evenements.update');
     Route::delete('/evenements/{evenement}', [EvenementsController::class, 'destroy'])->name('evenements.destroy');
-
+    
     // Routes API pour les points d'expérience
     Route::get('/api/users/{user}/points', [UserController::class, 'getPoints'])->name('api.users.points');
 

@@ -17,11 +17,12 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Vérifier l'e-mail" description="Veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer par e-mail.">
+    <AuthLayout title="Vérifier l'e-mail" description="Veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer par e-mail. N'hésitez pas à regarder les spams !">
         <Head title="Vérification des e-mails" />
 
         <div v-if="status === 'verification-link-sent'" class="mb-4 text-center text-sm font-medium text-green-600">
             Un nouveau lien de vérification a été envoyé à l'adresse e-mail que vous avez fournie lors de votre inscription.
+            N'hésitez pas à regarder les spams !
         </div>
 
         <form @submit.prevent="submit" class="space-y-6 text-center">

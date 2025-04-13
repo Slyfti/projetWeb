@@ -231,8 +231,37 @@ const deleteEvent = (evenement: Evenement) => {
 
 const updateEvent = () => {
     if (!selectedEvenement.value) return;
+    
+    // Utiliser FormData pour pouvoir envoyer des fichiers
+    const formData = new FormData();
+    
+    // Ajouter les champs de base
+    formData.append('nom', form.nom);
+    formData.append('dateEvenements', form.dateEvenements);
+    formData.append('descriptionEvenements', form.descriptionEvenements);
+    formData.append('typeEvents', form.typeEvents);
+    formData.append('equipeDomicile', form.equipeDomicile);
+    formData.append('equipeExterieur', form.equipeExterieur);
+    formData.append('prix', form.prix);
+    formData.append('Disponiblilite', form.Disponiblilite);
+    formData.append('lieu', form.lieu);
+    formData.append('meteo', form.meteo);
+    formData.append('ligue', form.ligue);
+    formData.append('consignes_securite', form.consignes_securite);
+    formData.append('activites_autour', form.activites_autour);
+    formData.append('resultat', form.resultat || '');
+    
+    // Gestion spéciale pour les images
+    if (form.logo_equipe_domicile instanceof File) {
+        formData.append('logo_equipe_domicile', form.logo_equipe_domicile);
+    } 
+    
+    if (form.logo_equipe_exterieur instanceof File) {
+        formData.append('logo_equipe_exterieur', form.logo_equipe_exterieur);
+    }
 
-    form.put(route('evenements.update', selectedEvenement.value.idEvenements), {
+    // Utiliser post avec _method=PUT pour permettre l'envoi de fichiers via la route PUT standard
+    form.post(route('evenements.update', selectedEvenement.value.idEvenements) + '?_method=PUT', {
         onSuccess: () => {
             showEventForm.value = false;
             form.reset();
@@ -772,4 +801,4 @@ const getImageUrl = (image: string | File) => {
     color: #ef4444;
     margin-top: 0.25rem;
 }
-</style> 
+</style>
