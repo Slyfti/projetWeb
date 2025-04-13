@@ -3,8 +3,6 @@
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Information\SportEventController;
-use App\Http\Controllers\Information\TicketController;
 use App\Http\Controllers\EvenementsController;
 use App\Models\User;
 use App\Http\Controllers\UserController;
@@ -24,10 +22,6 @@ Route::prefix('information')->group(function () {
     // Routes pour les événements
     Route::get('/evenements', [EvenementsController::class, 'index'])->name('evenements.index');
     Route::get('/evenements/{evenement}', [EvenementsController::class, 'show'])->name('evenements.show');
-    
-    // Routes pour les billets
-    Route::get('/tickets', [\App\Http\Controllers\Information\TicketController::class, 'index'])->name('tickets.index');
-    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Information\TicketController::class, 'show'])->name('tickets.show');
 
     // Routes pour les services
     Route::get('/services', [ServiceController::class, 'getServices'])->name('services.show');
