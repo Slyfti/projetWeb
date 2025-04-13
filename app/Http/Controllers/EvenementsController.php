@@ -127,7 +127,7 @@ class EvenementsController extends Controller
         if (!$file) return null;
 
         // Créer le nom du fichier
-        $fileName = Str::slug($equipeName) . '_logo.png';
+        $fileName = Str::slug($equipeName) . '_logo' . $file->getClientOriginalExtension();
         
         // Stocker le fichier dans public/images/logos
         $file->move(public_path('images/logos'), $fileName);

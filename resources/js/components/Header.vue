@@ -70,7 +70,7 @@ const toggleMenu = () => {
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <NavigationMenuLink :href="route('services.index')" class="tracking-[0.05em] bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300 px-4 py-2 rounded-md transition-all duration-300">
+                        <NavigationMenuLink :href="route('services.show')" class="tracking-[0.05em] bg-indigo-900/30 hover:bg-indigo-800/40 border border-indigo-500/30 hover:border-indigo-400/50 text-white hover:text-cyan-300 px-4 py-2 rounded-md transition-all duration-300">
                             Services
                         </NavigationMenuLink>
                     </NavigationMenuItem>
@@ -108,7 +108,7 @@ const toggleMenu = () => {
                         <Link :href="route('evenements.index')" class="text-white text-lg tracking-[0.05em] hover:text-cyan-300 transition-all duration-300">
                             Événements
                         </Link>
-                        <Link :href="route('services.index')" class="text-white text-lg tracking-[0.05em] hover:text-cyan-300 transition-all duration-300">
+                        <Link :href="route('services.show')" class="text-white text-lg tracking-[0.05em] hover:text-cyan-300 transition-all duration-300">
                             Services
                         </Link>
                         <Link 

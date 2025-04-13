@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Information\SportEventController;
 use App\Http\Controllers\Information\TicketController;
-use App\Http\Controllers\Information\ServiceController;
 use App\Http\Controllers\EvenementsController;
 use App\Models\User;
 use App\Http\Controllers\UserController;
@@ -12,6 +12,7 @@ use App\Http\Controllers\ObjetConnecteController;
 use App\Http\Controllers\RapportController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\DatabaseController;
+use App\Http\Controllers\ServiceController as AdminServiceController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -19,13 +20,6 @@ Route::get('/', function () {
 
 // Routes pour le module Information (visiteurs)
 Route::prefix('information')->group(function () {
-    // Routes pour les services
-    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
-    Route::get('/restauration', [ServiceController::class, 'restauration'])->name('restauration.index');
-    Route::get('/vip', [ServiceController::class, 'vip'])->name('vip.index');
-    Route::get('/securite', [ServiceController::class, 'securite'])->name('securite.index');
-    Route::get('/medical', [ServiceController::class, 'medical'])->name('medical.index');
-    Route::get('/pmr', [ServiceController::class, 'pmr'])->name('pmr.index');
     
     // Routes pour les événements
     Route::get('/evenements', [EvenementsController::class, 'index'])->name('evenements.index');
@@ -34,6 +28,9 @@ Route::prefix('information')->group(function () {
     // Routes pour les billets
     Route::get('/tickets', [\App\Http\Controllers\Information\TicketController::class, 'index'])->name('tickets.index');
     Route::get('/tickets/{ticket}', [\App\Http\Controllers\Information\TicketController::class, 'show'])->name('tickets.show');
+
+    // Routes pour les services
+    Route::get('/services', [ServiceController::class, 'getServices'])->name('services.show');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -59,6 +56,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Routes API pour les points d'expérience
     Route::get('/api/users/{user}/points', [UserController::class, 'getPoints'])->name('api.users.points');
+
+    // Routes pour la gestion des services (admin)
+    Route::get('/dashboard/services', [AdminServiceController::class, 'index'])->name('dashboard.services');
+    Route::get('/api/services', [AdminServiceController::class, 'getServices']);
+    Route::post('/api/services', [AdminServiceController::class, 'store']);
+    Route::put('/api/services/{service}', [AdminServiceController::class, 'update']);
+    Route::delete('/api/services/{service}', [AdminServiceController::class, 'destroy']);
 });
 
 Route::middleware(['auth'])->group(function () {
